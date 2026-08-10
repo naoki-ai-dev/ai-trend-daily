@@ -2,60 +2,161 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>ai_trend</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-10</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
 </head>
 <body>
-<h1>AI動向レポート</h1>
-<h2>AIエージェント普及の壁</h2>
-<ul>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-10</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 6トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>AIエージェント普及の壁</h2><ul>
 <li>Wiredの記事によれば、AIエージェントの技術的な進化にもかかわらず、一般ユーザーの間では実際の利用がなかなか広がっていない。</li>
 <li>理由として、エージェントに何ができるかが不明確であること、失敗した際の挙動が予測しづらいこと、そして日常タスクに組み込むための学習コストの高さが挙げられている。</li>
 <li>開発者やアーリーアダプター層と一般消費者との間には、依然として大きな体験ギャップが存在する。</li>
 <li>この課題は、AIエージェント市場が「技術的に可能」から「実際に使われる」段階へ移行するための重要なボトルネックとして注目されている。</li>
-</ul>
-<h2>人間とAIエージェントの新しいUXモデル</h2>
-<ul>
+</ul></article>
+<article class="card"><h2>人間とAIエージェントの新しいUXモデル</h2><ul>
 <li>Substackに掲載された記事は、AIエージェントとの協働において「船長（キャプテン）」のように出力を監督・判断する人間の役割を提案している。</li>
 <li>従来のUIパラダイムでは、人間がエージェントの細かい動作を逐一操作することが前提とされてきたが、これは今後のエージェント活用には適していないと指摘されている。</li>
 <li>代わりに、人間はエージェントの成果物（アウトプット）を読み取り、方向性を判断する「監督者」としての立ち位置を取るべきだという新しいUX設計思想が提示された。</li>
 <li>この考え方は、上記のWired記事が示す「普及の壁」に対する一つの解決策の方向性としても位置づけられる。</li>
-</ul>
-<h2>AI活用と批判的思考力の維持</h2>
-<ul>
+</ul></article>
+<article class="card"><h2>AI活用と批判的思考力の維持</h2><ul>
 <li>swiftrocksの記事では、AIツールへの依存が進む中で、開発者や利用者が自身の批判的思考力をどう維持するかが論じられている。</li>
 <li>AIが生成したコードや回答をそのまま受け入れるのではなく、常に検証し、自分の理解に基づいて判断するプロセスの重要性が強調されている。</li>
 <li>AIに「考えさせる」ことと、人間が「考える力を失う」ことは表裏一体であり、意識的な訓練とワークフロー設計が必要だとされる。</li>
 <li>実務においては、AIをアウトソーシング先ではなく、思考を補助するツールとして位置づける姿勢が推奨されている。</li>
-</ul>
-<h2>エンジニアリング組織における決定性と観測可能性</h2>
-<ul>
+</ul></article>
+<article class="card"><h2>エンジニアリング組織における決定性と観測可能性</h2><ul>
 <li>RedMonkのインタビューで、Charity Majors氏はAIが持ち込む非決定性（デタミニズムの欠如）が、既存のソフトウェア運用や信頼性の考え方に与える影響を語っている。</li>
 <li>AIを組み込んだシステムでは、従来型の再現可能なデバッグ手法が通用しにくくなるため、計測・観測可能性（インストゥルメンテーション）への投資がこれまで以上に重要になると主張されている。</li>
 <li>「ブロッコリーを食べる」という比喩は、地味だが不可欠な運用基盤への投資を怠らないことの重要性を表している。</li>
 <li>AI導入を急ぐ組織ほど、可観測性への基礎投資を後回しにしがちである点への警鐘として読める。</li>
-</ul>
-<h2>AIを用いた科学研究のリスクと倫理</h2>
-<ul>
+</ul></article>
+<article class="card"><h2>AIを用いた科学研究のリスクと倫理</h2><ul>
 <li>Wiredは、科学者がAIを用いて16種の新規ウイルスを設計したとする研究を報じた。</li>
 <li>この研究は生命科学分野におけるAIの応用可能性を示す一方、バイオセキュリティ上のリスクについても強い懸念を呼んでいる。</li>
 <li>AIによる生成能力が、意図せぬ形で危険な生物学的存在の設計に転用され得ることへの警戒感が、専門家の間で広がっている。</li>
 <li>研究の科学的意義とリスク管理のバランスをどう取るかが、今後の規制・ガバナンス議論の焦点となる見通しである。</li>
-</ul>
-<h2>AIコンピュートと資源・社会構造の共通課題</h2>
-<ul>
+</ul></article>
+<article class="card"><h2>AIコンピュートと資源・社会構造の共通課題</h2><ul>
 <li>Hacker Newsで紹介された記事は、気候変動、出生率の低下、そしてAI計算資源(コンピュート)の逼迫という一見異なる問題が、実は共通のボトルネック構造を持つと論じている。</li>
 <li>いずれも、限られた物理的・エネルギー的資源の制約の中で、国家や制度がどう対応するかという「国家権力」の問題に帰着するとされる。</li>
 <li>AIの計算需要拡大がエネルギーインフラや資源配分に与える影響は、他の社会的課題と同様に長期的な政策判断を要する構造的問題として位置づけられている。</li>
 <li>この視点は、AI技術の発展を単なる技術トレンドとしてではなく、より広い社会・経済システムの制約条件の中で捉える必要性を示している。</li>
-</ul>
-<h2>出典</h2>
-<ul>
-<li><a href="https://www.wired.com/story/why-normal-people-arent-using-ai-agents/">Why Normal People Aren't Using AI Agents</a></li>
-<li><a href="https://everythingengineer.substack.com/p/captains-read-the-outputs-a-better-human-agent-ux">Captaining your AI: new human-agent UX paradigm</a></li>
-<li><a href="https://swiftrocks.com/using-ai-without-losing-critical-thinking">Using AI without losing your critical thinking</a></li>
-<li><a href="https://redmonk.com/videos/charity-majors/">Charity Majors on AI, Determinism, Instrumentation, &amp; Eating Your Broccoli</a></li>
-<li><a href="https://www.wired.com/story/scientists-used-ai-to-create-16-new-viruses/">Scientists Used AI to Create 16 New Viruses</a></li>
-<li><a href="https://bytepith.com/article/slow-squeeze-climate-demographics-and-state-power">Why climate, fertility collapse, and AI compute share the same bottleneck?</a></li>
-</ul>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（6件）</h3>
+  <div class="badges"><a class="badge" href="https://www.wired.com/story/why-normal-people-arent-using-ai-agents/">wired.com</a><a class="badge" href="https://everythingengineer.substack.com/p/captains-read-the-outputs-a-better-human-agent-ux">everythingengineer.substack.com</a><a class="badge" href="https://swiftrocks.com/using-ai-without-losing-critical-thinking">swiftrocks.com</a><a class="badge" href="https://redmonk.com/videos/charity-majors/">redmonk.com</a><a class="badge" href="https://www.wired.com/story/scientists-used-ai-to-create-16-new-viruses/">wired.com</a><a class="badge" href="https://bytepith.com/article/slow-squeeze-climate-demographics-and-state-power">bytepith.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
 </body>
 </html>
