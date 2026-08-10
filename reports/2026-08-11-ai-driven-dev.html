@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-11</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-11</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 5トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>Claude Codeの機能強化ラッシュ</h2><ul>
+<li>Claude CodeでAuto modeがデフォルトの実行モードとなり、タスクの複雑さに応じてモデルやツール利用をエージェント側が自律的に調整する運用が標準になった。ユーザーが実行モードを都度選ばなくても、適切な粒度で作業を進められる設計への転換といえる。</li>
+<li>macOS版Claude Codeでは、複数セッション同士が直接やり取りできる機能が追加された。並列で動く複数エージェントが情報を共有しながら作業を進められるようになり、単一セッション内で完結しない大規模な自律開発フローが現実味を帯びてきている。</li>
+<li>サブエージェントの起動数上限（200）が撤廃され、1セッションからより多くのサブエージェントを展開できるようになった。大規模タスクの並列分解やマルチエージェント・オーケストレーションの設計自由度が大きく広がっている。</li>
+</ul></article>
+<article class="card"><h2>AIエージェント基盤・フレームワークの進化</h2><ul>
+<li>エージェントフレームワーク「Mastra」は、長時間稼働するエージェントの実行管理、実行トレースを解析する「Trace Intelligence」、エージェントを継続的に生産する「Factory」構想を打ち出した。単発タスク実行型から継続稼働型のエージェント運用基盤へと軸足を移す動きが見て取れる。</li>
+<li>マルチエージェント時代の実行制御レイヤーである「Execution Engine」を横断比較する記事が公開され、各ツールの実行制御・スケジューリング方式の違いがカオスマップとして整理された。エージェント基盤の選定軸が、単純な性能比較から「実行制御の設計思想」へ移りつつあることを示している。</li>
+</ul></article>
+<article class="card"><h2>業界動向:モデル・サービスの変化</h2><ul>
+<li>GitHub Modelsサービスが正式に終了（retire）し、GitHub上で複数のLLMを手軽に試せる仕組みが役目を終えた。プラットフォーム統合が進む中、開発者は代替のモデルアクセス手段への移行を迫られている。</li>
+<li>Anthropicの新モデルClaude Opus 5のシステムプロンプトが公開・引用され、モデルの振る舞い制御方針を読み解く材料として注目を集めている。</li>
+<li>自律エージェント「OpenClaw」に関する言及が広がりを見せており、汎用エージェントの実装・運用に対する関心の高まりがうかがえる。</li>
+</ul></article>
+<article class="card"><h2>マルチエージェント運用の課題と実践知</h2><ul>
+<li>Claude Code上で4つの異なるモデルを連携させたマルチモデル・オーケストレーションの検証では、Terminal-Bench上で4通りの失敗パターンが報告された。複数モデルの単純な組み合わせは必ずしも性能向上につながらず、責務分担やハンドオフ設計の難しさが浮き彫りになっている。</li>
+<li>「コードレビューをやめる」というテーマの記事では、AIエージェント導入に伴う開発プロセスの変化が3段階の進化モデルとして整理された。レビュー工程そのものの位置づけが、AI駆動開発の中で変わりつつあることを示唆している。</li>
+</ul></article>
+<article class="card"><h2>まとめ</h2><ul>
+<li>Claude Codeを中心に、単発の指示応答から「自律的に長時間動く」「複数エージェント・複数モデルが連携する」方向への進化が加速している。</li>
+<li>一方で、モデルやエージェントを単純に増やすだけでは効果が出ないケースも報告されており、実行制御・トレース可視化・役割分担といった「運用設計」が今後のAI駆動開発の重要な論点になっていくと考えられる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/shiromizuj/articles/27696ae3851aa1">zenn.dev</a><a class="badge" href="https://simonwillison.net/2026/Aug/9/github-models-is-now-retired/#atom-everything">simonwillison.net</a><a class="badge" href="https://simonwillison.net/2026/Aug/9/claude-opus-5-system-prompt/#atom-everything">simonwillison.net</a><a class="badge" href="https://simonwillison.net/2026/Aug/10/openclaw/#atom-everything">simonwillison.net</a><a class="badge" href="https://claude.com/blog/auto-mode-default-in-claude-code">claude.com</a><a class="badge" href="https://9to5mac.com/2026/08/07/claude-code-now-lets-sessions-talk-to-each-other-on-macos/">9to5mac.com</a><a class="badge" href="https://github.com/anthropics/claude-code/commit/66edf5358349356774812264b75b8ea792f0d0a3">github.com</a><a class="badge" href="https://quesma.com/blog/tbench-orchestrator-refuses/">quesma.com</a><a class="badge" href="https://zenn.dev/taka4/articles/67cf58d191580c">zenn.dev</a><a class="badge" href="https://zenn.dev/quon_agents/articles/ai-code-review-evolution">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
