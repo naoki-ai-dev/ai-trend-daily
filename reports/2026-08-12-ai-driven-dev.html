@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-12</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-12</span>
+      <span>⏱ 約12分で読めます</span>
+      <span>🗂 4トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>開発者の役割の変化：コーダーからオーケストレーターへ</h2><ul>
+<li>GitHub Blogの記事「<a href="https://github.blog/developer-skills/career-growth/from-coder-to-orchestrator-how-agents-shift-the-role-of-a-developer/">From coder to orchestrator</a>」では、AIエージェントの台頭により開発者の役割が「自らコードを書く人」から「複数のエージェントに指示を出し、結果を検証・統合する人」へとシフトしていると指摘されている。</li>
+<li>これは単なる生産性向上の話ではなく、コードレビューやタスク分解、品質保証の設計が開発者の中心業務になることを意味する。</li>
+<li>個人開発の現場でも同様の変化が見られ、Vibe coding（AIに大枠を任せて素早く作る開発スタイル）が本番運用に持ち込まれるケースが増えている。</li>
+<li>ただし本番化には課題があり、「<a href="https://zenn.dev/heftykoo/articles/5770d711add672">Vibe codingの本番化に必要なのは、プロンプトではなく「昇格マニフェスト」だ</a>」では、プロトタイプから本番運用へ「昇格」させる際に必要な明文化されたルール・責任範囲の整備（昇格マニフェスト）の必要性が論じられている。</li>
+<li>プロンプトの工夫だけでなく、誰が何を承認し、どの基準で本番投入を判断するかというガバナンスの仕組みづくりが、AI駆動開発の成熟における次の課題として浮上している。</li>
+</ul></article>
+<article class="card"><h2>エージェントのルール・ガバナンス管理</h2><ul>
+<li>AIコーディングエージェントの挙動を制御するための「ルールファイル」管理が、複数の記事で共通のテーマとして扱われている。</li>
+<li>「<a href="https://dev.to/arpituppal2rgb/agentsmd-explained-for-teams-that-actually-ship-13c3">AGENTS.md, explained for teams that actually ship</a>」は、チーム開発でエージェント向けの共通ルールファイル（AGENTS.md）を運用する際の実践的な考え方を解説している。</li>
+<li>一方で「<a href="https://dev.to/untactit/generating-your-agent-rules-from-one-file-does-not-stop-them-drifting-3gpb">Generating your agent rules from one file does not stop them drifting</a>」は、単一の元ファイルから各種エージェント設定を自動生成しても、運用が長期化するとルールが実態から乖離（ドリフト）していく問題を指摘している。</li>
+<li>ルールファイルの整備は「作って終わり」ではなく、継続的なメンテナンスと検証が必要であるという認識が広がりつつある。</li>
+<li>Claude Code関連でも同様の課題意識があり、「<a href="https://zenn.dev/quon_agents/articles/claude-code-claude-md-rules">Claude Code の CLAUDE.md に書くべきルール4選</a>」では、実用的なルール項目とテンプレートが紹介されている。</li>
+<li>ツール横断でエージェント設定の標準化が模索される一方、設定の陳腐化やドリフトへの対策が次の焦点になっている。</li>
+</ul></article>
+<article class="card"><h2>セキュリティリスクの表面化</h2><ul>
+<li>AI駆動開発の普及に伴い、生成コードやツール自体のセキュリティリスクが具体的な事例とともに指摘され始めている。</li>
+<li>「<a href="https://dev.to/coppersundev/ai-coding-tool-security-risk-for-engineering-leaders-25mh">AI Coding Tool Security Risk for Engineering Leaders</a>」では、エンジニアリング組織のリーダー層が把握すべきAIコーディングツール導入時のリスクが整理されている。</li>
+<li>より具体的な事例として「<a href="https://dev.to/coppersundev/command-injection-in-ai-generated-expressjs-a-real-scan-4a54">Command Injection in AI-Generated Express.js: A Real Scan</a>」があり、AIが生成したExpress.jsコードを実際にスキャンした結果、コマンドインジェクションの脆弱性が発見されたことが報告されている。</li>
+<li>これらの記事は、AIが生成したコードをそのまま信頼せず、既存のセキュリティレビュープロセスに組み込む必要性を強調している。</li>
+<li>開発速度の向上とセキュリティ担保の両立が、AI駆動開発における組織的な課題として顕在化しつつある。</li>
+</ul></article>
+<article class="card"><h2>実運用における運用知見の蓄積</h2><ul>
+<li>ツールの実運用に関する具体的なノウハウを共有する記事も多く見られ、現場レベルでの試行錯誤が進んでいる。</li>
+<li>「<a href="https://zenn.dev/satoshi_tech/articles/20260811-zenn-article-cloud-agents">コーディングエージェント（Cursor / Claude Code）をクラウド版で動かしてみた（2026年8月版）</a>」では、ローカル実行が主流だったコーディングエージェントをクラウド環境で動かす試みが報告されており、実行環境の選択肢が広がりつつあることがわかる。</li>
+<li>「<a href="https://zenn.dev/hijio/articles/545aa114d7ebae">Claude Codeのサブエージェントが自動で呼ばれなかったときの話</a>」は、サブエージェント機能を使う際に想定通り自動起動しないという実運用上のつまずきを共有しており、エージェント連携の設計にはまだ不安定さが残ることを示している。</li>
+<li>複数組織で働くエンジニアの環境管理についても知見が出てきており、「<a href="https://zenn.dev/shigerufukada/articles/d5d0ea2e7e6dec">複数社で働くエンジニアのClaude Code環境分離</a>」では、CLAUDE_CONFIG_DIRとdirenvを組み合わせてMCPサーバーの誤連携を防ぐ設計が紹介されている。</li>
+<li>コードレビューの分野でもAI活用が進んでおり、「<a href="https://zenn.dev/ivyxon/articles/five-llms-same-code-review">同じ差分を5つのLLMにレビューさせてみた</a>」では、複数のLLMに同一の差分をレビューさせた結果、レビュー対象のバグよりも先に自分自身のコードミスが発見されたという興味深い知見が報告されている。</li>
+<li>これらの記事に共通するのは、AIエージェントの導入がもはや「使うかどうか」ではなく「どう安定運用するか」というフェーズに入っているという点であり、環境分離や挙動の検証など地道な運用改善が求められている。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（11件）</h3>
+  <div class="badges"><a class="badge" href="https://github.blog/developer-skills/career-growth/from-coder-to-orchestrator-how-agents-shift-the-role-of-a-developer/">github.blog</a><a class="badge" href="https://zenn.dev/heftykoo/articles/5770d711add672">zenn.dev</a><a class="badge" href="https://dev.to/arpituppal2rgb/agentsmd-explained-for-teams-that-actually-ship-13c3">dev.to</a><a class="badge" href="https://dev.to/untactit/generating-your-agent-rules-from-one-file-does-not-stop-them-drifting-3gpb">dev.to</a><a class="badge" href="https://zenn.dev/quon_agents/articles/claude-code-claude-md-rules">zenn.dev</a><a class="badge" href="https://dev.to/coppersundev/ai-coding-tool-security-risk-for-engineering-leaders-25mh">dev.to</a><a class="badge" href="https://dev.to/coppersundev/command-injection-in-ai-generated-expressjs-a-real-scan-4a54">dev.to</a><a class="badge" href="https://zenn.dev/satoshi_tech/articles/20260811-zenn-article-cloud-agents">zenn.dev</a><a class="badge" href="https://zenn.dev/hijio/articles/545aa114d7ebae">zenn.dev</a><a class="badge" href="https://zenn.dev/shigerufukada/articles/d5d0ea2e7e6dec">zenn.dev</a><a class="badge" href="https://zenn.dev/ivyxon/articles/five-llms-same-code-review">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
