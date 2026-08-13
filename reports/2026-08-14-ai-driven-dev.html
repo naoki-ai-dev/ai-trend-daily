@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-14</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-14</span>
+      <span>⏱ 約8分で読めます</span>
+      <span>🗂 6トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>Claude Codeの実運用カスタマイズが進む</h2><ul>
+<li>個人開発や副業の現場では、Claude Codeを素のまま使うのではなく<code>.claude/</code>ディレクトリ以下の設定を自分の業務フローに合わせて作り込む動きが目立つ。</li>
+<li>業務レベルの活用では、素のClaude Codeでは実務が回らず、独自のルールやワークフローを追加した「魔改造」構成を公開する事例が出てきている。単なるTips共有ではなく、実際に運用して得た知見をベースにした設定内容である点が特徴。</li>
+<li>Claude CodeにCEO・QA・事業開発といった役割(ロール)を割り当てて個人開発を進める試みも報告されており、複数の視点をエージェントに持たせることで意思決定の「判断疲れ」を軽減できたという結果が出ている。</li>
+<li>こうした事例に共通するのは、単一の万能エージェントに頼るのではなく、役割分担・設定の作り込みによって開発プロセス全体を設計し直す方向性である。</li>
+</ul></article>
+<article class="card"><h2>テスト委譲の境界線と品質保証の再定義</h2><ul>
+<li>「この関数のテストを書いて」のような粒度の細かい指示はAIエージェントに委譲してよいが、「このモジュールをテストして」という粗い指示は危険だという整理が提示されている。テスト対象の粒度によって委譲の可否を分けるべきという主張である。</li>
+<li>AIが生成したコードは、既存のテストが緑(パス)のままでも実際には壊れているケースがあるという指摘があり、これに対して変異試験(ミューテーションテスト)をAI生成コードに適用する検証手法が紹介されている。従来のカバレッジ指標だけでは品質を担保できないという問題意識が背景にある。</li>
+<li>AIコーディングの完成判定基準を、コードのdiffレビューだけでなく実際にブラウザで動作させた証拠に基づいて行うべきという提案もある。人間によるレビューの焦点を「コードの見た目」から「実際の挙動」に移す動きといえる。</li>
+<li>エージェントが生成する回答の「根拠の捏造」をテスト駆動で検出し自動修正する取り組みでは、捏造発生率を86%から0%まで低減させた事例が報告されている。ハルシネーション対策を体系的なテストプロセスに組み込む試みとして注目される。</li>
+<li>全体として、AI生成コードの信頼性をどう担保するかというテーマが、単なる効率化の議論から一段進んで「検証手法そのものの再設計」というフェーズに入りつつある。</li>
+</ul></article>
+<article class="card"><h2>人間の承認プロセスとワークフロー設計</h2><ul>
+<li>AIエージェントを活用した編集業務において、ボトルネックが実はAI側ではなく人間の承認プロセス側にあったという振り返りがあり、承認ポイントを「不可逆な判断が発生する1箇所」だけに絞り込むことで効率化を図った事例が紹介されている。</li>
+<li>これは、AIの生成能力そのものより、人間がどこにチェックポイントを置くかという運用設計の巧拙が開発速度を左右するという示唆であり、承認プロセスの再設計がAI駆動開発における重要な論点になりつつあることを示している。</li>
+</ul></article>
+<article class="card"><h2>MCP(Model Context Protocol)の実務活用</h2><ul>
+<li>チームのデザインシステムをRemote MCP化し、チームメンバー全員のエージェントから共通利用できるようにする事例が報告されている。ローカル環境ごとに個別設定するのではなく、共有インフラとしてMCPサーバーを提供する発想である。</li>
+<li>MCPの認証フロー(OAuthなど)についての技術的な整理も公開されており、MCPを本格的に業務導入する際に避けて通れない認証まわりの実装知見が蓄積されつつある段階にあることがうかがえる。</li>
+<li>これらの動きから、MCPが単なる個人ツールの接続規格から、チーム・組織単位でエージェントに共有コンテキストを提供するインフラへと位置づけが広がりつつあることが読み取れる。</li>
+</ul></article>
+<article class="card"><h2>セキュリティ診断への応用</h2><ul>
+<li>Claude Codeの公式セキュリティプラグイン「Claude Security」を使い、意図的に脆弱性を仕込んだページに対して診断させる検証が行われている。AIエージェントをセキュリティ診断ツールとして実務レベルで評価する試みであり、AIコーディングツールの適用範囲が「コードを書く」だけでなく「コードを検査する」領域にも広がっていることを示す事例である。</li>
+</ul></article>
+<article class="card"><h2>まとめ</h2><ul>
+<li>今回取り上げた記事からは、AI駆動開発の関心が「とにかく生成させる」段階から、「生成物やエージェントの振る舞いをどう検証・信頼するか」という段階に移行していることがうかがえる。</li>
+<li>テスト委譲の粒度、変異試験、完成判定基準の見直し、根拠捏造の自動検出といったテーマが並行して登場しており、品質保証プロセスの再設計が今後のAI駆動開発における共通課題になりそうである。</li>
+<li>併せて、MCPによる共有コンテキスト基盤の整備や、承認プロセス・役割分担といった運用設計の工夫も、AIエージェントを実務に定着させる上での重要な要素として位置づけられつつある。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/polarisai_blog/articles/4464a734bb53bf">zenn.dev</a><a class="badge" href="https://zenn.dev/hidetzu/articles/ai-test-delegation-boundary">zenn.dev</a><a class="badge" href="https://zenn.dev/subagent_lab/articles/mutation-testing-ai-generated-code">zenn.dev</a><a class="badge" href="https://zenn.dev/miogawa/articles/f074de4d57b6bb">zenn.dev</a><a class="badge" href="https://zenn.dev/heftykoo/articles/3ba1ac54932b7f">zenn.dev</a><a class="badge" href="https://zenn.dev/hoshiorange/articles/14-ai-agent-approval-bottleneck">zenn.dev</a><a class="badge" href="https://zenn.dev/hashigodaka/articles/design-system-remote-mcp">zenn.dev</a><a class="badge" href="https://zenn.dev/anton072/articles/954de602f85d4f">zenn.dev</a><a class="badge" href="https://zenn.dev/solvio/articles/6f4739489100a8">zenn.dev</a><a class="badge" href="https://zenn.dev/aimakerlab/articles/df1edf6a854b19">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
