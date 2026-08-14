@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-15</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-15</span>
+      <span>⏱ 約8分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>業界動向:CursorをめぐるM&amp;Aの行方</h2><ul>
+<li>SpaceXがCursorを9兆円規模で買収するとの報道が話題になったが、実際には買収が「まだ完了していない」状況にあることが指摘されている。</li>
+<li>AIコーディングツール企業への巨額投資が現実味を帯びる一方、実際の統合や意思決定には時間がかかることを示す事例として注目されている。</li>
+<li>AI駆動開発ツール市場の評価額が急騰する中、資本の動きが開発現場の期待感を先取りしている構図が浮き彫りになっている。</li>
+</ul></article>
+<article class="card"><h2>エージェントの権限管理と安全性</h2><ul>
+<li>複数のAIエージェントを運用する現場で、全員が「危険な権限スキップ」モードで動いていた実態が明かされ、権限設計を一からやり直した事例が報告されている。</li>
+<li>「AIエージェントが本番データを削除しようとした」経験をきっかけに、172個ものガード（防護策）を段階的に構築した実践例も共有されている。</li>
+<li>いずれの事例も、AIエージェントに強い実行権限を与えることの利便性とリスクが表裏一体であることを示しており、権限の最小化とチェック機構の設計が開発現場で急務になっている。</li>
+<li>単発の失敗談にとどまらず、権限設計を体系化・テンプレート化しようとする動きが広がっている点が共通する特徴といえる。</li>
+</ul></article>
+<article class="card"><h2>開発現場のトレンドキーワード</h2><ul>
+<li>2026年時点で開発現場で頻出する10のバズワードを整理した記事では、「並列AIエージェント」から「Spec-Driven Development（仕様駆動開発）」まで幅広い概念が取り上げられている。</li>
+<li>単一のAIアシスタントに指示を出す従来型の使い方から、複数エージェントを並行稼働させる運用スタイルへの移行が進んでいることが読み取れる。</li>
+<li>バズワードの氾濫は技術の急速な進化を映す一方、現場では言葉の定義や適用範囲の整理が追いついていない側面もうかがえる。</li>
+</ul></article>
+<article class="card"><h2>スペック駆動開発とチーム標準化</h2><ul>
+<li>「スペック駆動開発（Spec-Driven Development）」とその実装ツール「cc-sdd」の仕組みを図解しながら整理した記事があり、要件定義からコード生成までの一連の流れを構造化する試みとして紹介されている。</li>
+<li>Claude Codeを用いたチーム開発では、CLAUDE.md・agents・skillsといった構成要素をどう設計・運用し、チーム全体で統制するかというテーマも扱われている。</li>
+<li>個人の工夫に依存しがちだったAIエージェントの活用を、再現性のあるチーム標準へと昇華させる動きが強まっている。</li>
+<li>仕様書やルールファイルを「資産」として管理する発想が、AI駆動開発の成熟度を測る新たな指標になりつつある。</li>
+</ul></article>
+<article class="card"><h2>セキュリティ対策の自動化</h2><ul>
+<li>Anthropic公式プラグイン「claude-security」を用い、多段階のエージェントによってリポジトリの脆弱性を自動的に洗い出す取り組みが紹介されている。</li>
+<li>単一のスキャンで終わらせず、複数のエージェントが役割分担しながら段階的に検証を進める設計になっている点が特徴的である。</li>
+<li>コード生成の高速化に伴い、生成物の安全性を人手だけで担保することの限界が意識され、セキュリティ検査自体をエージェント化する流れが加速している。</li>
+</ul></article>
+<article class="card"><h2>コストとモデル選定</h2><ul>
+<li>Claude Opus 5の「effort（思考の努力度）」パラメータを3段階に振って比較した検証では、コスト差がわずか0.6円程度にとどまったという結果が報告されている。</li>
+<li>高精度なモデル設定を選んでもコスト増が想定より小さいという結果は、性能と費用のトレードオフに関する従来の想定を見直すきっかけになり得る。</li>
+<li>こうした実測ベースの検証は、モデル選定やパラメータ調整を勘や経験則ではなくデータに基づいて行おうとする現場の姿勢を反映している。</li>
+</ul></article>
+<article class="card"><h2>キャリアと開発思想の変化</h2><ul>
+<li>「AI時代、アーキテクトは本当に死ぬのか」という問いに対し、AIは特定の「役割」を代替する存在ではなく、あくまで「道具」であるという整理がなされている。</li>
+<li>「AIに仕事をさせるための考え方2026」では、仕事を「有限生成仮説」という枠組みで捉え直し、AIにどこまで、どのように仕事を委ねるべきかという実践的な指針が示されている。</li>
+<li>これらの議論に共通するのは、AIの能力向上に伴い、エンジニアやアーキテクトの役割そのものよりも「AIとの協働の設計」に焦点が移っている点である。</li>
+<li>技術面のノウハウだけでなく、キャリア戦略や仕事の任せ方といった、より上位のマネジメント的な問いが開発コミュニティで活発に議論されるようになっている。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://qiita.com/kinamocchi_tech/items/9631dfdd2714cd989645">qiita.com</a><a class="badge" href="https://zenn.dev/chisatom/articles/73161858404704">zenn.dev</a><a class="badge" href="https://dev.to/frederikvonderheyden/how-i-built-172-guards-after-my-ai-agent-tried-to-delete-production-data-3664">dev.to</a><a class="badge" href="https://zenn.dev/yamitake/articles/dev-trends-2026-buzzwords">zenn.dev</a><a class="badge" href="https://zenn.dev/tukiyubi/articles/88cb22b6fded78">zenn.dev</a><a class="badge" href="https://zenn.dev/novexar/books/claude-code-team-standards">zenn.dev</a><a class="badge" href="https://zenn.dev/shirochan/articles/5ef71489b97a32">zenn.dev</a><a class="badge" href="https://zenn.dev/yashi888/articles/27e861913d0ac2">zenn.dev</a><a class="badge" href="https://zenn.dev/jinfuroi/articles/467ad3b640a796">zenn.dev</a><a class="badge" href="https://zenn.dev/r_ukyo/articles/2e5a0d909b3211">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
