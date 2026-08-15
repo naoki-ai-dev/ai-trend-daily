@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-16</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-16</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 5トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>業界動向：企業とビジネスの最前線</h2><ul>
+<li>アリババのAIモデルのダウンロード数が累計30億件を突破し、MetaやGoogleを上回ったと報じられた。オープンウェイトモデルの世界的な普及において、中国企業の存在感が急速に高まっていることを示す象徴的な数字である。</li>
+<li>Metaは極右系メディアNewsmaxのコンテンツを自社AIの学習データに含める方針であることが報じられた。学習データの出所や偏向性をめぐる論争を再燃させる動きとして注目されている。</li>
+<li>英国・アイルランドの古書店主たちが、AI企業とみられる業者からの「不自然な」大量注文に不審を抱いていると報じられた。学習データ確保を目的とした書籍の組織的な買い占めが疑われており、出版・古書業界への影響が懸念されている。</li>
+</ul></article>
+<article class="card"><h2>AI安全性・アライメントをめぐる研究動向</h2><ul>
+<li>arXivに投稿されたポジション論文は、AIアライメント分野のコミュニティが意図せずして「検閲ツールキット」を構築しつつあると警鐘を鳴らしている。安全性向上を目的とした技術が、表現の自由を制約する方向に転用されうるリスクを指摘する内容である。</li>
+<li>「核攻撃を推奨させたくないなら日本語で聞け」と題する研究は、LLMに与える指示の言語によって、危険な提案（核攻撃の推奨など）が出力される確率が変化することを実証した。プロンプトの言語自体が安全性に影響を与えるという、多言語安全性評価の重要な盲点を浮き彫りにしている。</li>
+</ul></article>
+<article class="card"><h2>AI生成コンテンツと社会的信頼への影響</h2><ul>
+<li>The Vergeの記事は、AI検出ツールの誤判定が増加し、学生や書き手が「AI生成」と誤って疑われるケースが相次いでいることを報告している。検出技術への不信が、教育現場や職場における新たな対立を生んでいると指摘する。</li>
+<li>Wiredの記事は、粗製濫造されたAI生成コンテンツ（いわゆる「AIスロップ」）への反発が実際に一定の効果を上げ始めていると報じている。プラットフォーム側の対策強化やユーザーの忌避行動が、質の低いAIコンテンツの流通に歯止めをかけつつあるとしている。</li>
+<li>BBCの記事は、テック業界のトップ経営者たちが相次いでAIに関する「マニフェスト」を公表する現象について分析している。技術的な主張というより、投資家や世論への訴求を意図した広報戦略としての側面が強いと論じている。</li>
+</ul></article>
+<article class="card"><h2>産業応用：研究開発分野での実装</h2><ul>
+<li>製薬大手アストラゼネカが、研究開発（R&amp;D）業務を支援する自律型（エージェント型）AIシステム「Research Assistant」をarXivで発表した。創薬プロセスの効率化を目的とした企業発の実用事例として注目される。</li>
+<li>Science誌のブログ記事は、AI創薬の現状を総括し、期待されたほどの成果がまだ十分に出ていない現実を指摘している。技術的な進展はあるものの、実際の新薬承認に結びついた事例は限定的であり、今後の課題を整理する内容となっている。</li>
+</ul></article>
+<article class="card"><h2>総括</h2><ul>
+<li>今回まとめた動向からは、AI技術そのものの進化に加え、社会的信頼・データ倫理・企業間競争といった周辺課題が並行して顕在化している様子がうかがえる。</li>
+<li>特に学習データの出所（書籍の大量調達、偏向メディアの利用）や、生成コンテンツへの不信の高まりは、技術の普及速度に社会的な受容が追いついていないことを示唆している。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.bloomberg.com/news/articles/2026-08-15/alibaba-ai-models-hit-3-billion-downloads-passing-meta-google">bloomberg.com</a><a class="badge" href="https://popular.info/p/meta-will-train-its-ai-on-far-right">popular.info</a><a class="badge" href="https://www.theguardian.com/technology/2026/aug/15/uk-ireland-booksellers-suspect-ai-companies-bulk-orders-data-acquisition">theguardian.com</a><a class="badge" href="https://arxiv.org/abs/2608.12346">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2608.12373">arxiv.org</a><a class="badge" href="https://www.theverge.com/column/976690/ai-writing-detectors-suspicion">theverge.com</a><a class="badge" href="https://www.wired.com/story/the-ai-slop-backlash-is-actually-having-an-impact/">wired.com</a><a class="badge" href="https://www.bbc.com/news/articles/cz97ljy91zxo">bbc.com</a><a class="badge" href="https://arxiv.org/abs/2608.12395">arxiv.org</a><a class="badge" href="https://www.science.org/content/blog-post/so-how-ai-drug-discovery-doing-really">science.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
