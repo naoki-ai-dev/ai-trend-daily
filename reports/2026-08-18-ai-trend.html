@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-18</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-18</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>AIインフラ・投資動向</h2><ul>
+<li>NVIDIAはOpジェネAIのオハイオ州AIデータセンター向けに最大1050億ドル規模の債務保証を行うと発表し、SB Energyとも提携した。生成AI基盤への設備投資が北米で加速している象徴的な動きといえる。</li>
+<li>巨額投資はGPUや電力インフラの確保競争が新たな段階に入ったことを示しており、日本企業にとっても半導体・電力調達コストの上昇という形で波及する可能性がある。</li>
+</ul></article>
+<article class="card"><h2>オープンモデル・国際競争</h2><ul>
+<li>Hugging Faceの分析によると、中国発のオープンモデル「Qwen」の派生モデルが15万件を超え、オープンソースAIエコシステムにおける中国勢の存在感が急拡大している。</li>
+<li>欧米中心だったオープンモデル開発の勢力図が変化しつつあり、企業のモデル選定や技術戦略にも影響を与え始めている。</li>
+</ul></article>
+<article class="card"><h2>政府・防衛領域でのAI活用</h2><ul>
+<li>自衛隊の指揮系統に米国製AIを導入する方針が報じられ、意思決定支援を目的とした運用が検討されている。国産技術の活用も並行して進められる見込み。</li>
+<li>防衛分野でのAI導入は安全保障政策とも直結するテーマであり、今後の調達・運用ルール整備が焦点になる。</li>
+</ul></article>
+<article class="card"><h2>国内企業のAI開発・活用</h2><ul>
+<li>Preferred Networks（PFN）は「国産AI」をゼロから自社開発する方針を継続しており、担当者は自家製ならではのカスタマイズ性やデータ主権の確保をメリットとして挙げている。</li>
+<li>外資系AIベンダーの攻勢を受け、システム開発業界では従来の「垣根」が崩れつつあり、新生TISIはSIerとしての独自価値の再定義を迫られている。</li>
+<li>製造業では「AI進化の裏でモノづくりは30年止まっている」との課題意識から、直列工程を並列化する「産業OS」構想が提案されており、AI活用を前提とした生産プロセス変革の動きが出てきている。</li>
+</ul></article>
+<article class="card"><h2>エンタープライズITとAI導入</h2><ul>
+<li>マネーフォワードは、ChatGPTやClaudeなど複数の生成AIサービスの利用量・コストを一元管理できる法人向け新サービスを無料で提供開始した。社内でのAI利用拡大に伴うガバナンス・コスト管理ニーズの高まりを反映している。</li>
+<li>生成AIの業務利用が広がる一方、コスト可視化やアクセス管理といった「AI運用の実務課題」への対応サービスが相次いで登場している。</li>
+</ul></article>
+<article class="card"><h2>ロボティクス</h2><ul>
+<li>中国Unitreeは、助走なしで高さ2mのジャンプ、時速45kmでの走行が可能な新型ヒューマノイドロボットを公開した。身体能力の面で人間を上回る性能を示し、ヒューマノイド開発競争が激化している。</li>
+</ul></article>
+<article class="card"><h2>労働市場とAI研究の最新知見</h2><ul>
+<li>EYは新卒インターンシップを1年間の「レジデンシー」制度へ転換する方針を打ち出した。AIの普及によりエントリーレベルの業務内容が変化していることへの対応とみられ、AIが採用・育成戦略に与える影響を示す事例となっている。</li>
+<li>AIシステムが専門家の人間を上回る説得力を発揮するとの研究結果が報告されており、生成AIの社会的影響力・情報操作リスクに関する議論が今後さらに重要性を増すとみられる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/18/2000000572/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/17/2000000557/">itmedia.co.jp</a><a class="badge" href="https://news.jp/i/1461963391517081614">news.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/17/2000000441/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/enterprise/articles/2607/29/news010.html">itmedia.co.jp</a><a class="badge" href="https://monoist.itmedia.co.jp/mn/articles/2608/18/news045.html">monoist.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/18/2000000571/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/17/2000000567/">itmedia.co.jp</a><a class="badge" href="https://www.businessinsider.com/ey-internship-residency-career-ai-skills-2026-8">businessinsider.com</a><a class="badge" href="https://arxiv.org/abs/2606.16475">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
