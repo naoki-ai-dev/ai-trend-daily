@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-19</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-19</span>
+      <span>⏱ 約8分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>OpenAI、安全性を理由に開発ペースを抑制</h2><ul>
+<li>OpenAIは、サイバー攻撃に悪用され得る能力が高まっている状況を踏まえ、フロンティアモデルの強化学習の一部を停止すると発表した。</li>
+<li>同社は公式ブログで「サイバークリティカルな能力の時代におけるモデル開発のペース配分」という方針を示し、性能向上と安全性確保のバランスを取る姿勢を強調した。</li>
+<li>これまで「速さ」を競ってきたAI業界において、開発を意図的に減速させるという判断は異例であり、他社の対応にも影響を与える可能性がある。</li>
+</ul></article>
+<article class="card"><h2>国産AI／ソブリンAIを巡る現実的な議論</h2><ul>
+<li>さくらインターネットとSakana AIの取り組みを題材に、「純国産AIは無理」という論点が改めて議論されている。</li>
+<li>記事では、海外の基盤モデルに全面依存せず、日本独自の技術基盤や運用ノウハウを積み上げる「ソブリンAI」の現実的な落とし所が模索されている。</li>
+<li>完全な自前主義ではなく、既存の海外モデルを活用しつつ自国内でコントロール可能な領域を確保する折衷的なアプローチが有力視されている。</li>
+</ul></article>
+<article class="card"><h2>フィジカルAI・ヒューマノイドへの投資が加速</h2><ul>
+<li>Preferred NetworksとトヨタのアプローチをもとにフィジカルAI・ヒューマノイドロボットの可能性が論じられ、製造業を中心に実用化の機運が高まっていることが示された。</li>
+<li>米国では、ロボティクスや航空宇宙分野を含む「フィジカルAI」に対しベンチャーキャピタルが数十億ドル規模の投資を行っており、2026年上半期だけで大型資金調達が相次いでいる。</li>
+<li>ソフトウェア中心だったAI投資の潮流が、ハードウェアと物理世界を対象とする領域へと広がりつつあることがうかがえる。</li>
+</ul></article>
+<article class="card"><h2>ChatGPT for Teens、若年層向け保護機能を発表</h2><ul>
+<li>OpenAIは10代のユーザーを対象とした「ChatGPT for Teens」を発表し、学習支援を目的としつつ保護者管理機能などの安全対策を組み込んだ。</li>
+<li>未成年者のAI利用が急速に拡大する中、教育活用とリスク管理を両立させる製品設計が求められている状況を反映している。</li>
+</ul></article>
+<article class="card"><h2>Claudeの透かし技術とEU AI法対応</h2><ul>
+<li>Anthropicは「Claude」が生成するテキストに、目に見えない形の“透かし”を追加する仕組みを導入した。</li>
+<li>この対応は、AI生成コンテンツの識別を義務付けるEUのAI法への準拠を意識したものであり、生成AIの出力に対する規制対応が具体化してきていることを示す事例となっている。</li>
+</ul></article>
+<article class="card"><h2>AIを悪用した攻撃とセキュリティ対策</h2><ul>
+<li>OpenAIは自社が関与したHugging Faceへの攻撃を踏まえ、「AIからの攻撃を防止する方法10選」を公開した。</li>
+<li>提言では、CodexなどのAIツールをむしろ防御側の武器として活用することが呼びかけられており、攻撃・防御双方でAIエージェントが使われる状況が浮き彫りになっている。</li>
+<li>AIエージェントの普及に伴い、開発現場でのセキュリティ運用の見直しが急務となっていることを示唆する内容である。</li>
+</ul></article>
+<article class="card"><h2>GoogleのA2Aプロトコル、Agentic AI Foundationへ移管</h2><ul>
+<li>Googleは、AIエージェント同士の連携プロトコル「A2A（Agent2Agent）」の管理を「Agentic AI Foundation」へ移管した。</li>
+<li>特定企業主導から中立的な組織運営へ移すことで、エージェント間相互運用の標準化を業界全体で進める狙いがあるとみられる。</li>
+<li>マルチエージェント環境の実用化が進む中、標準規格の主体が誰になるかは今後のエコシステム形成に大きく影響する。</li>
+</ul></article>
+<article class="card"><h2>AIによる雇用への影響、女性への偏った打撃</h2><ul>
+<li>日本経済新聞の報道によると、米国でAIによって職を脅かされている労働者のうち86％が女性であるとの分析が示された。</li>
+<li>産休・育休取得者が解雇対象になりやすいとの疑念も指摘されており、AI導入による雇用調整が特定の属性に偏って影響している可能性が浮上している。</li>
+<li>生産性向上を掲げるAI活用の裏で、労働市場における公平性の課題が改めて注目されている。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/19/2000000605/">itmedia.co.jp</a><a class="badge" href="https://openai.com/index/pacing-model-development-cyber-capabilities">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/18/2000000544/">itmedia.co.jp</a><a class="badge" href="https://monoist.itmedia.co.jp/mn/articles/2608/19/news019.html">monoist.itmedia.co.jp</a><a class="badge" href="https://news.crunchbase.com/venture/physical-ai-funding-startups-robotics-aerospace-h1-2026/">news.crunchbase.com</a><a class="badge" href="https://openai.com/index/chatgpt-for-teens">openai.com</a><a class="badge" href="https://forest.watch.impress.co.jp/docs/serial/yajiuma/2133309.html">forest.watch.impress.co.jp</a><a class="badge" href="https://gigazine.net/news/20260818-ai-security/">gigazine.net</a><a class="badge" href="https://techstrong.ai/articles/google-moves-a2a-under-agentic-ai-foundation/">techstrong.ai</a><a class="badge" href="https://www.nikkei.com/article/DGXZQOGN09BD50Z00C26A2000000/">nikkei.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
