@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-20</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-20</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>開発思想の転換：「理解」がボトルネックに</h2><ul>
+<li>Zennの記事「AIがコードを書く時代、ボトルネックは『理解』に移った」では、AIがコード生成を高速化する一方で、生成物を人間が理解し検証する速度が開発全体のボトルネックになっているという指摘がなされている。</li>
+<li>コードを書く行為自体の価値が相対的に下がり、レビューや設計判断といった「理解のプロセス」が開発者の中心的な役割になりつつあるという見方が示されている。</li>
+<li>この視点は、Simon Willisonが自身のブログ「Conceptual integrity and counting lines of code」で論じる、コード行数という指標の限界とも通じる。大量生成されたコードの量ではなく、システム全体の概念的一貫性（conceptual integrity）をいかに保つかが問われている。</li>
+<li>両記事は、AI駆動開発の評価軸が「生成速度」から「理解可能性・一貫性」へとシフトしつつあることを示唆している。</li>
+</ul></article>
+<article class="card"><h2>セキュリティとガバナンスへの警戒</h2><ul>
+<li>セキュリティ研究ブログ「Hacking SAML with Claude Code」では、Claude CodeをSAML認証の脆弱性調査に活用した事例が紹介されており、AIコーディングエージェントがセキュリティ研究のツールとしても実用段階に入っていることを示している。</li>
+<li>一方でQiitaの記事「Claude Code v2.1.236｜.env を deny してもリネームで読めていた」は、Claude Codeの権限拒否設定（permissions.deny）がファイルのリネーム操作によって回避可能だった問題を報告しており、AIエージェントへの権限管理が想定より脆弱であるリスクを浮き彫りにしている。</li>
+<li>こうした事例は、AIエージェントに強い権限を与える運用が広がる中で、ガードレールの実装精度そのものが開発現場の重要な論点になっていることを示している。</li>
+</ul></article>
+<article class="card"><h2>品質管理・レビュー体制の再構築</h2><ul>
+<li>「【チームによるAI駆動開発の勘所：第2回】AIが書いたコードに仕込まれる欠陥を見抜くには」では、AIが生成したコードに紛れ込みやすい欠陥のパターンと、それをチームで見抜くためのレビュー観点が整理されている。</li>
+<li>「品質ゲートは効かなかったのではなく、『呼ばれたか』を測れていなかった」は、AI駆動開発において品質ゲートが機能しない主因が、ゲート自体の性能不足ではなく「そもそも呼び出されていたかどうか」を計測できていないプロセス上の欠陥にあると論じている。</li>
+<li>両者に共通するのは、AIが生成するコードの「量」への対応から、レビューと計測の「仕組み」そのものを設計し直す段階に開発現場が移行している点である。</li>
+</ul></article>
+<article class="card"><h2>エージェント運用設計と「止まる」ことの価値</h2><ul>
+<li>「なぜAI開発ループには『止まる設計』が必要なのか」は、AIエージェントが自律的にループし続ける運用の実測データをもとに、意図的に処理を停止させるチェックポイントを設ける設計の必要性を論じている。</li>
+<li>暴走や誤った方向への処理継続を防ぐには、エージェントに「止まる権限」を持たせることが、単なる速度向上より重要になりつつあるという主張がなされている。</li>
+<li>これは前述の品質ゲートの議論とも重なり、AIエージェントを「止められる」形で組み込むガバナンス設計が、自動化の高度化と並行して求められていることを示す。</li>
+</ul></article>
+<article class="card"><h2>実力の証明：ベンチマークでの成果</h2><ul>
+<li>Hacker Newsで紹介された「100% RHAE on ARC-AGI-3 public with Claude Code, Opus 5, and one skill」では、Claude CodeとOpus 5、そして単一のスキル定義を組み合わせることで、抽象推論ベンチマークARC-AGI-3の公開セットで100%のスコアを達成したと報告されている。</li>
+<li>特定のワークフロー設計（スキル）次第で、汎用エージェントが高難度ベンチマークにおいても高い性能を発揮できることを示す事例として注目されている。</li>
+</ul></article>
+<article class="card"><h2>現場からの声：責任と組織への影響</h2><ul>
+<li>Code w/ Claude in Tokyo 2026のレポート「"やったのはAIだけど、バグがあったら俺の責任"」では、AIがコードを生成しても最終的な責任は人間のエンジニアにあるという、イベント参加者の実感が共有されている。</li>
+<li>「AIで生産性が3倍になった私たちが、チームを置き去りにした話」は、AI活用によって個人やごく一部のチームの生産性が向上した一方で、その恩恵がチーム全体に波及せず、逆に分断を生んだ実体験を報告している。</li>
+<li>これらの記事は、AI駆動開発の効果が技術面だけでなく、責任の所在やチームの心理的な足並みといった組織的な側面にも及んでいることを示している。</li>
+</ul></article>
+<article class="card"><h2>まとめ</h2><ul>
+<li>2026年8月時点のAI駆動開発の動向は、「AIにどれだけコードを書かせるか」という段階から、「生成されたコードをどう理解し、どう安全に運用し、どう組織に定着させるか」という次の段階に移行しつつある。</li>
+<li>セキュリティ面ではAIエージェントの権限管理の脆弱性が顕在化する一方、逆にAIエージェント自体をセキュリティ調査に活用する動きも進んでいる。</li>
+<li>品質・運用設計では「止まる」「測る」といったガバナンス機構の整備が重視され、組織面では生産性向上の恩恵をチーム全体にどう波及させるかが新たな課題として浮上している。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/shota0523/articles/understanding-is-the-new-bottleneck">zenn.dev</a><a class="badge" href="https://simonwillison.net/2026/Aug/19/conceptual-integrity-and-counting-lines-of-code/">simonwillison.net</a><a class="badge" href="https://oblique.security/blog/hacking-saml/">oblique.security</a><a class="badge" href="https://qiita.com/moha0918_/items/5807ba2338188adbc4a2">qiita.com</a><a class="badge" href="https://zenn.dev/scalar_sol_blog/articles/2dc93d3834ea33">zenn.dev</a><a class="badge" href="https://zenn.dev/minewo/articles/ai-review-gate-not-called">zenn.dev</a><a class="badge" href="https://zenn.dev/kai_ai/articles/6477298d88c1f5">zenn.dev</a><a class="badge" href="https://arc-skill.vercel.app/">arc-skill.vercel.app</a><a class="badge" href="https://zenn.dev/rb_engineering/articles/f5e5fa60ae0d96">zenn.dev</a><a class="badge" href="https://zenn.dev/factory_dx_eng/articles/ai-productivity-team-divide">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
