@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-21</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-21</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 10トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>AI市場の勢力図に変化 — Stripe、OpenRouter買収</h2><ul>
+<li>決済大手Stripeが、400以上のAIモデルを束ねるゲートウェイサービス「OpenRouter」を買収した。</li>
+<li>OpenRouterは特定の大手AI企業に属さない「中立的な基盤」として支持を集めてきたが、買収後もその中立性は維持される方針が示されている。</li>
+<li>決済インフラを持つStripeがAIモデル利用の入口を押さえることで、AI利用と課金の一体化が今後進む可能性がある。</li>
+</ul></article>
+<article class="card"><h2>OpenAIとAnthropicのデータ方針をめぐる攻防</h2><ul>
+<li>OpenAIは、顧客データを保存しない「ゼロデータ保持（ZDR）」の方針を維持したまま、悪用検知の仕組みを導入すると発表した。</li>
+<li>背景には、ログ保持を求めるAnthropicとの方針の違いがあり、両社のセキュリティ・プライバシー戦略の対比が鮮明になっている。</li>
+<li>企業顧客にとってはデータ保持ポリシーがベンダー選定の重要な判断材料になりつつある。</li>
+</ul></article>
+<article class="card"><h2>教育市場への浸透 — Google「AI Plus」無料提供</h2><ul>
+<li>Googleは大学生向けに、上位プラン「Google AI Plus」を1年間無料で提供すると発表した。</li>
+<li>「Gemini」アプリにも学生向けの新機能が追加され、学習支援用途での利用拡大を狙う。</li>
+<li>OpenAIなど競合も学生向け施策を強化しており、若年層ユーザーの囲い込み競争が激化している。</li>
+</ul></article>
+<article class="card"><h2>AIコストの逆説 — 単価低下でも総コストは上昇</h2><ul>
+<li>モデルの利用料金（トークン単価）自体は下落傾向にあるにもかかわらず、企業のAI利用にかかる総コストは上昇しているという「パラドクス」が指摘されている。</li>
+<li>背景には、利用量の急増や、複雑なタスクをこなすために複数回の推論・エージェント処理を重ねる利用形態の変化があるとされる。</li>
+<li>単純な単価比較だけでなく、実利用パターンを踏まえたコスト管理が企業に求められている。</li>
+</ul></article>
+<article class="card"><h2>日本企業のAI活用、生産性実感に世界とのギャップ</h2><ul>
+<li>アクセンチュアの調査によると、「AIで生産性が向上した」と回答した日本の従業員は57％にとどまり、世界平均の81％を大きく下回った。</li>
+<li>仕事の満足度についても日本と世界平均の間に大きな差があることが示されている。</li>
+<li>導入率だけでなく、実務への定着や活用支援の在り方が日本企業の課題として浮かび上がっている。</li>
+</ul></article>
+<article class="card"><h2>Googleの戦略転換 — 「最強のAIモデル」より「AIインフラ」</h2><ul>
+<li>Googleが単体で最強のAIモデルを追求する路線ではなく、AIを支える「電力網」的なインフラ基盤を志向しているとの分析記事が出た。</li>
+<li>モデル性能の競争が一巡する中、計算資源・電力供給といった基盤レイヤーでの優位性確保に軸足を移しているとの見方。</li>
+<li>短期的なモデル性能競争よりも、長期的なインフラ支配力を重視する戦略転換として注目されている。</li>
+</ul></article>
+<article class="card"><h2>エンタープライズ向けAIエージェント — Slackの新ツール</h2><ul>
+<li>Slackは、AIとチームが協働できる新機能「Slack Code」を発表した。</li>
+<li>ClaudeやDevinといった外部のAIエージェントを、専用チャネル上から直接操作できる点が特徴。</li>
+<li>チャットツールがAIエージェントの操作ハブとして機能する流れが強まっている。</li>
+</ul></article>
+<article class="card"><h2>国産LLM開発の現在地 — PFN「PLaMo」</h2><ul>
+<li>10社以上の企業がフルスクラッチでの国産大規模言語モデル開発に挑んだ中、Preferred Networks（PFN）は独自LLM「PLaMo」の開発を継続している。</li>
+<li>海外の巨大テック企業との計算資源格差がある中でも開発を続けられている背景・理由が注目されている。</li>
+<li>国産LLMの意義や持続可能性をめぐる議論が改めて活発化している。</li>
+</ul></article>
+<article class="card"><h2>ロボティクスの転換点 — Unitree CEOの発言</h2><ul>
+<li>中国のロボット企業UnitreeのCEOが、世界ロボット大会で「ロボットのChatGPTモーメントが近づいている」と発言した。</li>
+<li>生成AIが言語モデルで起こした急速な性能向上・普及が、ロボット分野でも近く起こるとの見立てを示したもの。</li>
+<li>ハードウェアとAIの融合が次の技術的ブレークスルーの焦点になりつつある。</li>
+</ul></article>
+<article class="card"><h2>個人発信とAI — 松浦勝人氏のnoteバズ事例</h2><ul>
+<li>エイベックス松浦勝人会長が、noteの記事作成をほぼAI任せで行い、開始1週間で複数の記事が大きく拡散した事例が話題となった。</li>
+<li>本人が行った作業は「パスワード入力程度」とされ、自身の経験・データをAIに読み込ませて執筆させた点が注目を集めている。</li>
+<li>個人の知見・経験をAIに学習させてコンテンツを量産する手法の是非や可能性をめぐる議論を呼んでいる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/20/2000000634/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/enterprise/articles/2608/20/news022.html">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/20/2000000639/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/20/2000000638/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/20/2000000641/">itmedia.co.jp</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2608/21/news006.html">atmarkit.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/21/2000000667/">itmedia.co.jp</a><a class="badge" href="https://levtech.jp/media/detail_910/">levtech.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/20/2000000656/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/20/2000000644/">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
