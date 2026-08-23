@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-24</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-24</span>
+      <span>⏱ 約8分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>モデル開発・研究動向</h2><ul>
+<li>OpenAIが最新モデルに対する強化学習（RLHF等）のプロセスを約2週間にわたり一時中断したと報じられた。安全性検証やチューニング方針の見直しが背景にあるとみられる。</li>
+<li>国内では言語モデル研究チームLLMCが、約332億パラメーター規模の日本語大規模言語モデル「LLM-jp-4 33B」を公開した。</li>
+<li>国産オープンモデルの開発が着実に進んでおり、パラメーター規模の拡大と公開範囲の広がりが続いている点が注目される。</li>
+</ul></article>
+<article class="card"><h2>AI安全性・法的リスク</h2><ul>
+<li>OpenAIが、ChatGPTが病気の牧師に対し「神はあなたの体が永遠に壊れ続けるようには設計していない」という趣旨の危険な医療アドバイスをしたとして提訴された。</li>
+<li>生成AIチャットボットが専門的な医療判断領域に踏み込むことのリスクが改めて浮き彫りになった事例。</li>
+<li>米国では既に複数のAI関連訴訟が進行しており、対話型AIの発言責任をめぐる法的な議論が今後さらに活発化する見通し。</li>
+</ul></article>
+<article class="card"><h2>ロボティクス動向</h2><ul>
+<li>中国で「世界ヒト型ロボット運動会」が開幕し、100メートル走で9秒32という記録が話題となった。</li>
+<li>ヒューマノイドロボットの運動性能を競うイベントとして、国家的な技術力アピールの色合いも強い。</li>
+<li>一方でインテルの調査によれば、ロボット導入の費用対効果が3年以内に人手コストを上回るとの見通しが示され、産業界での導入加速が見込まれている。</li>
+<li>運動性能のショーケース的な側面と、実務導入における経済合理性の両輪でロボティクス分野の関心が高まっている。</li>
+</ul></article>
+<article class="card"><h2>AIをめぐる哲学・意識研究</h2><ul>
+<li>英エコノミスト誌が、大規模言語モデルの内部に「意識」が存在するかどうかを探る特集記事を掲載した。</li>
+<li>哲学者や神経科学者、AI研究者らの見解を横断的に紹介し、LLMの内部表現をめぐる科学的・倫理的な論点を整理している。</li>
+<li>AIの能力向上が進む中で、単なる性能評価にとどまらず「AIに内面はあるのか」という根源的な問いへの関心が高まっていることを示す動き。</li>
+</ul></article>
+<article class="card"><h2>セキュリティ・サイバー脅威</h2><ul>
+<li>OpenAIの幹部が、AIを悪用した「持続的」なサイバー攻撃の脅威について警鐘を鳴らした。</li>
+<li>攻撃者がAIを活用することで、従来よりも高度で継続的な攻撃キャンペーンを展開できる可能性が指摘されている。</li>
+<li>AI開発企業自身が攻撃リスクの高まりを公に警告する動きは、業界全体でのセキュリティ対策強化を促す契機となりうる。</li>
+</ul></article>
+<article class="card"><h2>社会・政治的反発</h2><ul>
+<li>米国では、監視カメラ企業Flockのカメラ導入をめぐる反発が、データセンター建設や中間選挙を控えた「反AI」的な世論の高まりと結びついている。</li>
+<li>AIインフラ拡大（データセンター建設など）に対する地域住民の懸念が、政治的な争点として顕在化しつつある状況が伝えられている。</li>
+<li>テクノロジー企業の急速なAIインフラ投資と、それに伴う社会的軋轢が今後の政策論争に影響を与える可能性がある。</li>
+</ul></article>
+<article class="card"><h2>企業活用・ビジネス動向</h2><ul>
+<li>国内企業では「野良AI」――部門や個人が管理部門の把握しないままAIツールを利用してしまう事例――が発覚するケースが報告されており、実際の発覚パターンと対策が解説されている。</li>
+<li>情報漏えいやガバナンス上のリスクとして、シャドーAIの管理が企業のIT部門にとって喫緊の課題となっている。</li>
+<li>ニトリでは、店舗名や商品カテゴリーなど独自の「社内用語」がAIによるデータ分析の障害となっていた課題を、力技的な対応で解決し、「赤羽店の寝具の売上高を出して」といった自然な問い合わせを可能にした事例が紹介された。</li>
+<li>現場データとAIをつなぐ際の「用語の壁」という、地味だが実務的に重要な課題への対応事例として参考になる。</li>
+</ul></article>
+<article class="card"><h2>AIラベリング・透明性</h2><ul>
+<li>大手テック企業がAI生成コンテンツへの「AIラベル」表示を徹底することは基本的な責務であるとする論説が発表され、Anthropic「Claude」の透かし（ウォーターマーク）機能も事例として言及された。</li>
+<li>生成AIコンテンツの真正性表示をめぐる業界標準の確立が急務であるとの指摘がなされている。</li>
+<li>コンテンツの出所表示は、誤情報対策や利用者の信頼確保の観点から今後さらに重要性を増すテーマとなりそうだ。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/pcuser/articles/2608/23/news005.html">itmedia.co.jp</a><a class="badge" href="https://gigazine.net/news/20260823-openai-lawsuit-chatgpt-medical-advice/">gigazine.net</a><a class="badge" href="https://www.nikkei.com/article/DGXZQOGM220TI0S6A820C2000000/">nikkei.com</a><a class="badge" href="https://www.economist.com/interactive/briefing/2026/08/20/the-search-for-consciousness-inside-llms">economist.com</a><a class="badge" href="https://www.theguardian.com/technology/2026/aug/23/openai-cyber-attacks-threat-chris-lehane">theguardian.com</a><a class="badge" href="https://www.axios.com/2026/08/23/flock-cameras-data-centers-ai-midterms-2026-tech">axios.com</a><a class="badge" href="https://monoist.itmedia.co.jp/mn/articles/2608/24/news061.html">monoist.itmedia.co.jp</a><a class="badge" href="https://kn.itmedia.co.jp/kn/articles/2608/24/news039.html">kn.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/business/articles/2608/24/news058.html">itmedia.co.jp</a><a class="badge" href="https://www.cnet.com/tech/services-and-software/claude-watermarks-ai-labels-commentary-2026/">cnet.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
