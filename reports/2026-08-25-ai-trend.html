@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-08-25</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-25</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 6トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>総括</h2><ul>
+<li>この日の話題は、AIの「電力・半導体という物理的制約」と「企業導入の成果ギャップ」という2つのボトルネックに集中した。モデル性能そのものより、それを動かす基盤とコストが主役になっている。</li>
+<li>一方でモデル側では、30Bクラスのオープンモデルや MoE 特化の実行環境など、「小さく安く動かす」方向の進化が加速している。巨大モデル一辺倒からの分岐が鮮明になった。</li>
+<li>開発ツール領域では、OpenAI が価格性能比を前面に出した施策を打ち出し、Codex の利用枠問題にも対応するなど、コーディングエージェントの消費コスト管理が実務的な論点になっている。</li>
+</ul></article>
+<article class="card"><h2>インフラ制約：値上げと電力がAIの上限を決める</h2><ul>
+<li>NVIDIA が大手顧客に対し、AI関連製品を15％以上値上げすると通知したと報じられた。次世代の「Vera Rubin」や現行の「Grace Blackwell」系にも影響が及ぶとされる。</li>
+<li>値上げの背景にはメモリをはじめとする部材の逼迫があるとみられ、GPU 需要の強さが価格に転嫁される構図が続いている。クラウド各社の調達コスト上昇は、最終的に API 価格や GPU インスタンス料金に波及する可能性が高い。</li>
+<li>AI 事業者にとっては、推論単価の前提が崩れるリスクを意味する。長期契約や自社推論基盤への投資判断を見直す動機になる。</li>
+<li>さらに深刻なのが、AI開発の新たなボトルネックとして「ガスタービン不足」が指摘されている点だ。データセンターの電力需要急増に対し、発電設備そのものの供給が追いつかなくなっている。</li>
+<li>ガスタービンは製造リードタイムが長く、注文しても数年待ちという状況が生じている。GPU を確保できても、それを動かす電力インフラが先に詰まる段階に入りつつある。</li>
+<li>「計算資源＝GPU」という前提から、「計算資源＝GPU＋電力＋発電設備」へと制約条件が拡張された。今後のデータセンター立地は、電力調達力が決定的な変数になる。</li>
+</ul></article>
+<article class="card"><h2>モデル動向：小型化・効率化への明確なシフト</h2><ul>
+<li>30Bクラスのオープンモデルが注目を集めており、「27Bパラメータで Opus 4.6 超え」を主張するモデルも登場している。パラメータ数と性能の相関が、蒸留や学習手法の改善によって崩れつつある。</li>
+<li>このクラスが「熱い」理由は実用性にある。単一 GPU やワークステーションで動かせるサイズでありながら、実務タスクで大型モデルに迫る品質を出せるため、コストと機密性の両面で企業利用に適する。</li>
+<li>関連して、MoE（Mixture of Experts）に特化した実行環境「FreeToken」が話題となった。8GB の GPU で 35B モデルを高速動作させることを狙った実装だ。</li>
+<li>MoE はパラメータ全体のうち一部の専門家のみを活性化するため、適切なオフロード制御を行えば VRAM 要件を大きく下げられる。この種の実行環境は、ローカル LLM の現実的な性能上限を引き上げる。</li>
+<li>匿名ラボが提供する謎のAI「Ox Alpha」が出現し、無料テストが行われている。コンテキストウィンドウは100万トークン、1日あたり数兆トークンを処理できるとされる。</li>
+<li>提供元が不明なまま大規模な無償テストを行う手法は、近年の新モデル投入で見られるパターンでもある。実データによる評価を集めつつ正体を伏せる形で、既存プレイヤーの新モデルである可能性も取り沙汰されている。</li>
+</ul></article>
+<article class="card"><h2>開発ツール：価格性能比と利用枠の管理</h2><ul>
+<li>OpenAI は、開発環境「Kiro」における GPT-5.6 の提供によって、開発者向けの価格性能比を前進させると発表した。性能そのものより「同じ品質をいくらで出せるか」を訴求軸に据えている。</li>
+<li>エージェント型のコーディングでは、1タスクあたりのトークン消費が従来のチャット利用と桁違いになる。そのため単価の改善が、実用可能なワークフローの範囲を直接広げる。</li>
+<li>同じ文脈で、Codex が使用量を再びリセットする対応を取った。「消費が早すぎる」という利用者側の不満に応えた形だ。</li>
+<li>コーディングエージェントは自律的にファイル探索やテスト実行を繰り返すため、利用者の体感以上にトークンを消費しやすい。定額プランと実消費量の設計が噛み合っていない実態が露呈している。</li>
+<li>リセット対応は短期的な救済にとどまり、根本的には消費量の可視化とコスト予測性の提供が求められる。この点は次の企業導入の課題とも直結する。</li>
+</ul></article>
+<article class="card"><h2>企業導入：投資は進むが成果は出ていない</h2><ul>
+<li>アクセンチュアの調査によれば、日本企業のAI投資で「成果あり」と回答したのはわずか13％にとどまった。投資額の増加と成果の実現が明確に乖離している。</li>
+<li>同社は原因として「人任せ」の限界を指摘している。ツールを導入して現場の自主的な活用に委ねるだけでは、業務プロセスの再設計まで到達しないという構図だ。</li>
+<li>成果を出している少数派は、経営レベルでの目標設定とデータ基盤整備を伴っている点が共通する。PoC の量ではなく、業務への組み込み方が分岐点になる。</li>
+<li>実行面では「予算の壁」がAIエージェント活用を阻んでいる。従量課金型のエージェントは費用が読めず、年度予算を組む日本企業の意思決定と相性が悪い。</li>
+<li>セールスフォースらが打ち出した新機能は、この予算予測性の問題に対する打開策として注目されている。消費量の上限設定や可視化によって、稟議を通しやすくする方向性だ。</li>
+<li>費用の予測不能性は技術課題ではなく調達・会計の課題であり、ベンダー側の課金設計が導入速度を左右する段階に来ている。</li>
+</ul></article>
+<article class="card"><h2>公共・防衛分野での実装</h2><ul>
+<li>Sakana AI が防衛省の「情報分析」業務をAIで支援する取り組みを進めている。同社は自衛隊の指揮統制システム高度化にも関与しており、防衛領域での実績を重ねている。</li>
+<li>情報分析は大量の文書・画像から兆候を抽出する作業であり、LLM とマルチモーダルモデルの適性が高い領域だ。人手不足が深刻な分野でもあり、導入圧力は強い。</li>
+<li>国産AI企業が防衛インフラに組み込まれることは、技術主権の観点で意味を持つ。海外モデルへの依存を避けたい領域で、国内ベンダーの役割が明確化しつつある。</li>
+<li>同時に、判断支援AIの説明可能性や誤情報耐性といった検証要件が問われる。運用ルールの整備が技術導入と並走する必要がある。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://gigazine.net/news/20260824-nvidia-price-hike-ai-related-products/">gigazine.net</a><a class="badge" href="https://gigazine.net/news/20260824-gas-turbine-shortage/">gigazine.net</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/24/2000000723/">itmedia.co.jp</a><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2134988.html">pc.watch.impress.co.jp</a><a class="badge" href="https://gigazine.net/news/20260824-ox-alpha/">gigazine.net</a><a class="badge" href="https://openai.com/index/gpt-5-6-in-kiro">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/24/2000000703/">itmedia.co.jp</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2608/24/news047.html">atmarkit.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/enterprise/articles/2608/24/news075.html">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/24/2000000711/">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
