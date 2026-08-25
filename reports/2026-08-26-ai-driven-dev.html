@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-26</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-26</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>直近の議論の重心は「AIにコードを書かせる方法」から「AIが生んだ大量のアウトプットをいかに統制するか」へ明確に移っている。</li>
+<li>論点は大きく5つに整理できる：①生産性指標の錯覚と品質負債、②自律実行の暴走制御と権限分離、③マルチエージェント化の逓減、④文脈・状態の管理、⑤指示の実効性検証と評価。</li>
+<li>共通するのは「速度は所与になった、ボトルネックは検証と設計に移った」という認識である。</li>
+</ul></article>
+<article class="card"><h2>1. 「生産性向上」の錯覚と品質負債</h2><ul>
+<li>最も示唆的なのは、AIで生産性が3倍になったと考えていたチームが、実際には「ゴミのスループットを3倍にしていただけだった」と総括した報告である。生成量の増加を成果と取り違える構造的リスクを、実体験として言語化している。</li>
+<li>ここでの問題は、レビュー・統合・手戻りといった下流工程に負荷が転嫁され、フロー全体では改善していない点にある。局所最適化としてのAI導入への警告と読める。</li>
+<li>品質面では、割れ窓理論を援用してAIコード生成がソフトウェアエントロピーを加速させると論じる記事が出ている。低品質なコードが文脈として残ると、AIがそれを模倣して劣化が自己増殖する、という指摘である。</li>
+<li>この2本を合わせると、「AIは既存コードベースの規律を増幅する装置」であり、規律のない環境では劣化も同じ速度で増幅されることになる。</li>
+<li>実務上の含意として、導入効果はコード行数や生成速度ではなく、リードタイムや欠陥率など下流を含む指標で測る必要がある。</li>
+</ul></article>
+<article class="card"><h2>2. 自律実行の制御：暴走検知と権限分離</h2><ul>
+<li>エージェントの無人実行を前提とした「ループエンジニアリング」の実践ガイドが、暴走検知を正面から扱っている。人間が常時監視しない前提に立つと、停止条件と異常検知の設計が中心課題になる。</li>
+<li>権限面では、AIエージェントへ付与する権限を分離すべきという議論が具体化している。単一の強い権限を渡すのではなく、作業単位で最小権限を切り分ける発想である。</li>
+<li>この2つは表裏一体で、暴走検知は「異常を止める」仕組み、権限分離は「異常時の被害を限定する」仕組みにあたる。片方だけでは自律実行を任せる根拠にならない。</li>
+<li>従来のセキュリティ原則（最小権限、ブラストラディウスの限定）がそのままAIエージェント運用に適用され始めた段階と言える。</li>
+</ul></article>
+<article class="card"><h2>3. マルチエージェント化の限界</h2><ul>
+<li>「エージェントを増やすほど、成果は平均へ寄る」という指摘は、多エージェント化への素朴な期待に対する重要な反証である。並列化は分散を縮小させ、突出した成果も出にくくなる。</li>
+<li>一方で、AIチームがうまく回らない原因を「業務設計の問題」に帰す議論もある。エージェント数やモデル性能ではなく、役割分担・引き継ぎ・責任範囲といった設計側の欠陥が律速になっているという見方だ。</li>
+<li>両者を合わせると、マルチエージェントは「人数を増やす」比喩ではなく「組織を設計する」比喩で捉えるべきということになる。設計なき増員は平均化を招くだけである。</li>
+</ul></article>
+<article class="card"><h2>4. 文脈と状態の管理</h2><ul>
+<li>セッション管理と引き継ぎプロンプトを不要にする「STATE LOOP」という運用が提案されている。会話履歴を引き継ぐのではなく、外部化された状態を毎回読み直す発想である。</li>
+<li>これは長時間・複数セッションにまたがる作業でAIの一貫性が失われる問題への直接的な回答であり、コンテキストウィンドウの拡大に依存しない解決策として現実的だ。</li>
+<li>状態を成果物（ファイル）として持つことで、人間側もレビュー可能になる点が副次的だが大きい利点である。</li>
+</ul></article>
+<article class="card"><h2>5. 指示の実効性と学習の定着</h2><ul>
+<li>「AGENTS.mdが本当に読まれているかは、合言葉テストでは分からない」という指摘は、指示ファイルの効力検証という盲点を突いている。合言葉を仕込んで復唱させても、実際の判断に反映されている保証はない。</li>
+<li>設定ファイルを書いた時点で満足してしまう「設定の見かけ上の遵守」問題は、多くのチームが無自覚に抱えている。</li>
+<li>対になるのが「AIに、二度、同じ指摘をしない」という運用原則で、レビュー指摘を都度の会話で終わらせずルールとして永続化する考え方だ。</li>
+<li>ただし前者の警告を踏まえれば、ルール化しただけでは不十分で、ルールが実際に挙動を変えたかを行動ベースで確認する工程が要る。</li>
+</ul></article>
+<article class="card"><h2>6. 本番投入前の評価</h2><ul>
+<li>GitHub Blogの「How to evaluate LLMs before production」は、体感やデモではなく評価基盤に基づく判断を求める、エンタープライズ寄りの標準的アプローチを示している。</li>
+<li>個人の運用工夫が中心だった日本語圏の議論に対し、組織導入では評価・監査可能性が前提になるという対比が鮮明である。</li>
+</ul></article>
+<article class="card"><h2>全体の展望</h2><ul>
+<li>2026年後半の焦点は「AIをどう速く動かすか」ではなく「AIの出力をどう信頼可能にするか」に定まりつつある。</li>
+<li>暴走検知・権限分離・状態外部化・指示の実効性検証・評価基盤は、いずれも従来のソフトウェアエンジニアリング規律の再適用であり、新奇な技術ではない。</li>
+<li>逆に言えば、既存の規律を持つ組織ほどAI導入の効果を得やすく、持たない組織では劣化が加速する二極化が進むと予想される。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/factory_dxtouji/articles/86171075de9f86">zenn.dev</a><a class="badge" href="https://zenn.dev/moridev/articles/59199be4a8aeaa">zenn.dev</a><a class="badge" href="https://zenn.dev/motowo/articles/loop-engineering-practice-guide-2">zenn.dev</a><a class="badge" href="https://zenn.dev/leadus_nova/articles/a8ffc1640005a5">zenn.dev</a><a class="badge" href="https://zenn.dev/narukijima/articles/cb9287f4ac9536">zenn.dev</a><a class="badge" href="https://zenn.dev/hampen2929/articles/20260825-ai-team-workflow-design">zenn.dev</a><a class="badge" href="https://zenn.dev/cutcha/articles/b6abccb42ecacf">zenn.dev</a><a class="badge" href="https://qiita.com/yurukusa/items/578052664c425ea92ae6">qiita.com</a><a class="badge" href="https://zenn.dev/scalar_sol_blog/articles/297fb9c736992e">zenn.dev</a><a class="badge" href="https://github.blog/ai-and-ml/llms/how-to-evaluate-llms-before-production/">github.blog</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
