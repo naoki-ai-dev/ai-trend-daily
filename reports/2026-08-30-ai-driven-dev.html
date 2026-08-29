@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-08-30</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-08-30</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>本日の論点は大きく4つに集約される。すなわち「プラットフォーム側の制約強化とコスト最適化」「エージェント経由の新しい攻撃面」「コンテキスト設計の標準化」「ツール間可搬性の再評価」である。</li>
+<li>特に注目すべきは、Claude Codeの利用上限が9月14日から25%削減されるという告知と、OpenAIがCursorへのモデル提供を打ち切ったという業界動向で、これらが同時に発生している点が重要である。</li>
+<li>技術的関心の中心は「モデルの賢さ」から「エージェントに何をどう渡すか」へ完全に移行しており、記事の大半がコンテキスト・記憶・ルール運用の話題に寄っている。</li>
+</ul></article>
+<article class="card"><h2>プラットフォーム制約とコスト構造の変化</h2><ul>
+<li>Anthropicが9月14日からClaude Codeの利用上限を25%削減すると告知し、Hacker Newsで大きな反響を呼んでいる。ヘビーユーザーほど影響が直撃するため、ワークフローの見直しを迫られる開発者は多い。</li>
+<li>これと連動する形で、Claude CodeのリクエストをDeepSeekやGrokにルーティングして請求額を圧縮する手法が注目を集めている。高価なモデルは設計・レビューに、安価なモデルは定型的な実装に割り当てる「モデルの使い分け」が現実的な運用解になりつつある。</li>
+<li>上限削減はコスト最適化を「余裕があればやること」から「継続利用の前提条件」に格上げした。ルーティングやキャッシュ、コンテキスト削減はいずれもトークン消費を直接下げる施策として再評価されている。</li>
+<li>業界レベルでは、OpenAIがCursorへのモデル提供を切断した件とAnthropicのIPO観測が同日に報じられており、AIコーディングツールの供給網が政治的・商業的な力学に強く左右される段階に入ったことを示している。</li>
+</ul></article>
+<article class="card"><h2>セキュリティ：エージェントが持ち込む新しい攻撃面</h2><ul>
+<li>「Webサイトを要約して」と頼むだけでClaude Codeを騙せるという研究報告が公開された。悪意あるページに仕込まれた指示をエージェントが命令として解釈してしまう、典型的な間接プロンプトインジェクションである。</li>
+<li>深刻なのは、これが特殊な設定や高度な攻撃準備を必要としない点である。ファイル読み書きやコマンド実行の権限を持つエージェントに、信頼できない外部テキストを読ませる行為そのものがリスクとなる。</li>
+<li>実務上の含意は明確で、外部コンテンツの取り込みは信頼境界の越境として扱うべきである。要約・調査タスクを実行するエージェントには権限を絞る、あるいは読み取り専用のサブエージェントに分離する設計が求められる。</li>
+<li>利便性のために自動承認を広げてきた運用は、この報告を機に見直しが必要になる。「どこで人間が止めるか」の設計が改めて論点になっている。</li>
+</ul></article>
+<article class="card"><h2>コンテキストとルールの設計が中心課題に</h2><ul>
+<li>CLAUDE.md、AGENTS.md、GEMINI.mdを個別に書く運用をやめ、どのAI CLIが実際に何を読むかを実測したうえで正本1本に集約した事例が報告されている。設定ファイルの乱立は同期コストと矛盾の温床であり、実測に基づく統合は合理的である。</li>
+<li>より本質的な指摘として、「ルールが不足している」だけでなく「ルールはあるのに使われない」という失敗様式（Activation Failure）が提起された。ルールを書き足すほど発火率が下がるという逆説は、多くのチームが経験している問題を的確に言語化している。</li>
+<li>3週間の個人開発を通じて「AIは毎回すべてを忘れる」という前提からドキュメントの書き方自体を変えたという報告もある。人間向けの説明ではなく、セッション開始時にエージェントが最短で状態を復元できる形式へと文書設計が変わりつつある。</li>
+<li>Claude Code、Cursorほか26ツール間で記憶を共有するツール「Itsuki」の登場は、この問題がツール単位ではなく開発者単位で解決されるべきものだという認識の広がりを示している。</li>
+</ul></article>
+<article class="card"><h2>ツール間可搬性とロックイン回避</h2><ul>
+<li>OpenAIのモデル提供終了を受け、Cursorの設定がClaude CodeやCodexにどこまで持ち出せるかを実測した検証記事が出ている。特定ツールへの依存が突然のポリシー変更で顕在化した典型例である。</li>
+<li>ここでの教訓は、プロンプト・ルール・ワークフローをツール固有の形式に埋め込まないことである。移行可能性を保つコストは、供給が不安定な現状では十分に見合う。</li>
+<li>記憶・設定・ルールをツール外部に持つ設計は、コスト最適化のためのモデル切り替えとも整合する。可搬性はリスク管理と経済性の両面から要求されている。</li>
+</ul></article>
+<article class="card"><h2>実践知の共有</h2><ul>
+<li>Claude Codeの開発に深く関わる人物の使い方をまとめたサイトが公開され、Hacker Newsで注目を集めた。作り手自身の運用が公開されることは、断片的なTipsが氾濫する状況において貴重な基準点となる。</li>
+<li>全体として、成熟した実践は「強力なモデルに大きく任せる」方向ではなく、「境界・権限・コンテキストを設計したうえで任せる」方向に収束している。</li>
+</ul></article>
+<article class="card"><h2>今後の注目点</h2><ul>
+<li>9月14日の上限削減後、実際にどの程度のユーザーがマルチモデル運用へ移行するかが短期的な焦点となる。</li>
+<li>プロンプトインジェクション対策がツール側の標準機能として実装されるか、当面は利用者側の運用でカバーし続けるのかも注視すべきである。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://twitter.com/ClaudeDevs/status/2093742321473065266">twitter.com</a><a class="badge" href="https://news.ycombinator.com/item?id=49488963">news.ycombinator.com</a><a class="badge" href="https://qiita.com/lhjjjk4/items/7d5f005ccabca9960cf2">qiita.com</a><a class="badge" href="https://www.theregister.com/research/2026/08/28/researcher-shows-how-claude-code-can-be-tricked-simply-by-asking-it-to-summarize-a-website/5293372">theregister.com</a><a class="badge" href="https://qiita.com/ishizakahiroshi/items/ffecb88684c29803b3c6">qiita.com</a><a class="badge" href="https://zenn.dev/c_a_p_engineer/articles/activation-failure">zenn.dev</a><a class="badge" href="https://qiita.com/nak3761/items/c620408df51ed1cdca4c">qiita.com</a><a class="badge" href="https://itsuki.app/">itsuki.app</a><a class="badge" href="https://zenn.dev/uguisu_blog/articles/f2286418e86de0">zenn.dev</a><a class="badge" href="https://howborisusesclaudecode.com">howborisusesclaudecode.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
