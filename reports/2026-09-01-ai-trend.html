@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-09-01</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-01</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>本日の最大の論点は、AIの「収益化」と「原資」である。OpenAIがChatGPTへの広告導入を発表する一方、大手音楽出版社がAnthropicを提訴し、学習データを巡る法的コストが顕在化した。</li>
+<li>計算資源の確保も新たな局面に入った。OpenAIによるMac mini／Mac Studioの大量調達は、GPU一極集中とは異なる推論インフラの選択肢を示唆する。</li>
+<li>オープンウェイトモデルGLM-5.3の公開により、フロンティアモデルとの性能差はさらに縮小した。商用APIの価格・制限方針に対する交渉力が利用者側に移りつつある。</li>
+<li>企業導入は「試行」から「運用」へ移った。利用の偏在、エージェントの運用コスト、プロンプトインジェクションといった、実運用でしか出てこない課題が中心議題になっている。</li>
+</ul></article>
+<article class="card"><h2>ビジネスモデルと法務</h2><ul>
+<li>OpenAIは「A milestone in expanding access to AI」として、ChatGPTへの広告導入を発表した。無料ユーザーへのアクセス拡大を掲げるが、実質的にはサブスクリプション一本足からの脱却である。</li>
+<li>広告モデルは、対話型AIにおいて「回答の中立性」と「広告主の意向」が構造的に衝突する。表示形式と回答生成の分離をどこまで担保できるかが、今後の信頼性評価の焦点になる。</li>
+<li>一方で、推論コストを利用者課金だけで回収する路線が限界に近いことの表明とも読める。競合各社が追随するか、有料プランの差別化を強めるかで市場構造が変わる。</li>
+<li>ソニー・ミュージックパブリッシングとワーナー・チャペルは、Anthropicを著作権侵害で提訴した。音楽出版社による提訴であり、争点は歌詞など楽曲著作物の学習・出力にあるとみられる。</li>
+<li>AI企業にとって訴訟対応と和解・ライセンス費用は、もはや突発的な事故ではなく恒常的なコスト項目である。この負担が価格や利用制限に転嫁される流れは、以下の製品動向とも地続きである。</li>
+</ul></article>
+<article class="card"><h2>モデルとインフラ</h2><ul>
+<li>「GLM-5.3」がオープンウェイトで公開され、Fable 5に迫る性能水準と報じられている。フロンティアモデルとオープンモデルの差が数カ月単位まで縮んだ。</li>
+<li>オープンウェイトの意義は単なるコスト削減ではない。機密データを外部に出せない業務や、モデル挙動の固定が必要な用途で、自社ホスティングという選択肢が現実的になる。</li>
+<li>OpenAIが数万台規模のMac miniとMac Studioを調達しているとの報道は、推論基盤の多様化を示す。Apple Siliconの統合メモリと電力効率は、特定の推論ワークロードでコスト優位を持ちうる。</li>
+<li>GPU供給が逼迫するなか、「入手できる計算資源で最適化する」というアプローチが大手でも採られ始めた点が重要である。調達戦略そのものが競争要因になっている。</li>
+</ul></article>
+<article class="card"><h2>製品と安全性</h2><ul>
+<li>Claude Codeの週次利用制限枠が9月14日に25%引き上げられる。ただし直前の引き下げを含めると実質は現状比17%減であり、利用者から見れば緩和ではない。</li>
+<li>数字の見せ方と実態の差は、AIコーディングツールの価格・制限が需給に応じて頻繁に動く段階にあることを示す。特定ツールへの業務依存はリスクとして扱う必要がある。</li>
+<li>Anthropicは、AIに「AIの安全性研究」自体を担わせる実験を公表した。うそや過度な迎合といった問題行動を、性能を落とさずに改善できたとしている。</li>
+<li>安全性研究の自動化はスケール面で有望だが、評価者と被評価者が同系統のモデルである以上、共通の盲点を検出できない可能性が残る。人間による監査との併用が前提となる。</li>
+</ul></article>
+<article class="card"><h2>セキュリティ</h2><ul>
+<li>「エラーログをAIに解析させる」だけで感染する攻撃手法が報告された。ログに仕込まれた指示をAIが実行してしまう、間接プロンプトインジェクションの典型例である。</li>
+<li>危険なのは、攻撃者が社内システムに直接侵入する必要がない点だ。外部から到達可能なログやチケット、メール本文が、そのまま攻撃の入力経路になる。</li>
+<li>対策の基本は、AIが読む外部データを「命令」ではなく「データ」として扱う設計、エージェントの権限最小化、そして外部通信・ファイル操作の承認ゲートである。</li>
+<li>AIエージェントに実行権限を与える運用が広がるほど、この種の攻撃の影響範囲は拡大する。導入計画とセキュリティ設計を同時に進める必要がある。</li>
+</ul></article>
+<article class="card"><h2>利用実態と企業導入</h2><ul>
+<li>AnthropicとOpenAIがそれぞれ公開した利用動向レポートは、AI利用の拡大がユーザー側にどのような変化をもたらしているかを示すデータとして参照価値が高い。</li>
+<li>企業現場では、AIを日常的に使う社員の利用量だけが5倍に伸びるという偏在が報告されている。全社平均ではなく、ヘビーユーザー層の突出が実態である。</li>
+<li>この偏在は、ライセンスを配れば効果が出るという想定が誤りであることを意味する。使いこなす層のワークフローを可視化し、横展開する施策のほうが費用対効果が高い。</li>
+<li>Claude、ChatGPT／Codex、Cursorといったツールが揃い、企業が本格運用できる段階に入った。評価軸はモデル性能から、権限管理・ログ・コスト配賦などの運用基盤へ移りつつある。</li>
+</ul></article>
+<article class="card"><h2>開発現場のエージェント運用</h2><ul>
+<li>Uberは大規模な「ソフトウェアファクトリー」の効率的な運用手法を公開した。AIエージェントを開発プロセスに組み込む際の、規模と経済性の両立が主題である。</li>
+<li>論点はモデルの賢さではなく、エージェント1回の実行あたりのトークン消費と再試行回数をどう抑えるかにある。単価が安くても実行回数が多ければコストは容易に膨らむ。</li>
+<li>実践的には、コンテキストの絞り込み、キャッシュの活用、失敗の早期打ち切り、安価なモデルへの適切な振り分けが効く。運用設計がそのままコスト構造を決める。</li>
+<li>エージェント運用は個人の生産性向上策から、組織のインフラ運用課題へと性質を変えた。SREに近い監視・コスト管理の枠組みが求められる。</li>
+</ul></article>
+<article class="card"><h2>総括と示唆</h2><ul>
+<li>短期的には、広告導入と訴訟という二つの動きが、AIサービスの価格と利用条件に影響する。契約更改時には利用制限の変更履歴を確認すべきである。</li>
+<li>中期的には、オープンウェイトモデルの追い上げにより、用途ごとにモデルを使い分ける構成が標準になる。単一ベンダーへの固定は避けたい。</li>
+<li>導入側の優先課題は、プロンプトインジェクション対策とエージェントの権限設計、そしてヘビーユーザーの実践知の横展開である。この三点が投資対効果を左右する。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://openai.com/index/expanding-access-to-ai-with-chatgpt-ads">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2608/31/2000000950/">itmedia.co.jp</a><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2136902.html">pc.watch.impress.co.jp</a><a class="badge" href="https://gigazine.net/news/20260831-openai-tens-of-thousands-apple-mac-mini-studio/">gigazine.net</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/31/2000000951/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2608/31/2000000964/">itmedia.co.jp</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2608/31/news035.html">atmarkit.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/enterprise/articles/2608/27/news091.html">itmedia.co.jp</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2609/01/news009.html">atmarkit.itmedia.co.jp</a><a class="badge" href="https://www.uber.com/us/en/blog/efficient-software-factory/">uber.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
