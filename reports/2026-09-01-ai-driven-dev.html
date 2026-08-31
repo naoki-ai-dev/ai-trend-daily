@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-01</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-01</span>
+      <span>⏱ 約12分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>本レポートは、Zenn・Hacker News・Simon Willison's Weblog 等で観測された記事群から、重要度の高い10件を選び、AI駆動開発の現在地を整理したものです。</li>
+<li>全体の論点は3つに収束しています。すなわち「モデルそのものより周辺実装（ハーネス）が成果を決める」「提供枠とコストが開発計画の制約条件になった」「エージェントの出力に対する来歴と安全性の統制が実務課題になった」という3点です。</li>
+<li>昨年までの「どのモデルが賢いか」という比較軸から、「どう囲い、どう記録し、どう並べるか」という運用設計の議論へ、話題の重心が明確に移動しています。</li>
+<li>なお本レポートは提示された記事タイトル・出典・URLの一覧に基づく整理であり、各記事の本文を精読した上での要約ではない点をお断りします。</li>
+</ul></article>
+<article class="card"><h2>モデル更新と提供枠の変動</h2><ul>
+<li>Simon Willison が「Hy4 Preview」の紹介記事を公開しました。プレビュー段階の新モデルが個人ブログ経由で最初に精査されるという、近年定着した情報伝播の形が今回も繰り返されています。</li>
+<li>コーディングエージェント領域では、モデルのリリース自体よりも「プレビュー版が実務のどのタスク層に効くか」を早期に見極める記事の価値が高まっています。</li>
+<li>一方で Claude Code の週次利用上限をめぐり、相反する2つの情報が同時に流通しました。一方は「標準の週次上限を恒久的に引き上げる」と伝え、もう一方は「週次上限が本日比で17%削減される」と伝えています。</li>
+<li>両者は同日付・同種のソース（X/Twitter）でありながら結論が逆であり、少なくとも一方は誤読・誤報、あるいはプラン区分の取り違えである可能性が高い状況です。</li>
+<li>実務上の教訓は明快です。提供枠は開発計画に直接影響する変数であるにもかかわらず、SNS経由の断片情報では確度が担保されないため、公式のプラン表記で裏を取る運用が必要です。</li>
+<li>逆に言えば、利用上限の増減が開発者コミュニティのトップ話題になること自体が、エージェント開発がすでに「枠を消費する生産設備」として扱われている証左です。</li>
+</ul></article>
+<article class="card"><h2>「ハーネス」という評価軸の台頭</h2><ul>
+<li>今期もっとも概念的な進展は、「ハーネス（harness）＝モデル以外のすべて」という定義の共有が進んだことです。公式定義と6つの実装例を突き合わせて解剖する記事が、この語の輪郭を実装レベルで固めています。</li>
+<li>ここで言うハーネスには、ツール定義、コンテキスト構築、ループ制御、権限境界、ログ、再試行方針といった要素が含まれます。同じモデルでもこれらの設計次第で挙動が大きく変わります。</li>
+<li>これを評価論に接続したのが「あなたが評価しているのは、モデルか、ハーネスか」という問題提起です。ベンチマークやSNS上の体感比較の多くが、実際にはハーネスの差を測っているという指摘は重要です。</li>
+<li>実務への含意として、モデル乗り換えの意思決定を行う前に、自社のハーネス側に伸びしろが残っていないかを先に検証すべき、という順序が導かれます。</li>
+<li>逆に、ハーネスを固定しない比較は再現性を持ちません。社内でモデル選定を行う際は、ツール構成・プロンプト・権限設定を凍結した上で差分を取る手続きが求められます。</li>
+</ul></article>
+<article class="card"><h2>エージェント設計：インターフェースが性能を決める</h2><ul>
+<li>SWE-agent のアブレーション実験を読み解く記事は、ACI（Agent-Computer Interface）の設計がエージェント性能に与える影響を定量的に扱っています。</li>
+<li>ここでの主張は、モデルの推論能力を所与としても、ファイル閲覧・編集・検索といった操作の粒度や返却フォーマットを変えるだけで成功率が動く、というものです。</li>
+<li>これは前節のハーネス論と同じ方向を指しています。すなわち、エージェント改善の投資対効果は、モデル更新待ちよりもインターフェース設計の作り込みの方が高い局面が存在します。</li>
+<li>アブレーション（構成要素を1つずつ外して寄与を測る）という手法自体も、社内エージェントの改善サイクルにそのまま転用できる実務的価値があります。</li>
+<li>ツールの返す出力が冗長であればコンテキストを圧迫し、簡潔すぎれば判断材料を失います。この中間点の探索が、当面のエージェント開発の主要な作業になります。</li>
+</ul></article>
+<article class="card"><h2>セキュリティ：サンドボックスと資格情報</h2><ul>
+<li>Claude Code のサンドボックスにおける credential mask の挙動について、extract の指定が実際の値と不一致だとマスクが機能せず平文が漏れる、という具体的な欠陥報告が出ています。</li>
+<li>これは「マスク機能を有効にしている」という事実が、必ずしも「マスクされている」ことを意味しない典型例です。設定の存在と効果を混同しない検証が必要です。</li>
+<li>エージェントに資格情報を扱わせる構成では、マスク設定を入れて終わりにせず、意図的にダミーの秘密情報を通してログ出力を確認する回帰テストを置くべきです。</li>
+<li>同種のリスクは、フォールバック経路一般に潜在します。正常系でマスクされていても、パターン不一致時に素通りする実装であれば、例外時にだけ漏洩が起きます。</li>
+</ul></article>
+<article class="card"><h2>コミットの来歴とAIの帰属表示</h2><ul>
+<li>Claude Code が全コミットに Claude セッションへのリンクを付与するようになった件が議論を呼んでいます。生成過程への参照が履歴に残るのは追跡性の面で利点があります。</li>
+<li>他方で、Claude Code を自身の Co-author としてコミットに追加させるのをやめた、という開発者の主張も支持を集めました。著者性の表示と機械的な生成記録は別物だ、という立場です。</li>
+<li>論点は3つに整理できます。責任の所在（レビュー者は人間である）、外部への情報露出（セッションリンクが何を指すか）、そして履歴の可読性です。</li>
+<li>特に公開リポジトリでは、セッションリンクが将来的に何を参照し得るかを確認しないまま既定のまま運用するのは避けるべきです。組織としてのデフォルト方針を明文化する段階に来ています。</li>
+</ul></article>
+<article class="card"><h2>並列セッションという運用スタイル</h2><ul>
+<li>「Claude Code のセッションを同時に5つ動かす」という運用記事は、単一エージェントの待ち時間を人間側のボトルネックと捉え、並列化で埋める発想を示しています。</li>
+<li>並列化の実務的な壁は、モデル性能ではなく作業単位の切り出しとコンフリクト管理にあります。独立性の高いタスクへの分割が前提条件になります。</li>
+<li>この運用は前節の提供枠の話と直結します。並列度を上げれば消費も比例して増えるため、上限変動のニュースが敏感に受け止められる背景がここにあります。</li>
+<li>人間1人が同時にレビューできる変更量には上限があるため、並列度を上げるほどレビュー体制がボトルネックへ移動する点にも注意が必要です。</li>
+</ul></article>
+<article class="card"><h2>まとめ</h2><ul>
+<li>今期の中心的なメッセージは「モデルではなくハーネスを設計せよ」であり、ハーネス解剖記事・評価軸の問題提起・SWE-agent のACI分析の3本が同じ結論を別角度から支えています。</li>
+<li>運用面では、利用上限とコストが設計制約として前面に出てきました。並列セッション運用は生産性と消費のトレードオフを鮮明にしています。</li>
+<li>統制面では、資格情報マスクの不備とコミットへの来歴付与という、露出に関する2種類の課題が同時に顕在化しています。いずれも既定設定のまま運用しないことが要点です。</li>
+<li>短期的な打ち手としては、（1）ハーネスを固定した上でのモデル比較手順の整備、（2）秘密情報マスクの回帰テスト導入、（3）コミット付随メタデータの組織方針決定、の3点を推奨します。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://simonwillison.net/2026/Aug/29/hy4/">simonwillison.net</a><a class="badge" href="https://twitter.com/chandlerwilcox/status/2093742530659766324">twitter.com</a><a class="badge" href="https://twitter.com/ClaudeDevs/status/2093742322525810912">twitter.com</a><a class="badge" href="https://zenn.dev/singularity/articles/agent-harness-anatomy">zenn.dev</a><a class="badge" href="https://zenn.dev/quick_wpd/articles/410a689d5b9d8a">zenn.dev</a><a class="badge" href="https://zenn.dev/id774/articles/c09d6fdec1aaa7">zenn.dev</a><a class="badge" href="https://zenn.dev/clopy/articles/claude-sandbox-credential-mask-extract-fallback">zenn.dev</a><a class="badge" href="https://news.ycombinator.com/item?id=49515667">news.ycombinator.com</a><a class="badge" href="https://igupta.in/blog/why-i-am-no-longer-letting-claude-code-add-itself-as-coauthor/">igupta.in</a><a class="badge" href="https://draper.chat/dev/the-ultimate-claude-code-parallelisation-guide-2026">draper.chat</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
