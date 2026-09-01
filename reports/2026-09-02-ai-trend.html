@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-09-02</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-02</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>フロンティアモデルの世代交代と、それに伴う「安全性・監視可能性」の開示が同時進行しており、能力向上と制御性のトレードオフが業界共通の論点になっている。</li>
+<li>ChatGPTの広告事業が短期間で年換算10億ドル規模に到達し、生成AIの収益モデルがサブスクリプション一辺倒から広告併用へ拡張しつつある。</li>
+<li>防衛・行政分野へのAI導入が日米双方で具体化し、AIは実験段階から国家インフラの構成要素へ移行している。</li>
+<li>実務面では、PC操作やタスク自動実行を担うAIエージェントの製品化が進む一方、エージェントの権限管理という新しいガバナンス課題が浮上している。</li>
+</ul></article>
+<article class="card"><h2>フロンティアモデルと安全性</h2><ul>
+<li>Anthropicが「Claude Fable 5.1」と「Claude Mythos 5.1」を発表した。性能向上とあわせて「監視の難しさ」への懸念を自ら開示した点が特徴的で、モデルカードでのリスク開示が競争上の差別化要素になりつつある。</li>
+<li>能力が上がるほど内部推論の追跡や挙動の予測が難しくなるという構造的問題は、単一ベンダーの課題ではなく業界全体の共通課題として扱われ始めている。</li>
+<li>OpenAIは「Path to Astra」で、次世代モデルに向けた重要能力（critical capabilities）とフロンティア・セーフガードの考え方を公表した。危険な能力の閾値を事前に定義し、到達時に追加の防護策を発動する枠組みを示すアプローチである。</li>
+<li>両社が相次いで安全枠組みを公開した背景には、規制当局や大口顧客に対する説明責任の高まりがあり、安全性の開示が事実上の市場参入条件になりつつある。</li>
+</ul></article>
+<article class="card"><h2>生成AIの収益化</h2><ul>
+<li>ChatGPTの広告事業が、開始から200日足らずで年換算売上高10億ドルに到達した。GoogleやMetaが築いた広告市場に、対話型インタフェースを起点とする新たな導線が生まれたことを意味する。</li>
+<li>立ち上がりの速さは、チャット上での購買意図の強さと広告在庫としての質の高さを示唆する。一方で、回答の中立性と広告表示の両立はユーザー信頼に直結する論点として残る。</li>
+<li>推論コストの負担が重い生成AI事業にとって、広告は課金以外の第二の収益柱となり得る。他の主要プレイヤーが追随する可能性が高い。</li>
+</ul></article>
+<article class="card"><h2>半導体・インフラ</h2><ul>
+<li>NVIDIAがMediaTekの転換社債に35億ドル（約5,600億円）を投資し、AI分野での協業を強化する。「NVLink Fusion」の採用などを通じ、自社インターコネクト技術のエコシステムを外部に広げる狙いがある。</li>
+<li>出資は単なる財務投資ではなく、標準化を伴う囲い込み戦略と読める。カスタムAIチップ需要の拡大局面で、接続規格を押さえることの戦略的価値が高まっている。</li>
+</ul></article>
+<article class="card"><h2>防衛・公共分野</h2><ul>
+<li>米国防総省が「軍事向けChatGPT」を導入し、「Gemini」「Grok」を含む計3モデルが利用可能になった。複数ベンダーを並行採用する構成は、特定企業への依存回避と能力比較を意識したものとみられる。</li>
+<li>日本でも防衛省が過去最大となる8兆8,900億円の概算要求を行い、自衛隊の指揮統制へのAI導入とドローン取得の加速を掲げた。意思決定支援領域へのAI適用が明確に政策化されている。</li>
+<li>民生技術の軍事転用が加速する一方、自律性の水準や人間の関与をどこで担保するかという議論は追いついていない。調達の速度と規範整備の速度の乖離が今後の火種になり得る。</li>
+</ul></article>
+<article class="card"><h2>産業実装：医療と予測</h2><ul>
+<li>OpenAIは、電子カルテ（EHR）やヘルスケア関連データをChatGPTに接続する機能を提供開始した。個人の医療記録を文脈として扱えるようになり、汎用チャットが実務システムへ接続する段階に入った。</li>
+<li>規制の厳しい医療データを扱う以上、権限管理と監査可能性が採用可否を左右する。ここでの実績は他の規制産業への展開の試金石となる。</li>
+<li>Googleは時系列予測モデル「TimesFM-3」を公開した。売上や天気など複数系列のデータを、追加学習なしで予測できる点が実務上の利点で、専用モデル構築のコストを下げる。</li>
+<li>予測分野における「基盤モデル化」が進み、需要予測や在庫最適化といった従来の機械学習案件の前提が変わりつつある。</li>
+</ul></article>
+<article class="card"><h2>AIエージェントの実用化とガバナンス</h2><ul>
+<li>PC操作を代行するAI秘書「OpenClaw 2.0」が公開された。導入手順の簡素化、ブラウザーアプリの刷新に加え、共有クラウドセッションによる「マルチプレイヤー化」が目玉となる。</li>
+<li>エージェントが単独作業から複数人・複数エージェントの協調作業へ広がることで、操作ログの共有や責任分界の設計が新たな要件になる。</li>
+<li>一方で、AIエージェントにも「社員証」（identity）と「委任状」（権限の委譲根拠）が必要だという指摘が出ている。「AIが勝手にやった」では免責されず、誰の権限で何を実行したかを追跡できる仕組みが不可欠との整理である。</li>
+<li>実務的な対策としては、エージェント専用のアカウント発行、権限の最小化、操作ログの保全が現時点で着手可能な打ち手となる。エージェント導入を進める組織は、機能検証と並行してこの基盤整備を進めるべき局面にある。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/02/2000001048/">itmedia.co.jp</a><a class="badge" href="https://openai.com/index/path-to-astra">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/01/2000000997/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/01/2000001005/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2609/01/2000001033/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/01/2000001004/">itmedia.co.jp</a><a class="badge" href="https://openai.com/index/chatgpt-connects-health-records-and-healthcare-sources">openai.com</a><a class="badge" href="https://gigazine.net/news/20260901-google-timesfm-3/">gigazine.net</a><a class="badge" href="https://forest.watch.impress.co.jp/docs/news/2137126.html">forest.watch.impress.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2609/01/2000000898/">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
