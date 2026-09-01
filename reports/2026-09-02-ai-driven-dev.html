@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-02</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-02</span>
+      <span>⏱ 約11分で読めます</span>
+      <span>🗂 10トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>本日の論点は「エージェントをどう作るか」から「どう安全に走らせ、どう金額と品質を統制するか」へ明確に移った。セキュリティ、コスト、検証の3点が共通軸である。</li>
+<li>とくにコーディングエージェントの実行経路を突く攻撃と、権限モードの落とし穴が同時に報告され、防御設計の前提を見直す必要が出ている。</li>
+<li>一方で設計論も成熟し、「全部エージェント化」への反動として、段階的アーキテクチャや書き込みツールの粒度設計といった地味な議論が主流化している。</li>
+</ul></article>
+<article class="card"><h2>1. コーディングエージェントの実行経路が攻撃面になった</h2><ul>
+<li>最も重大な報告は、信頼できないリポジトリをクローンしただけでClaude Codeなどのエージェント上で任意コードが実行されうるという「GitSpawn」の指摘である。単一の欠陥が複数エージェント製品に横断的に効く点が深刻度を上げている。</li>
+<li>攻撃の本質は、エージェントがリポジトリ内の設定やフックを暗黙に信頼して起動してしまう点にある。開発者が「読ませただけ」と思っている操作が実行に化ける構造的問題だ。</li>
+<li>実務的対応としては、未検証リポジトリを扱う作業を使い捨てコンテナやサンドボックスに隔離し、ホスト側の資格情報を露出させない運用が現実解となる。</li>
+</ul></article>
+<article class="card"><h2>2. 権限モードの「安全側」が安全とは限らない</h2><ul>
+<li>Claude Codeの<code>--restricted</code>がプロジェクト側のPreToolUseフックまで無効化するという報告は、防御設計の盲点を突いている。制限モードを選んだ結果、自作のガードレールが外れるという逆転が起きうる。</li>
+<li>これは「安全そうな名前のオプションを選ぶ」だけでは不十分で、実際にどのフックが発火しているかを検証する必要があることを示す。ガードレールは書いた時点ではなく、動いた証拠が取れた時点で存在すると考えるべきだ。</li>
+<li>前項のリポジトリ経由攻撃と組み合わせると、フック無効化は単なる利便性の低下ではなく実害に直結する。権限モードごとの挙動差は組織内で明文化しておきたい。</li>
+</ul></article>
+<article class="card"><h2>3. 本体側の権限修正とモデル追加</h2><ul>
+<li>Claude Code v2.1.257では、Fable 5.1の追加とあわせて権限すり抜けの修正が入った。エージェント製品の更新が機能追加と脆弱性修正を同時に含む以上、バージョン追随そのものがセキュリティ運用の一部になっている。</li>
+<li>同バージョンではautoモードの自動承認範囲が縮小されており、ベンダー側も「自動承認を広げる」方向から「確認を挟む」方向へ舵を切ったことが読み取れる。</li>
+<li>利用者側は、更新のたびに自動承認範囲が変わりうる前提で、CI等での挙動確認を組み込むのが望ましい。</li>
+</ul></article>
+<article class="card"><h2>4. エージェント基盤のコストは実装次第で桁が変わる</h2><ul>
+<li>同一モデルをHermes、Claude Code、Codexの各ハーネスで走らせたところ、トークン消費が最大70倍の差になったという計測は今週最も示唆的な数字である。モデル選定より前に、ハーネスの設計がコストを支配している。</li>
+<li>差の主因はコンテキストの持ち回り方、ツール返り値の冗長さ、再試行の設計といった実装上の判断にある。モデル単価の比較だけでは実コストを予測できない。</li>
+<li>社内でエージェントを内製する組織は、トークン消費を機能ごとに計測する仕組みを最初から入れるべきだ。可視化がないまま運用に入ると、削減余地の大きい箇所を特定できない。</li>
+</ul></article>
+<article class="card"><h2>5. 「エージェントにすべきか」は問いの立て方が誤り</h2><ul>
+<li>LLMアプリを5段階のアーキテクチャとして整理し、単純なプロンプト呼び出しから自律エージェントまでを連続体として捉える議論が出ている。二択で考えるのをやめ、要件が要求する最小の段階を選ぶという発想だ。</li>
+<li>自律性を上げるほど、デバッグ可能性・コスト予測性・再現性が失われる。前節の70倍というコスト差も、必要以上の自律性を選んだ結果として説明できる部分がある。</li>
+<li>実務では「まず固定ワークフローで組み、判断が必要な箇所だけをLLMに委ねる」設計が費用対効果で優位に立ちやすい。</li>
+</ul></article>
+<article class="card"><h2>6. 書き込み系MCPツールの設計が焦点に</h2><ul>
+<li>LLMに書き込みを許すMCPツールの設計論として、操作の粒度を細かく分け、破壊的操作には確認を挟み、返り値で状態を明示するといった原則が整理されている。読み取り専用ツールとは要求水準が違う。</li>
+<li>重要なのは、権限をツール側で構造的に制約することだ。プロンプトでの禁止指示は前提として弱く、ツールが呼べてしまう限り呼ばれうる。</li>
+<li>MCPは接続数が増えるほど攻撃面と混乱の両方が増える。追加するサーバーごとに、書き込み権限の有無を棚卸しする運用が要る。</li>
+</ul></article>
+<article class="card"><h2>7. 検証は自己申告から機械的ゲートへ</h2><ul>
+<li>「LLMに自己申告させる検査は、見落としたものを申告できない」という指摘は、LLM-as-a-judgeやセルフレビューの構造的限界を端的に言い当てている。見落としの申告を見落とし本人に頼む設計が成立しないのは当然だ。</li>
+<li>同じ方向として、AIが書いたコードを人間が読むのではなくビルドとテストに判定させる、という実践報告がある。レビュー負荷が生成量に比例して増える問題への現実的な回答である。</li>
+<li>両者を合わせると、AI生成物の品質保証はテスト、型検査、静的解析といった独立した機械的ゲートへ寄せるのが筋であり、AI自身の申告や人間の目視は補助に留めるべきだと言える。</li>
+</ul></article>
+<article class="card"><h2>8. 「作る」から「運用する」フェーズへ</h2><ul>
+<li>50体規模のエージェントを捌く設計と統制を論じた記事は、エージェント運用が個人の工夫から組織的なガバナンスの問題へ移行したことを示している。命名、権限、ログ、停止手順といった運用資産が必要になる。</li>
+<li>会社の全業務をAIで回す取り組みの全体像を扱った報告も同じ潮流にある。個別業務の自動化を積み上げるのではなく、業務全体を再設計対象として捉える視点が特徴だ。</li>
+<li>台数が増えると、1体あたりのコスト差やガードレールの抜けが積算で効いてくる。前述のトークン計測と権限設計は、規模拡大の前提条件である。</li>
+</ul></article>
+<article class="card"><h2>総括</h2><ul>
+<li>今日の記事群は、セキュリティ（実行経路と権限）、コスト（ハーネス設計）、品質（機械的検証）の3点で一貫している。いずれも「エージェントを増やす前に整える」べき土台だ。</li>
+<li>短期的な優先アクションは、未検証リポジトリの隔離、権限モードとフックの実挙動確認、バージョン追随の3つである。</li>
+<li>中期的には、エージェント単位のトークン計測と、書き込みツールの権限棚卸しを定例化することが、規模拡大時の破綻を防ぐ。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（11件）</h3>
+  <div class="badges"><a class="badge" href="https://www.manifold.security/blog/ai-coding-agents-git-hijack">manifold.security</a><a class="badge" href="https://zenn.dev/clopy/articles/claude-restricted-mode-drops-project-hooks">zenn.dev</a><a class="badge" href="https://qiita.com/picnic/items/ba95f05d2b78799f238b">qiita.com</a><a class="badge" href="https://qiita.com/moha0918_/items/74317aca2bd592a109a6">qiita.com</a><a class="badge" href="https://thenewstack.io/agent-harness-token-costs/">thenewstack.io</a><a class="badge" href="https://zenn.dev/quick_wpd/articles/afc6d71b0bea5e">zenn.dev</a><a class="badge" href="https://zenn.dev/tamat_llc/articles/mcp-tool-design-for-safe-llm-writes">zenn.dev</a><a class="badge" href="https://zenn.dev/ms07bgf/articles/5e513eb3140ccf">zenn.dev</a><a class="badge" href="https://dev.to/indiecoredev/i-dont-review-ai-code-my-build-does-436d">dev.to</a><a class="badge" href="https://zenn.dev/tech_realinvent/articles/86e621a33c0857">zenn.dev</a><a class="badge" href="https://qiita.com/chooser/items/8666f035872f316b0221">qiita.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
