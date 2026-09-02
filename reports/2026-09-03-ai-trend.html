@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-09-03</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-03</span>
+      <span>⏱ 約11分で読めます</span>
+      <span>🗂 9トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>Anthropicが基盤モデル「Claude Fable 5.1」「Claude Mythos 5.1」を同時発表し、性能向上と実質値下げを同時に打ち出した。企業向けガバナンス機能の拡充も同日発表され、モデル競争の軸が「賢さ」から「安全に業務へ組み込めるか」へ移りつつある。</li>
+<li>サイバーセキュリティ領域では、GoogleとAnthropicがそれぞれ官公庁・企業向けの能動的防御プログラムを展開。日本ではNECがAnthropic主導の枠組みに参画し、「AI対AI」の防衛体制づくりが具体化した。</li>
+<li>一方で、米ニューヨーク市が公立校での生成AI利用を1年間禁止する措置を打ち出すなど、社会実装のブレーキも同時に強まっている。</li>
+</ul></article>
+<article class="card"><h2>モデル競争：Anthropicが2モデルを同時更新</h2><ul>
+<li>Anthropicは「Claude Fable 5.1」と「Claude Mythos 5.1」を発表した。両モデルは性能を従来から引き上げつつ、価格面では実質的な値下げにあたる設計となっている。</li>
+<li>特にエージェント用途では最大45%のコスト削減効果があるとされ、長時間・多ステップのタスクを回す使い方ほど恩恵が大きい。エージェント運用の採算ラインが下がる意味は小さくない。</li>
+<li>注目すべきは、2モデルの違いがセーフガード（安全対策）の水準のみという点だ。同一の基礎能力に対して安全側の設定を変えた製品を並列で出す構成は、用途とリスク許容度に応じてモデルを選ばせる新しい売り方といえる。</li>
+</ul></article>
+<article class="card"><h2>エンタープライズ導入とガバナンス</h2><ul>
+<li>Anthropicは企業向けに「Enterprise Frontier Safeguards」を発表した。特徴は、利用ログを顧客自身のクラウドに保存し、人手による内容確認も顧客側で実施する設計にある点だ。</li>
+<li>これはAIベンダー側にデータと監査の主導権を握らせない構成であり、金融・医療・公共といった規制産業が抱えてきた導入障壁に正面から応えるものだ。安全対策を「ベンダーの善意」ではなく「顧客の統制下」に置き直したと評価できる。</li>
+<li>モデル性能の発表と同日にガバナンス機能を出してきたことは、企業向け市場での競争が機能比較からコンプライアンス対応力の比較へ移行している証左といえる。</li>
+</ul></article>
+<article class="card"><h2>サイバーセキュリティ：「AI対AI」の防衛戦</h2><ul>
+<li>NECはAnthropicと組み、日本のサイバー防衛体制の構築に乗り出した。攻撃側がAIによって無差別・大量に攻撃を仕掛ける時代に対し、防御側もAIで応じる「AI対AI」の構図が前提となる。</li>
+<li>背景には、攻撃の自動化によって従来の人手中心のSOC（セキュリティ監視）が量的に追いつかなくなっている現実がある。国内大手SIerがフロンティアモデルを防衛用途に本格投入する動きは、日本市場における実運用フェーズ入りを示す。</li>
+<li>Googleも政府機関・企業向けの能動的サイバー防御プログラムを発表しており、脅威が顕在化してから対処するのではなく、事前に脆弱性や攻撃の兆候を見つけにいく方向へ舵を切っている。防御AIは大手プラットフォーマーの主戦場になりつつある。</li>
+</ul></article>
+<article class="card"><h2>空間・映像・音声：マルチモーダルの拡張</h2><ul>
+<li>フェイフェイ・リー氏が率いるWorld Labsが、空間知能オムニモデル「Atlas」を発表した。少数の画像から3D空間やバレットタイム映像を生成でき、画像・動画・3D空間を一つのモデルで扱う点が新しい。</li>
+<li>「世界モデル」の実用化はロボティクスやシミュレーション、映像制作に直結する。テキスト・画像中心だった生成AIの主戦場が、空間理解へ広がっている流れを象徴する発表だ。</li>
+<li>Googleは「Agentic Video Understanding」を投入し、Geminiが動画を自律的に分析できるようにした。文字起こしと再確認を繰り返しながら長時間動画を詳細に解析しつつ、コストを抑えて回答を生成する設計になっている。</li>
+<li>Metaは初のリアルタイム音声認識モデル「Muse Voice Transcribe」を発表した。20人超の話者識別と多言語混在に対応しており、会議や多国籍環境での実用に耐える水準を狙っている。</li>
+<li>これら3件はいずれも「非テキスト情報をどれだけ安く正確に構造化できるか」という同じ課題に取り組んでおり、次の競争軸がここにあることを示している。</li>
+</ul></article>
+<article class="card"><h2>クリエイティブツールの一般化</h2><ul>
+<li>Googleは画像生成・編集ツール「Google Pics」の提供を開始した。特定オブジェクトのみの編集や画像内文字の翻訳に対応し、専門知識なしで実用的な編集ができる。</li>
+<li>CanvaやAdobe Expressを正面から狙う位置づけで、GoogleドキュメントやGoogleスライドとの連携も可能だ。生成AIが単体ツールから既存業務フローの一部へ組み込まれる典型例といえる。</li>
+</ul></article>
+<article class="card"><h2>規制と社会：NY市が学校でのAI利用を禁止</h2><ul>
+<li>米ニューヨーク市が、中学生以下を対象に公立校での生成AI利用を1年間禁止する措置を発表した。全米で最も広範な生成AIモラトリアムとされる。</li>
+<li>教育現場では、AIが学習プロセスそのものを代替してしまう懸念と、AIリテラシー教育の必要性が正面から衝突している。今回の措置は前者を優先した判断だ。</li>
+<li>大都市の教育委員会が明確な禁止に踏み切った影響は大きく、他都市・他国の政策議論に波及する可能性が高い。技術の進歩と社会的受容のギャップが可視化された事例として注視すべきだ。</li>
+</ul></article>
+<article class="card"><h2>現場の実態：AIが生む新しい負担</h2><ul>
+<li>AIOpsに関する調査では、AI導入によって新たに生まれた業務について、9割が「負担」と回答したと報告されている。AIの監視・検証・例外対応といった作業が現場に積み上がっている実態がある。</li>
+<li>ここには重要な示唆がある。AIは既存業務を減らす一方で、AIを管理するための業務を新たに生み出す。導入効果の評価では、この差し引きを見なければ実像を誤る。</li>
+<li>前述のAnthropicのガバナンス機能のように、監査や確認の負荷を仕組みで吸収する設計が今後の差別化要因になる。「導入する」段階から「運用コストを設計する」段階へ、企業側の課題も移っている。</li>
+</ul></article>
+<article class="card"><h2>展望</h2><ul>
+<li>今日の動向を貫くのは、性能競争と統制・安全設計が不可分になったという構図だ。セーフガード水準だけが異なる2モデルの並列提供は、その象徴的な形といえる。</li>
+<li>攻撃・防御の双方がAI化するセキュリティ領域と、空間・映像・音声へ広がるマルチモーダル領域が、当面の技術的な主戦場になる。</li>
+<li>同時に、教育現場での禁止措置や運用負担の増大が示すように、社会側の受け入れ体制は技術の速度に追いついていない。この非対称性が今後の政策・製品設計の最大の変数となる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://forest.watch.impress.co.jp/docs/news/2137456.html">forest.watch.impress.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/02/2000001049/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/business/articles/2609/03/news052.html">itmedia.co.jp</a><a class="badge" href="https://blog.google/innovation-and-ai/technology/safety-security/fairwind-program/">blog.google</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2609/02/2000001068/">itmedia.co.jp</a><a class="badge" href="https://gigazine.net/news/20260902-gemini-agentic-video/">gigazine.net</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/02/2000001062/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/02/2000001058/">itmedia.co.jp</a><a class="badge" href="https://www.reuters.com/technology/mamdani-imposes-one-year-ban-ai-most-nyc-students-2026-09-02/">reuters.com</a><a class="badge" href="https://www.itmedia.co.jp/enterprise/articles/2609/02/news047.html">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
