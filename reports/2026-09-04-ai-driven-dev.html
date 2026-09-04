@@ -109,12 +109,53 @@
     <h1>AI駆動開発の動向</h1>
     <div class="meta">
       <span>📅 2026-09-04</span>
-      <span>⏱ 約1分で読めます</span>
-      <span>🗂 0トピック</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 7トピック</span>
     </div>
   </header>
   <main>
-    
+    <article class="card"><h2>概要</h2><ul>
+<li>直近の議論の重心は「AIにコードを書かせる方法」から「AIが書いた成果物をどう信頼するか」へ明確に移っている。生成の速度はすでに前提となり、検証・レビュー・並列制御といった人間側の運用設計が主要な論点になった。</li>
+<li>同時に、Opus 5 や Fable 5.1、GPT-6 Astra といったモデル層の更新が続き、「最上位モデルを常用する」前提が実測ベースで見直されつつある。</li>
+<li>一方で、認証情報の平文保存のような足元の運用基盤の弱さも露呈しており、実験的な活用と本番運用の間のギャップが課題として残る。</li>
+</ul></article>
+<article class="card"><h2>1. 「できました」を疑う ― 検証がボトルネックに</h2><ul>
+<li>最も件数が多く、質的にも深いのが検証・レビューの領域である。AIエージェントの完了報告をそのまま受け入れないという姿勢が、個人の心構えではなく手順として言語化され始めた。</li>
+<li>「AIエージェントの『できました』を12回ぜんぶ確かめた」では、エージェントの自己申告の的中率が82%だったと報告されている。注目すべきは、検証した人間の側の判断も2回誤っていた点で、二重の検証コストが実測で可視化された。</li>
+<li>「『テストが通る』は『正しい』の証明にならない」は、AI協働で発生した3つの「静かなバグ」を起点にレビュー方針を組み立てた事例である。テスト通過という機械的シグナルが、仕様の正しさを担保しないという指摘は、CI依存の開発フローに対する警鐘として重い。</li>
+<li>レビュー自体をAIに任せる場合の設計も進んでいる。「レビューAIには、報告を信じさせない」では、AIレビュアーに他エージェントの報告を鵜呑みにさせず、実物と突合させる構成が紹介されている。エージェント同士が報告を信じ合うと誤りが増幅されるため、突合を強制する設計が要になる。</li>
+<li>これら3本に共通するのは、「AIの出力を検証する仕組み」自体を成果物として設計するという発想である。検証は事後の作業ではなく、パイプラインの一部として先に組む対象になりつつある。</li>
+</ul></article>
+<article class="card"><h2>2. モデル選択は「使い分け」の実測フェーズへ</h2><ul>
+<li>「Fable 5.1 は low で使う」は、Opus 5 と Fable 5.1 を240試行という規模でQCD（品質・コスト・納期）比較した検証記事である。上位モデルを常時使うのではなく、思考量の設定を含めてタスク種別ごとに割り当てるという結論は、コスト意識の高まりを反映している。</li>
+<li>Simon Willison による「GPT-6 Astra」は、モデル層の最新動向を追う定点観測として位置づけられる。フロンティアモデルの更新サイクルが短くなるなか、リリースごとの実性能を独立に検証する情報源の価値は上がっている。</li>
+<li>傾向としては、ベンチマーク上の優劣よりも「自分のワークフローで何試行して何が変わったか」を示す実測記事が支持を集めている。モデル選択が感覚論から測定可能な運用パラメータへ移行しつつある。</li>
+</ul></article>
+<article class="card"><h2>3. 並列エージェント運用の常識化</h2><ul>
+<li>単一エージェントとの対話ではなく、複数エージェントを同時稼働させる運用が実務レベルで語られるようになった。論点は「動くか」ではなく「壊れないか」である。</li>
+<li>「AIエージェントを同時に働かせても、なぜコードが壊れないのか」は、並行作業時の競合をどう避けるかという構造的な問いに答えるものである。作業境界の分離やマージ戦略が、並列度を上げる際の前提条件となる。</li>
+<li>「人間がAIの速度に追いつくための運用」は、Claude Code を9本並列で回しながら、人間側の認識と指示をどう保つかを扱っている。ボトルネックがAIの生成速度ではなく人間の状況把握に移ったという指摘は、並列化の実務的な上限を示している。</li>
+<li>並列化は生産性の伸びを直接もたらす一方で、レビュー負荷を並列度の分だけ増やす。前節の検証設計と並列運用は、実質的に同じ問題の表と裏である。</li>
+</ul></article>
+<article class="card"><h2>4. コンテキストと指示の経済学</h2><ul>
+<li>入力コンテキストの削減が、必ずしも体感速度の改善に直結しないという実測が出ている。「Google ADKのレビューを差分だけにしたら、入力は90.8%減ったのに待ち時間はほぼ変わらなかった」は、トークン削減とレイテンシが別物であることを数値で示した。</li>
+<li>この結果は、コンテキスト最適化の目的を「速度」ではなく「コストと精度」に整理し直す必要を示唆する。削減そのものを目的化すると、投資対効果を見誤る。</li>
+<li>指示の与え方についても比較実験が行われている。「AIに『設計図』を渡すか『批評』を渡すか」では、DESIGN.md を同条件でA/B比較し、事前の設計提示と事後の批評提示のどちらが有効かを測っている。プロンプト設計が個人の作法から検証対象へ移った例といえる。</li>
+</ul></article>
+<article class="card"><h2>5. セキュリティと運用基盤の遅れ</h2><ul>
+<li>「Claude Code Stores OAuth Tokens in Plaintext」は、コーディングエージェントがOAuthトークンを平文で保存している問題を指摘したものである。エージェントがリポジトリやクラウド資源への広範な権限を持つことを踏まえると、影響範囲は小さくない。</li>
+<li>開発体験の進化に比べ、認証情報管理などの基盤面が追いついていないことが浮き彫りになった。エージェントを業務環境へ広げる際は、権限の最小化とトークン保護を前提条件として扱うべきである。</li>
+</ul></article>
+<article class="card"><h2>まとめ</h2><ul>
+<li>主要な流れは、「速く書く」から「確かに正しいと言える状態にする」への移行である。検証設計、並列時の破壊防止、コンテキストの費用対効果という3点が、当面の実務課題として共通している。</li>
+<li>数値付きの実測記事（的中率82%、240試行、入力90.8%減）が増えている点も特徴で、経験則の共有段階から測定と再現の段階へ入りつつある。</li>
+<li>一方で、セキュリティ基盤の脆弱さは未解決である。運用拡大の前に、権限と認証情報の扱いを見直すことが現実的な優先事項となる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://qiita.com/manabu49-ai/items/c55d35b493e38fcec241">qiita.com</a><a class="badge" href="https://zenn.dev/yuninaka/articles/ai-review-philosophy">zenn.dev</a><a class="badge" href="https://zenn.dev/r2_san/articles/3a06fe3deb0abe">zenn.dev</a><a class="badge" href="https://zenn.dev/nnakapa/articles/lab-37-fable51-opus5-qcd">zenn.dev</a><a class="badge" href="https://simonwillison.net/2026/Sep/3/gpt6-astra/">simonwillison.net</a><a class="badge" href="https://zenn.dev/ikuosaito1989/articles/ec5e4711cd52fa">zenn.dev</a><a class="badge" href="https://zenn.dev/daichi_pep/articles/claude-code-six-parallel-sessions">zenn.dev</a><a class="badge" href="https://zenn.dev/hogehogetaro/articles/google-adk-diff-review-history">zenn.dev</a><a class="badge" href="https://zenn.dev/jadaq/articles/55fe3f5479de02">zenn.dev</a><a class="badge" href="https://secretspec.dev/blog/claude-code-stores-oauth-tokens-in-plaintext/">secretspec.dev</a></div>
+</div>
+
     <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
   </main>
 </div>
