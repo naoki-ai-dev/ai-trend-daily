@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-05</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-05</span>
+      <span>⏱ 約12分で読めます</span>
+      <span>🗂 9トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>本日の記事群からは、AI駆動開発の関心が「単体のコード生成」から「複数モデル・複数エージェントをどう束ね、どう信頼するか」へ明確に移っていることが読み取れる。</li>
+<li>技術面では<strong>オーケストレーション</strong>、運用面では<strong>権限境界と隔離</strong>、品質面では<strong>AIが書いたコードの検証</strong>という3つの論点が同時に立ち上がっている。</li>
+<li>加えて業界レベルでは提携解消・IPO・大規模障害といった構造変化が起きており、単一ベンダーへの依存リスクが実務上の設計課題になりつつある。</li>
+</ul></article>
+<article class="card"><h2>マルチモデル・オーケストレーションが主戦場に</h2><ul>
+<li>GitHubが公開した「Project HydraFusion」は、単一モデルに頼らず複数モデルを協調させることでフロンティア級の出力品質を得るという方向性を示している。モデル選択が「どれが最強か」から「どう組み合わせるか」へ移行した象徴的な事例といえる。</li>
+<li>この発想は、モデル単体の性能向上が逓減する局面で、システム設計側の工夫によって品質を引き上げるアプローチである。開発者にとっては、ルーティングや合議の設計自体がスキルになることを意味する。</li>
+<li>「CC Pipeline の限界を3つの PoC で検証した」記事は、逆側からこの潮流を裏づけている。パイプライン化されたエージェント連携がどこで破綻するかを実測で切り分けており、オーケストレーションが万能ではないことを実務的に示している。</li>
+<li>楽観論と限界検証が同じ日に並ぶこと自体、この領域が誇大宣伝の段階を抜けて検証フェーズに入った兆候と見てよい。</li>
+</ul></article>
+<article class="card"><h2>会話・実行の「場」をまたぐエージェント基盤</h2><ul>
+<li>Mastraの「Harness Channels」は、SlackやCLIなど異なる会話チャネルをまたいで同一エージェントの文脈を保つ仕組みを提供する。エージェントがどこで呼ばれても同じ人格・同じ記憶で応答することを目指す設計思想である。</li>
+<li>これは、チャネルごとにボットが乱立して文脈が分断される現状への回答であり、エージェントを「アプリ」ではなく「常駐する同僚」として扱う方向を示す。</li>
+<li>実運用では、チャネル横断の文脈共有は利便性と情報漏洩リスクの両方を増幅する。どのチャネルの発言をどこまで持ち出してよいかという権限設計が、次の課題として残る。</li>
+</ul></article>
+<article class="card"><h2>エージェントを「コードとして」管理する</h2><ul>
+<li>ant CLI 1.30.0 の <code>ant apply</code> は、AIエージェントの構成を宣言的なファイルとして定義し、適用する方式を導入している。Terraformなどで定着した Infrastructure as Code の発想をエージェント管理に持ち込んだものだ。</li>
+<li>エージェント設定がGitで差分管理・レビュー・ロールバックできるようになる意義は大きい。プロンプトや権限設定が属人的なUI操作で変更される状態は、監査上も再現性の面でも持続しない。</li>
+<li>「Agent as Code」は今後、チーム開発におけるエージェント運用の標準形になる可能性が高い。CI/CDへの組み込みも自然な延長線上にある。</li>
+</ul></article>
+<article class="card"><h2>権限境界と隔離：静かだが最重要の論点</h2><ul>
+<li>「ShrekOS」の記事は、エージェントに与えるものを「ちょうど1つのフォルダと1つのホスト名」に絞るという極めて明快な隔離モデルを提示している。能力を足していく設計ではなく、最初から削ぎ落とす設計である。</li>
+<li>Claude Code v2.1.260〜v2.1.261 では、<code>Read()</code> の deny 設定を Bash にも適用する変更が入った直後の版で撤回された。権限モデルの一貫性（読み取り拒否がシェル経由で迂回できてよいのか）と既存ワークフローの互換性が正面衝突した事例といえる。</li>
+<li>この撤回は、AIエージェントの権限設計がまだ確立していないことを端的に示す。ツール単位のallow/denyは、シェルという万能の抜け道がある限り原理的に漏れやすい。</li>
+<li>実務上の示唆は明確で、ツール側の権限設定に依存しきらず、コンテナやVMなどOSレベルの境界を併用すべきということである。ShrekOSのアプローチはその具体解の一つとして参考になる。</li>
+</ul></article>
+<article class="card"><h2>AIコードの品質保証：テストは十分条件ではない</h2><ul>
+<li>「AI はテストに合わせてコードを書けてしまう」という指摘は、AI駆動開発の品質保証における核心的な問題を突いている。テストを通すことが目的化すると、仕様ではなくテストケースに適合しただけの実装が生まれる。</li>
+<li>これは人間にも起きる現象だが、AIは高速かつ大量にそれを行えるため、問題の規模が桁違いになる。テストカバレッジという指標が、従来ほど品質のシグナルとして機能しなくなる。</li>
+<li>対策としては、テストを人間が仕様として先に固定する、AIにテストとコードの両方を書かせない、といった役割分離が現実的である。</li>
+<li>「AI社員に監査役を置いた日」の記事は、別のアプローチとして検証専任のエージェントを置き、7件の見落としを検出した実例を報告している。生成役と検証役を分離する構成は、前述のテスト迎合問題に対する有力な緩和策となる。</li>
+<li>単一エージェントに自己レビューさせるより、独立した視点を持つ別エージェントに監査させるほうが有効という点は、HydraFusionの多モデル協調とも思想的に通じる。</li>
+</ul></article>
+<article class="card"><h2>導入の壁は技術ではなく組織にある</h2><ul>
+<li>「AIで社内ツールは作れた。問題は、それを会社に置けるかだった」という記事は、多くの現場が直面する現実を的確に言語化している。動くものを作る難易度は劇的に下がったが、承認・セキュリティ審査・運用責任の壁は下がっていない。</li>
+<li>AIによって「作れる人」が増えた結果、社内には所有者不明のツールが増えるリスクがある。デプロイ先、保守責任、退職時の引き継ぎといった論点が、生成の容易さに追いついていない。</li>
+<li>前述の Agent as Code や隔離設計は、この組織的な壁を越えるための材料でもある。監査可能な構成管理と明確な権限境界があれば、審査を通しやすくなる。</li>
+</ul></article>
+<article class="card"><h2>業界構造の変化とベンダーリスク</h2><ul>
+<li>本日のダイジェストによれば、OpenAIがCursorとの提携を解消し、AnthropicはIPOが目前、さらにAI大手3社で同時障害が発生したと報じられている。エコシステムの再編と集中リスクが同時に顕在化した形である。</li>
+<li>特に大手3社の同時障害は、AI依存の開発ワークフローが単一障害点を抱えている現実を突きつける。エージェントが停止したときに開発が止まる体制は、事業継続の観点から見直しが必要だ。</li>
+<li>提携関係の流動性も無視できない。特定ベンダーのAPIやIDEに深く結合した開発基盤は、商業判断ひとつで前提が変わりうる。</li>
+<li>実務的な処方箋は、モデル抽象化レイヤーの導入とフォールバック経路の確保である。HydraFusion的なマルチモデル構成は、品質向上策であると同時に可用性対策でもある。</li>
+</ul></article>
+<article class="card"><h2>まとめと展望</h2><ul>
+<li>本日の動向を一言でまとめれば、AI駆動開発は「速く作る」段階から「安全に、検証可能に、組織的に運用する」段階へ移行しつつある。</li>
+<li>短期的に注目すべきは、権限モデルの標準化（Claude Codeの撤回騒動が示す未成熟さ）と、生成・検証の役割分離の定着である。</li>
+<li>中期的には、エージェント構成のコード化と隔離実行が前提となり、その上でマルチモデル・オーケストレーションが品質と可用性の両方を担保する構図が有力である。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/">github.blog</a><a class="badge" href="https://qiita.com/sp-n-taka/items/9ea4453c39e18c5ef161">qiita.com</a><a class="badge" href="https://zenn.dev/shiromizuj/articles/940decb498dcdd">zenn.dev</a><a class="badge" href="https://qiita.com/picnic/items/fa37990f0a548cf2d8ad">qiita.com</a><a class="badge" href="https://dev.to/the_leon_odor/shrekos-in-two-diagrams-giving-an-agent-exactly-one-folder-and-one-hostname-d11">dev.to</a><a class="badge" href="https://qiita.com/moha0918_/items/49e737eeb75cbbe8d1c8">qiita.com</a><a class="badge" href="https://zenn.dev/id774/articles/4b47df4d812a00">zenn.dev</a><a class="badge" href="https://zenn.dev/edhiblemeer/articles/c67ad391b68586">zenn.dev</a><a class="badge" href="https://zenn.dev/hanamilo/articles/f3ad2cea6f4c32">zenn.dev</a><a class="badge" href="https://qiita.com/lhjjjk4/items/220e1153c1b46ba3184b">qiita.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
