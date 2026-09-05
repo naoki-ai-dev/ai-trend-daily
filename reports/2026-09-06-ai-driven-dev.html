@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-06</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-06</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 6トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>今回の記事群を通して見えるのは、AIコーディングの関心が「どう書かせるか」から「どう安く・確実に回し続けるか」へ移っている点である。</li>
+<li>特に強いシグナルは3つ。トークンコストとコンテキスト設計の最適化、大規模コードベースでのエージェント運用、そして人間のレビューを前提にしない自律ループ化である。</li>
+<li>同時に、AI出力の品質検証（コードレビュー精度・静的検査）が「後付けのおまけ」ではなく開発ループの構成要素として語られ始めている。</li>
+</ul></article>
+<article class="card"><h2>1. トークンコストとコンテキストが最大の設計変数に</h2><ul>
+<li>Spotifyのエンジニアリングブログは、社内ツール「Portal」の導入によりClaude Codeのトークン使用量を90%削減したと報告している。エージェントに渡す情報を絞り込むレイヤーを挟むだけで、コストが桁で変わることを示す事例である。</li>
+<li>削減幅の大きさは、逆に言えば多くのチームが「必要のない文脈」に大半のトークンを払っている可能性を示唆する。ツール選定より前に、コンテキスト供給の設計を見直す余地が大きい。</li>
+<li>日本語圏では、Claude Codeのプロンプトキャッシュ TTL に着目し「さっきの続きやって」が最も高価なリクエストになりうる、という指摘が出ている。キャッシュが失効した後の再開は、実質的に全コンテキストの再送になるためだ。</li>
+<li>この観点は運用ルールに直結する。作業の中断・再開のタイミング、セッションの区切り方といった従来は無頓着だった習慣が、そのままコストに跳ね返る。</li>
+<li>コンテキスト設計を体系化する動きもあり、Claude Code のスキルとして高度なコンテキストエンジニアリングの技法・パターンをまとめたキットが公開され、Hacker Newsで注目を集めている。属人的なノウハウを再利用可能な形に落とし込む流れの一例といえる。</li>
+<li>コスト議論はインフラ側にも及ぶ。AIネイティブ開発への移行で品質と性能を上げつつ、AWS費用を移行前より下げた事例報告は、AI活用が単なる追加コストではなく、アーキテクチャ刷新の契機になりうることを示している。</li>
+</ul></article>
+<article class="card"><h2>2. 大規模コードベースにおけるエージェント運用</h2><ul>
+<li>Spotifyが2000万行規模のコードベースでエージェントをどう回しているかという解説は、個人の生産性向上とは別次元の課題を扱う。規模が大きいほど、エージェントに何を見せないかの設計が効いてくる。</li>
+<li>前述のPortalの事例と合わせて読むと、大規模組織のアプローチは一貫している。すなわち、モデルを賢くするのではなく、モデルに届く情報経路を整備するという方向性だ。</li>
+<li>対照的な知見として、3か月で159回コミットしたLLM向けアーキテクチャ文書を廃止した、という報告がある。構造の把握はLSP（言語サーバー）に、意思決定の理由はADRに、図は人間向けに、と役割を分離した判断である。</li>
+<li>これは「LLMのために専用ドキュメントを維持する」という一時期の定番手法への反証として重要である。既存の機械可読な情報源で足りる部分に、人手のメンテナンスコストをかけ続ける必要はない。</li>
+<li>総じて、大規模環境ではドキュメント整備よりも、既存ツールチェーンからコンテキストを自動供給する仕組みに投資する方が持続可能だと読める。</li>
+</ul></article>
+<article class="card"><h2>3. 自律ループ化——人間を待たない開発フロー</h2><ul>
+<li>エージェントに目標だけを渡して無人で自走させる「ループエンジニアリング」を体系的に扱う書籍形式の記事が登場している。指示単位ではなく目標単位でAIを動かす発想の転換である。</li>
+<li>より具体的な実装としては、GitHub CopilotにプルリクエストをApproveさせ、Auto Mergeで開発を回す自律開発ループの構築事例がある。レビュー承認という従来は人間の専権だった工程をAIに委ねる点が特徴的だ。</li>
+<li>この方向性は生産性を大きく高める一方、承認プロセスの実効性が失われるリスクを内包する。誰も止めないループは、誤りも同じ速度で本番に運ぶ。</li>
+<li>したがって自律ループの成否は、ループ内に組み込む検証の質にほぼ依存する。次節の品質・セキュリティ検証の議論と表裏一体の関係にある。</li>
+</ul></article>
+<article class="card"><h2>4. 品質検証とセキュリティの現実</h2><ul>
+<li>Claude Code / Codex / Cursor の各最新モデルによるコードレビュー性能を OWASP Benchmark で比較検証した記事は、体感ベースになりがちなツール比較に定量的な軸を持ち込んでいる。</li>
+<li>脆弱性検出という明確な正解のあるタスクでの比較は、レビュー用途にどのツールを充てるかの判断材料になる。少なくとも「どれも同じ」という前提は置けない。</li>
+<li>運用面では、自作の静的検査を1日に4回作り直した経験から得られた「誤検出する検査は必ず無視される」という指摘が示唆に富む。精度の低いゲートは、存在しないゲートより有害である。</li>
+<li>これは自律ループにそのまま当てはまる。ノイズの多いチェックはAIにも人間にも素通りされ、結果として検証層が形骸化する。</li>
+<li>検証の網羅範囲についても注意が必要である。grep検査を全て通したにもかかわらず、コミット履歴から個人情報が漏れていたという事例は、AIが生成する成果物の点検が「最終的なファイル内容」だけでは不十分であることを示している。</li>
+</ul></article>
+<article class="card"><h2>5. 実務への示唆</h2><ul>
+<li>短期的に効果が大きいのはコンテキスト供給の見直しである。トークン90%削減やキャッシュTTLの事例は、モデル変更を伴わずに実行できる改善策を示している。</li>
+<li>LLM向けの専用ドキュメントを新規に作る前に、LSPやADRなど既存資産で代替できないかを検討すべきである。維持コストの高い仕組みは長続きしない。</li>
+<li>自律ループの導入は、先に検証層の精度を確保してから進めるのが順序として妥当である。誤検出の多い検査を抱えたまま人間を外すと、品質保証は実質的に消滅する。</li>
+<li>ツール選定においては、ベンチマークによる客観的比較の材料が揃いつつある。用途ごとに使い分ける前提で評価するのが現実的だ。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://engineering.atspotify.com/2026/9/portal-by-spotify-cut-my-claude-code-token-usage-by-90">engineering.atspotify.com</a><a class="badge" href="https://zenn.dev/odacchi/articles/claude-code-prompt-cache-ttl">zenn.dev</a><a class="badge" href="https://github.com/NeoLabHQ/context-engineering-kit">github.com</a><a class="badge" href="https://zenn.dev/fixu/articles/ai-native-aws-cost-peaks-and-valleys">zenn.dev</a><a class="badge" href="https://zenn.dev/talks_tldr_jp/articles/tldr29-gustavsson-summary">zenn.dev</a><a class="badge" href="https://zenn.dev/shimo4228/articles/codemap-retirement">zenn.dev</a><a class="badge" href="https://zenn.dev/chobitnet/books/loop-engineering-harness">zenn.dev</a><a class="badge" href="https://zenn.dev/yamitake/articles/github-copilot-auto-merge-autonomous-loop">zenn.dev</a><a class="badge" href="https://zenn.dev/yukkie1114/articles/f13672584add05">zenn.dev</a><a class="badge" href="https://qiita.com/fujiken818/items/3d0b08fc783cbffb3d7c">qiita.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
