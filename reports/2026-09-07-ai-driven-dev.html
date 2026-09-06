@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-07</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-07</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>全体観</h2><ul>
+<li>直近1週間の話題は「新モデルの登場」から「そのモデルをどう業務に組み込むか」へ明確に軸足が移っている。GPT-6 Astra と Claude Fable 5.1 という2つの発表が起点となり、移行作業・コスト計測・ガバナンス設計の記事が同時多発的に出ている。</li>
+<li>共通する論調は、エージェントを全面的に信頼する段階は過ぎ、<strong>権限・検証・記録で囲い込む</strong>方向への揺り戻しである。「自律性を上げる」より「自律性の境界を設計する」記事が支持を集めている。</li>
+<li>もう一つの軸は経済性で、トークン単価ではなく「1タスクあたりいくらか」を実測する動きが定着しつつある。</li>
+</ul></article>
+<article class="card"><h2>1. 基盤モデルの世代交代</h2><ul>
+<li>Simon Willison による GPT-6 Astra の開発者向け解説が今週最大のトピック。モデル単体の性能よりも、開発者が触れる API 面・ツール利用の挙動がどう変わるかに焦点が当たっている。</li>
+<li>同時期に Claude Fable 5.1 も発表され、週次の定点観測記事では両モデルの発表に加えて NVIDIA の買収合意が並記されている。モデル競争とインフラ側の再編が同じ週に重なった点が今週の特徴といえる。</li>
+<li>実務側の反応は速い。Fable 5.1 への移行について「プロンプトに追記するだけでは足りない」とし、既存エージェントの実装チェックリストを提示する記事が出ている。ツール定義やエラーハンドリングを含む実装レベルの見直しが必要という指摘である。</li>
+<li>ここから読み取れるのは、モデル更新が<strong>プロンプト調整ではなくコード変更を伴う作業</strong>になってきたということ。エージェント基盤を持つチームほど、モデル更新のたびに回帰テストが必要になる構造が固まりつつある。</li>
+</ul></article>
+<article class="card"><h2>2. エージェント設計の現実解</h2><ul>
+<li>「なぜ『全部エージェント』はまだ無理なのか」という記事が、今のエージェント設計の到達点をよく示している。判断が必要な箇所だけをエージェントに任せ、確定的な処理はワークフローとして固定する、という役割分担が現実解として語られている。</li>
+<li>LangChain の Harrison Chase による「メモリこそがAIエージェントの本当のモート」という主張も注目度が高い。モデルがコモディティ化する前提に立てば、差別化の源泉は蓄積された文脈側にあるという整理である。</li>
+<li>この2本は方向としては噛み合っている。すなわち、エージェントの価値はその場の推論力ではなく、<strong>繰り返し使われる文脈と、決められた手順に接続されていること</strong>にあるという見方だ。</li>
+<li>実装上の含意として、エージェントを増やす前にメモリ層とワークフロー境界を先に設計すべき、という順序が示唆される。</li>
+</ul></article>
+<article class="card"><h2>3. 品質とレビューのガバナンス</h2><ul>
+<li>Simon Willison の「There's No Limit to How Bad Code Can Get」は、AI 生成コードの品質下限が想定より低くなりうることへの警鐘。生成速度が上がるほど、レビュー体制が律速になるという構図を突いている。</li>
+<li>これに対する実務側の回答が、AIレビューの「承認」を信用ではなく<strong>特定 commit に紐づく期限付き権限</strong>として扱う設計。承認を恒久的な信頼の付与ではなく、失効する権限として扱う発想は、人間のコードレビュー運用にも応用が効く。</li>
+<li>逆方向のリスクも指摘されている。Claude Code の hook による誤検知（過剰ブロック）は「安全側の失敗」ではない、という主張だ。ブロックが多発すると開発者は例外運用を常態化させ、結果としてガードそのものが形骸化する。</li>
+<li>3本を通して見えるのは、ガードレールの設計基準が「厳しさ」ではなく「開発者が回避したくならない精度」に移りつつあること。誤検知率は安全性指標として明示的に管理すべき対象になった。</li>
+</ul></article>
+<article class="card"><h2>4. 運用コストの実測</h2><ul>
+<li>Claude Agent SDK で3モデルを実測し、1件あたり $0.04〜0.32 という幅を示した記事が出ている。同じタスクでもモデル選択で数倍のコスト差が出ることを、推測ではなく実測値で示した点に価値がある。</li>
+<li>この数字は、エージェントを常時稼働させる構成の採算判断に直結する。バッチ的に大量実行する設計では、モデル選択がそのまま運用費の設計になる。</li>
+<li>傾向として、コスト議論の単位が「1Mトークンあたり」から「1タスクあたり」へ移っている。実際に課金される単位で計測しないと意思決定に使えない、という実務的な学びが共有されつつある。</li>
+</ul></article>
+<article class="card"><h2>5. プラットフォームと市場構造</h2><ul>
+<li>「Enterprise AI Platform はどこへ向かうのか」は、AI 市場における Control Point（主導権を握るレイヤー）がどこに落ち着くかを論じたもの。モデル層・オーケストレーション層・データ層のどこが価値を取るかという問いを扱っている。</li>
+<li>メモリがモートだという前述の議論と合わせて読むと、企業側の関心はモデル調達から<strong>文脈とデータの保持場所</strong>へ移動していると読める。ベンダーロックインの論点もモデルではなくメモリ側に移りつつある。</li>
+<li>実務的な示唆として、モデルは差し替え可能に保ち、メモリとワークフロー定義は自社側に置く構成が、当面のリスクヘッジとして妥当と考えられる。</li>
+</ul></article>
+<article class="card"><h2>まとめ：当面の実務指針</h2><ul>
+<li>モデル更新は実装変更として扱う。移行チェックリストを用意し、ツール定義とエラー処理の回帰テストを前提に組む。</li>
+<li>エージェントは全面適用せず、判断が必要な箇所に限定する。確定的処理はワークフローに固定し、境界を明示する。</li>
+<li>レビュー承認は失効する権限として設計し、ガードレールは誤検知率まで含めて品質管理の対象にする。</li>
+<li>コストは1タスク単位で実測し、モデル選択を運用設計の一部として扱う。</li>
+<li>メモリ層は自社資産として設計する。モデルの差し替え可能性を保ちつつ、文脈の蓄積場所を握ることが中期の差別化になる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://simonwillison.net/2026/Sep/5/introducing-gpt-6-astra-for-developers/">simonwillison.net</a><a class="badge" href="https://qiita.com/good-software/items/54b7be0aa0a402267960">qiita.com</a><a class="badge" href="https://zenn.dev/nomurasan/articles/claude-fable-5-1-agent-migration">zenn.dev</a><a class="badge" href="https://zenn.dev/oryo_data/articles/f94473ed24ef95">zenn.dev</a><a class="badge" href="https://zenn.dev/talks_tldr_jp/articles/tldr15-chase-langchain-summary">zenn.dev</a><a class="badge" href="https://simonwillison.net/2026/Sep/6/theres-no-limit-to-how-bad-code-can-get/">simonwillison.net</a><a class="badge" href="https://zenn.dev/heftykoo/articles/891004333b3479">zenn.dev</a><a class="badge" href="https://zenn.dev/erenoa6622/articles/overblocking-is-not-safe-side">zenn.dev</a><a class="badge" href="https://zenn.dev/toki_mwc/articles/claude-agent-sdk-model-cost-sweep">zenn.dev</a><a class="badge" href="https://zenn.dev/chushaofeng/articles/03ad691287e963">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
