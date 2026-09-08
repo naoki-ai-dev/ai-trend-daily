@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-09</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-09</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 10トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>本日の論点は「エージェントをどう速く動かすか」から「どう正しく・安全に・安くまとめるか」へ明確に移っている。</li>
+<li>設計面ではコンテキストの絞り込みと並列化、品質面ではAIの自己整合性バイアス、セキュリティ面ではサブエージェント権限の実効性が焦点になった。</li>
+<li>フロンティア側では、OpenAIが自社の研究プロセス自体をAIで加速する内部像を語り、開発現場の議論と地続きになりつつある。</li>
+</ul></article>
+<article class="card"><h2>1. フロンティア：AIが「研究そのもの」を加速する段階へ</h2><ul>
+<li>Simon Willison が紹介するOpenAI内部の視点では、AIエージェントは成果物を作る道具ではなく、研究サイクルの回転数を上げる装置として位置づけられている。</li>
+<li>注目点は、モデル性能の単発ベンチマークではなく「同じ人員でどれだけ多くの仮説を検証できたか」という組織スループットの指標に評価軸が移っていることである。</li>
+<li>これは開発現場にもそのまま当てはまる。エージェント導入の効果測定を「書けたコード量」ではなく「試せた設計案の数」で見る発想への転換を示唆する。</li>
+</ul></article>
+<article class="card"><h2>2. エージェント設計：コンテキストの絞り込みが性能を決める</h2><ul>
+<li>「AIエージェントは全部読ませると弱くなる」という指摘は、必要なSkillだけを動的にロードするルーティング設計を提案している。手当たり次第の知識注入は精度を下げる。</li>
+<li>背景には、コンテキストウィンドウが広がっても注意が希薄化するという実務上の観測がある。設計課題は「何を入れるか」から「何を入れないか」へ移った。</li>
+<li>Skillやサブエージェントの肥大化はそれ自体が技術的負債になる。ロード条件を明示的に管理する仕組みが必要になる。</li>
+</ul></article>
+<article class="card"><h2>3. 並列化の実像：「マルチエージェント」の多くは直列だった</h2><ul>
+<li>Googleの審査で上位に残った事例の分析によれば、マルチエージェントを標榜する構成の多くが実際には直列実行であり、並列化の恩恵を得ていなかった。</li>
+<li>真に並列化できるのはタスク間の依存が切れている場合に限られ、分割の粒度と結合方法の設計がボトルネックになる。</li>
+<li>「エージェントを増やす」ことと「速くなる」ことは別問題であり、アーキテクチャ選定時に依存グラフを先に描く必要がある。</li>
+</ul></article>
+<article class="card"><h2>4. ツール側の思想：Plan・Rewind・Worktree が示すもの</h2><ul>
+<li>Claude Code と Cursor が Plan・Rewind・Worktree を実装した理由を追った分析は、これらが「AIの出力は間違う」という前提に立つ設計だと整理する。</li>
+<li>Plan は実行前の合意形成、Rewind は失敗からの安価な復帰、Worktree は並行試行の隔離を担う。いずれも人間が制御点を取り戻すための機構である。</li>
+<li>ツールの機能追加を追うことは、ベンダーが認識している失敗モードを読み取ることでもある。</li>
+</ul></article>
+<article class="card"><h2>5. 品質保証：AIは「自分の壊れ方」を見逃す</h2><ul>
+<li>Claude Code に書かせたテストは、実装と同じ思い込みを共有するため、その思い込みが原因の不具合だけを素通しにするという指摘は重要である。</li>
+<li>テストが緑であることが品質の証明にならない構造的理由であり、実装とテストの生成主体を分ける、あるいは仕様から独立にテストを起こす対策が要る。</li>
+<li>自己整合的なチェックは安心感だけを生産する。カバレッジ数値では検出できない盲点である。</li>
+</ul></article>
+<article class="card"><h2>6. AIコードレビューの1年運用：効く領域と効かない領域</h2><ul>
+<li>1年間の運用知見として、規約違反や定型的な不備の検出には有効だが、設計判断やドメイン文脈を要する指摘は依然として人間が担う必要があるとされる。</li>
+<li>ノイズの多い指摘はレビュー疲れを招き、導入効果を打ち消す。指摘の取捨選択とチューニングが運用の本体になる。</li>
+<li>「導入したか」ではなく「どのルールを止めたか」に運用の成熟度が表れる。</li>
+</ul></article>
+<article class="card"><h2>7. セキュリティ：権限モデルの前提が崩れている</h2><ul>
+<li>Claude Code のサブエージェント権限は hook でも強制できないという検証結果は深刻である。読み取り専用として与えたつもりの権限が実効的に担保されない。</li>
+<li>対策としてTrail of Bits の Coop は、Claude Code や Codex を隔離VM環境で実行するアプローチを取る。エージェント内部の制御に頼らず、外側の境界で封じ込める発想である。</li>
+<li>さらにサブプロセスへ親の認証情報を継承させない環境スクラブの実装・検証事例も出ており、多層防御が現実的な解になりつつある。</li>
+</ul></article>
+<article class="card"><h2>8. コスト：トークン設計が運用費を決める</h2><ul>
+<li>「1回のコールにまとめれば安くなる」という直感が誤りだった事例では、prompt cache が接頭辞の一致でしか効かないという仕様が原因だった。</li>
+<li>プロンプトの可変部分を先頭に置くとキャッシュが全く効かず、まとめたことでかえって高くつく。設計時にプレフィックスの安定性を意識する必要がある。</li>
+<li>コスト最適化はモデル選定よりも、プロンプト構造とキャッシュ境界の設計に依存する段階に入っている。</li>
+</ul></article>
+<article class="card"><h2>9. 実務への示唆</h2><ul>
+<li>短期の打ち手は3つ。ロードするコンテキストを絞る、テスト生成の主体を実装から分離する、エージェントの実行環境を隔離する。</li>
+<li>中期的には、並列化の可否をタスク依存関係から判断する設計力と、キャッシュを効かせるプロンプト構造の標準化が競争力の差になる。</li>
+<li>共通するのは、AIの自己申告や見かけの成功を信じず、外部から検証可能な仕組みで担保するという姿勢である。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://simonwillison.net/2026/Sep/6/research-acceleration-the-view-inside-openai/">simonwillison.net</a><a class="badge" href="https://zenn.dev/c_a_p_engineer/articles/ai-agent-skill-routing">zenn.dev</a><a class="badge" href="https://zenn.dev/tariki_yashiro/articles/na-20260907-232542">zenn.dev</a><a class="badge" href="https://zenn.dev/albatrosary/articles/d11b1fd1131865">zenn.dev</a><a class="badge" href="https://zenn.dev/erenoa6622/articles/self-consistent-check-stays-green">zenn.dev</a><a class="badge" href="https://zenn.dev/vaonvn/articles/392c45b39708d7">zenn.dev</a><a class="badge" href="https://zenn.dev/erenoa6622/articles/readonly-subagent-not-enforced-by-tools">zenn.dev</a><a class="badge" href="https://github.com/trailofbits/coop">github.com</a><a class="badge" href="https://qiita.com/akihidem/items/8fba54e72f69fd1828a9">qiita.com</a><a class="badge" href="https://qiita.com/kodomo-news/items/77a73ba2d2f1aa64d471">qiita.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
