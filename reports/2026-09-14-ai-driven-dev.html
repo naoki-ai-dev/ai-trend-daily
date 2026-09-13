@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-09-14</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-14</span>
+      <span>⏱ 約11分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>直近の記事群を通読すると、話題の重心が「AIにコードを書かせられるか」から「書き続けるAIをどう止め、どう制御するか」へ明確に移動している。</li>
+<li>単発のプロンプト技法を扱う記事はほぼ姿を消し、代わりに完了条件・ループ構造・権限境界・コンテキスト管理といった<strong>運用系の設計論</strong>が主流を占めている。</li>
+<li>特徴的なのは、主張を実測値で裏づける記事が増えている点である。リポジトリ調査やトークン計測など、定量データを根拠にする書き方が定着しつつある。</li>
+<li>以下、重要度の高い10件を「制御」「ワークフロー設計」「コンテキスト」「権限とセキュリティ」「人間の役割」の5軸に整理する。</li>
+</ul></article>
+<article class="card"><h2>1. エージェントの暴走制御——禁止リストは機能しない</h2><ul>
+<li>最も根本的な論点を扱うのが「AIエージェントの暴走をどう制御するか――禁止リストでは防げない問題行動」である。禁止事項を列挙する方式は、想定外の行動経路を塞げないという構造的限界を持つ。</li>
+<li>禁止リストはブラックリスト型の防御であり、列挙されていない行動はすべて許可されてしまう。エージェントの行動空間が広いほど、この抜け穴は指数的に増える。</li>
+<li>示唆されるのは、禁止の列挙ではなく<strong>許可の明示</strong>へ、あるいは行動そのものではなく実行環境側の制約へと防御層を移すアプローチである。</li>
+<li>この記事は本レポートの他の記事群——権限ルール、完了条件、ワークフロー制御——が個別に解こうとしている問題の、共通の上流にある問題設定として読める。</li>
+</ul></article>
+<article class="card"><h2>2. 完了条件の定式化——「いい感じに」が終わらない理由</h2><ul>
+<li>「AI に『いい感じにして』と頼むと終わらない ── 完了条件を grep で書く」は、曖昧な指示がエージェントを無限に作業させる現象を扱う。</li>
+<li>提案されているのは、完了条件を自然言語の形容詞ではなく <strong>grep で検証可能な述語</strong>として記述する手法である。「テストが通る」「この文字列が残っていない」といった機械判定可能な条件に落とす。</li>
+<li>この発想の重要性は、判定主体をAIから外部ツールへ移す点にある。AI自身に「終わったか」を判断させる限り、判断は生成の一部であり信頼できない。</li>
+<li>完了条件の形式化は、後述するループ設計やワークフローの終了判定とも直結しており、2026年秋の設計論における共通基盤になりつつある。</li>
+</ul></article>
+<article class="card"><h2>3. ワークフロー設計とループパターンの定型化</h2><ul>
+<li>「エージェントワークフローを実際に組む ─ 制御・終了判定・コンテキスト肥大化との戦い」は、実装で直面する三つの壁を正面から扱った実践記事である。</li>
+<li>制御・終了判定・コンテキスト肥大化という分解自体が有用で、エージェント開発の失敗がこの3カテゴリにほぼ収まることを示している。特にコンテキスト肥大化は、長時間稼働するワークフローで必ず顕在化する。</li>
+<li>「ループエンジニアリング・4つのデザインパターン」は、そのループ構造をパターンとしてカタログ化する試みである。個別のノウハウをパターン言語へ昇華させる動きは、技術領域が成熟する典型的な兆候といえる。</li>
+<li>両者を併読すると、エージェント開発が「プロンプトの工夫」から「制御構造の選択」という、より工学的な営みへ移行していることがわかる。</li>
+<li>ループ設計は完了条件と不可分であり、終了判定を欠いたループは前節の「終わらないAI」そのものになる。</li>
+</ul></article>
+<article class="card"><h2>4. コンテキストとメモリ——有限資源としての設計</h2><ul>
+<li>「コンテキストウィンドウの限界を逆手にとってAIエージェントの性能を向上させる方法」は、制約を欠点ではなく設計資源として扱う逆転の発想を提示する。</li>
+<li>コンテキストの引き継ぎ（ハンドオフ）と批評ループを組み合わせることで、ウィンドウの切れ目を強制的な整理・要約の契機に変える。制約があるからこそ情報が濃縮されるという構図である。</li>
+<li>「AIに会話を覚えさせる前に、何を『事実』として残すかを決める」は、記憶機構の実装より先に<strong>何を事実とみなすか</strong>の定義が必要だと説く。</li>
+<li>会話ログをそのまま蓄積する素朴なメモリは、誤りや暫定的な発言まで事実として固定してしまう。残す対象の選別基準こそが設計の本体だという指摘は重い。</li>
+<li>「CLAUDE.md は何行までにすべきか:長さとトークン消費の目安」は、この議論を最も具体的な数字に落とし込む。指示ファイルは毎回コンテキストに載るため、長さが直接コストと性能に跳ね返る。</li>
+<li>三者に共通するのは、コンテキストを「無限に足せる説明欄」ではなく<strong>予算のある有限資源</strong>として扱う姿勢である。</li>
+</ul></article>
+<article class="card"><h2>5. 権限とセキュリティ——許可範囲の明示と実態調査</h2><ul>
+<li>「Claude Codeに『確認しなくていい範囲』を渡したら、開発時間が1日30分になった」は、権限設計が生産性に直結することを実例で示す。</li>
+<li>確認プロンプトの都度応答は、エージェント運用における最大のボトルネックのひとつである。安全な操作をあらかじめ許可範囲として宣言することで、人間の介在を本当に必要な判断だけに絞れる。</li>
+<li>これは第1節の裏返しでもある。禁止リストで塞ぐのではなく、許可範囲を積極的に定義するホワイトリスト型の設計思想が、安全性と速度を同時に改善している。</li>
+<li>一方「手元の84リポジトリを数えたら、.env は63%が gitignore 済みで .claude/ は18%だった」は、セキュリティ衛生の実態を定量的に突きつける。</li>
+<li><code>.env</code> の除外はほぼ常識化しているのに対し、エージェント設定ディレクトリの除外率は極端に低い。ここには認証情報や内部手順が含まれうるため、新しい種類の漏洩経路になっている。</li>
+<li>新しいツールが持ち込む新しい機密ファイルに、既存のセキュリティ慣行が追いついていない——84リポジトリという実測に基づく指摘だけに説得力がある。</li>
+</ul></article>
+<article class="card"><h2>6. 人間の役割の移動——何を書く価値があるか</h2><ul>
+<li>「AIは何でも書ける。でも、今何を書く価値があるかはわからない」は、技術論に偏りがちな議論に対する視点の提示である。</li>
+<li>実装能力がコモディティ化すると、希少性は「作れること」から「何を作るべきか判断できること」へ移る。優先順位づけと価値判断は、依然として人間側に残る。</li>
+<li>この指摘は、本レポートの他の記事とも整合する。完了条件を定義するのも、残すべき事実を選ぶのも、許可範囲を決めるのも、すべて人間による<strong>境界と目的の設定</strong>である。</li>
+<li>つまり制御技術の精緻化は人間の役割を縮小させるのではなく、役割を「実行」から「仕様と判断」へ押し上げている。</li>
+</ul></article>
+<article class="card"><h2>7. 総括——2026年秋の論点</h2><ul>
+<li>エージェント開発の関心は、生成品質からライフサイクル管理（起動・継続・終了・記憶・権限）へ完全に移った。</li>
+<li>議論の質が上がっており、実測データやパターンカタログを伴う記事が主流になっている。逸話ベースの知見共有の段階は終わりつつある。</li>
+<li>未解決の中心課題は、<strong>行動の制御をAI自身に委ねずに外部化する方法</strong>である。完了条件のgrep化も権限ホワイトリストも、この一点に収束している。</li>
+<li>実務上の推奨は明快である。指示ファイルの肥大化を計測し、<code>.claude/</code> の除外を確認し、完了条件を機械判定可能な形で書くこと。いずれも今日から着手できる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/o_sup/articles/d1eb10c63c6254">zenn.dev</a><a class="badge" href="https://zenn.dev/takuyanagai0213/articles/ai-agent-completion-criteria-grep">zenn.dev</a><a class="badge" href="https://zenn.dev/oryo_data/articles/d4cb16c7bb198a">zenn.dev</a><a class="badge" href="https://zenn.dev/z_maruhira/articles/loop-engineering-4-patterns">zenn.dev</a><a class="badge" href="https://zenn.dev/ken_okabe/articles/2026-09-13-context-handoff-critic-loop">zenn.dev</a><a class="badge" href="https://zenn.dev/gitmeshi/articles/3bda3079225b97">zenn.dev</a><a class="badge" href="https://qiita.com/aicoding-guide/items/bcb60bf5439145d3149c">qiita.com</a><a class="badge" href="https://zenn.dev/mugen_web/articles/claude-code-permission-rules">zenn.dev</a><a class="badge" href="https://zenn.dev/tsutomusaito/articles/dotclaude-gitignore-ja">zenn.dev</a><a class="badge" href="https://zenn.dev/beatapi/articles/fd1c35c954527f">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
