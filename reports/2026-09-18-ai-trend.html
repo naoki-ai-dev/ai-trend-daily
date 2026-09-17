@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-09-18</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  .today{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-18</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>この日の動きは、「製品統合の加速」「安全性・ガバナンスの制度化」「データと電力という物理・権利基盤の争奪」という3層で整理できる。</li>
+<li>Anthropic と OpenAI はいずれも汎用チャットから一歩踏み出し、業務文書や特定業種の作業フローそのものを取りに行く動きを見せた。</li>
+<li>一方で、DeepMind の新研究機関設立、OpenAI のミスアライメント報告枠組み、英国王の警告と、AGI を前提としたガバナンス議論が同日に集中したのが特徴的だ。</li>
+<li>日本側では三菱重工と PFN の資本提携という大型の産業 AI 案件が出た半面、DeNA の事例は「効率化しても人は早く帰らない」という導入の現実を突きつけている。</li>
+</ul></article>
+<article class="card"><h2>プロダクト：エージェントとオフィス文書の統合</h2><ul>
+<li>Anthropic は Claude のチャットと「Cowork」を統合し、資料作成機能「Claude Docs」「Claude Slides」を追加した。Pro / Max プランから順次展開され、Free プランにも近く提供される予定とされる。</li>
+<li>これは対話 UI とエージェント的な作業環境を分けて提供してきた設計を、ひとつの入口に畳む方向転換にあたる。ユーザーから見れば「相談する場所」と「成果物ができる場所」が一致する。</li>
+<li>ドキュメントとスライドの内製化は、Microsoft 365 や Google Workspace が押さえてきた成果物レイヤーへの正面からの参入でもある。モデル提供者がアプリ層まで垂直に取りに来る流れが一段進んだ。</li>
+<li>OpenAI は法務領域に特化した「Astra for Law」を発表した。汎用モデルの上に業種特化の製品を重ねる、垂直 SaaS 的なアプローチが本格化している。</li>
+<li>法務は出典の正確性と機密保持の要求が極めて高い領域であり、ここで実運用に耐える設計を示せるかは、他の規制業種への展開可否を占う試金石になる。</li>
+</ul></article>
+<article class="card"><h2>安全性・ガバナンス：AGI 前提の制度づくり</h2><ul>
+<li>OpenAI はモデルの「ミスアライメント」を報告するための新しいフレームワークを公開し、データ捏造など6件の実例も併せて公表した。</li>
+<li>自社モデルの失敗事例を類型化して外部に出す姿勢は、脆弱性開示の慣行に近い。事象の呼称と報告様式が共通化されれば、業界横断の比較や規制対応の土台になりうる。</li>
+<li>Google DeepMind は AGI の影響を議論する「DeepMind Institute」を設立し、「AGI に近づいている」との認識を示した。技術開発部門とは別に、社会的影響を扱う常設の場を置いた点が重要だ。</li>
+<li>英チャールズ国王は NVIDIA、OpenAI、Anthropic などの大手トップに対し「実存的な危険」を警告した。国家元首レベルからの発信は、規制論議の政治的な後押しになる可能性がある。</li>
+<li>同日にこれら3件が並んだことは、安全性が研究者コミュニティの話題から、企業の組織構造と国家の外交課題へと移行しつつあることを示している。</li>
+</ul></article>
+<article class="card"><h2>データ主権と知的財産の攻防</h2><ul>
+<li>米当局は、中国の AI が Claude や GPT から数十億トークンを抽出していたとして「知識蒸留」の実態を指摘した。フロンティアモデルの出力そのものが、模倣可能な資産として扱われている。</li>
+<li>API 越しの出力から競合モデルを育てる行為は、契約違反として争われる一方、技術的な遮断は難しい。レート制限や出力透かしといった防御策のコストが今後重くなる。</li>
+<li>Cloudflare は「AI 学習の不許可」機能を提供し、検索クロールは維持したまま学習利用だけを拒否できるようにした。Google、Apple、Microsoft が対応したと報じられている。</li>
+<li>従来の robots.txt では「検索には出たいが学習には使われたくない」という要求を表現できなかった。主要プラットフォームが足並みを揃えたことで、事実上の業界標準になる可能性が高い。</li>
+<li>知識蒸留とクロール制御は、いずれも「学習データをどこまで囲い込めるか」という同じ問題の表と裏である。データの入手経路が制度化される局面に入った。</li>
+</ul></article>
+<article class="card"><h2>インフラ：電力がボトルネックに</h2><ul>
+<li>NVIDIA、Google、Emerald AI が AI データセンターの電力消費調整を目指すアライアンスを設立し、Anthropic も参加した。競合関係にある各社が電力で協調する構図になっている。</li>
+<li>焦点は総量削減よりも、需要のピークを電力網の状況に合わせて動的に調整する点にあるとみられる。計算需要を「動かせる負荷」として扱う発想だ。</li>
+<li>電力制約が明示的な協業テーマになったこと自体が、スケーリングの限界要因がチップ供給から系統容量へ移りつつある兆候といえる。</li>
+</ul></article>
+<article class="card"><h2>産業応用と導入の現実</h2><ul>
+<li>三菱重工がインフラ・防衛向け AI で Preferred Networks と資本業務提携し、100億円を出資して共同開発を行う。日本の産業 AI としては異例の規模だ。</li>
+<li>防衛領域が明示された点は、安全保障分野での国内 AI 技術の内製化志向を示す。海外モデルへの依存を避けたい領域が具体化してきた。</li>
+<li>DeNA では工数が最大9割減った一方、経営側の「早く帰って」に対し社員が帰らないという現象が起きている。効率化の成果が労働時間ではなく業務量の増加に吸収されている。</li>
+<li>生産性向上を何に再投資するのかを設計しない限り、AI 導入の効果は指標上見えにくい。これは多くの企業に共通する次の課題になる。</li>
+</ul></article>
+<article class="card"><h2>注目点</h2><ul>
+<li>短期的には、Claude Docs / Slides や Astra for Law のような「成果物まで作る AI」が既存 SaaS の価格・機能競争をどう動かすかが焦点となる。</li>
+<li>中期的には、Cloudflare 型の学習拒否が普及した後のデータ調達コストと、電力アライアンスの実効性が、モデル開発の経済性を左右する。</li>
+<li>ガバナンス面では、OpenAI の報告フレームワークが他社に採用され共通規格化するかどうかを注視したい。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2609/17/2000001563/">itmedia.co.jp</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2609/17/news038.html">atmarkit.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/17/2000001565/">itmedia.co.jp</a><a class="badge" href="https://openai.com/index/astra-for-law">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/17/2000001570/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/17/2000001573/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2609/17/2000001584/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/18/2000001599/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/18/2000001484/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/18/2000001600/">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
