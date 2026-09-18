@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-09-19</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-19</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>エグゼクティブサマリー</h2><ul>
+<li>本日の話題は「AIがAI開発そのものを担い始めた」という開発現場の変化と、企業導入が依然としてチャット利用に留まる現実とのギャップに集約される。</li>
+<li>モデル層では中国勢のオープンモデルと軽量化技術が相次ぎ、性能あたりコストの競争軸が一段と鮮明になった。</li>
+<li>一方で、学習データの調達と著作権をめぐる摩擦が日本国内で具体的な事件として表面化しており、実務上のリスク管理が急務となっている。</li>
+</ul></article>
+<article class="card"><h2>AIがAI開発を担う段階へ</h2><ul>
+<li>Anthropicは、自社のAI開発作業のうち26％をClaudeが主導していると明らかにした。半年前には1％未満だったとされ、極めて急速な拡大である。</li>
+<li>これは「AIがコーディングを補助する」段階から、「AIが開発タスクの主体として工程を回す」段階への移行を示唆する数値といえる。</li>
+<li>同社の数字は自社製品の宣伝を兼ねる点は差し引く必要があるが、フロンティア企業の内部でAIの自動化比率が公表指標になりつつあること自体が業界の転換点を示す。</li>
+<li>関連して、Claude Codeのプロジェクト機能が刷新され、「あとはよろしく」と任せるだけで複数タスクを並行処理し成果物を生む方向へ進化した。</li>
+<li>人間が逐次指示を出す対話型から、目的を渡して結果を受け取る委任型へとUXが移りつつある点が重要である。</li>
+<li>委任型が主流化すれば、開発者に求められるスキルは実装力よりも要件定義・レビュー・検証設計へと重心が移る。</li>
+</ul></article>
+<article class="card"><h2>実行基盤・言語レイヤーの模索</h2><ul>
+<li>「既存のLLMがCPUなら、JevはそのGPU版みたいなやつ」とする論考が注目を集めた。LLMを汎用の逐次処理装置に、Jevを特定用途向けの並列的な処理装置になぞらえる整理である。</li>
+<li>この比喩が示すのは、あらゆる処理を単一の巨大モデルに投げる構成から、用途特化の実行レイヤーを組み合わせる構成へという設計思想の変化だ。</li>
+<li>コミュニティ発の概念であり技術的な評価は定まっていないが、推論コストと応答速度の制約に直面する実務者の関心を強く引いている点は押さえておきたい。</li>
+<li>汎用モデルと軽量特化レイヤーの役割分担は、次のアーキテクチャ議論の主戦場になる可能性が高い。</li>
+</ul></article>
+<article class="card"><h2>モデル競争：オープン化と圧縮</h2><ul>
+<li>Alibabaは「Qwen3.8-Omni-Flash」をリリースし、音声・映像処理でGemini 3.8 Flashに匹敵する性能を達成したと発表した。</li>
+<li>マルチモーダルのリアルタイム処理という、これまでクローズドモデルが優位を保っていた領域でオープン勢が肉薄した意味は大きい。</li>
+<li>音声・映像がローカルまたは低コストで扱えるようになれば、コールセンター、監視、車載、ロボティクスといった領域の実装ハードルが一気に下がる。</li>
+<li>圧縮技術では「Bonsai 2 27B」が、Qwen3.8-27Bを9分の1のサイズに圧縮しながら性能98.2％を維持したと報告された。</li>
+<li>性能をほぼ保ったまま桁違いにサイズを削る手法が実用段階に入れば、オンプレミス運用やエッジ推論の選択肢が現実的になる。</li>
+<li>モデル競争の評価軸は「最高性能」から「同等性能をどれだけ安く速く出せるか」へと明確にシフトしている。</li>
+</ul></article>
+<article class="card"><h2>企業導入：6割が導入、8割超が「チャット止まり」</h2><ul>
+<li>調査によれば企業のAI導入率は6割に達した一方、8割超が対話利用の段階に留まり、業務自動化まで進んでいないことが分かった。</li>
+<li>ボトルネックはモデル性能ではなく、業務プロセスの棚卸し、データ整備、権限設計といった導入以前の組織課題にある。</li>
+<li>「導入した」と「成果が出た」の乖離は今後さらに可視化され、PoC疲れからの撤退と本格投資への二極化が進むとみられる。</li>
+<li>成功事例として、資生堂はAIエージェントを用いて化粧品原料の探索時間を95％削減した。</li>
+<li>同社は研究員の「目利き」を複数のLLMで再現する構成を採り、単一モデルへの依存を避けて判断の質を担保している。</li>
+<li>ポイントは汎用チャットではなく、特定業務の判断プロセスを分解してエージェントに写し取った点にあり、自動化フェーズへ進む企業の参考になる。</li>
+</ul></article>
+<article class="card"><h2>著作権とデータ調達をめぐる摩擦</h2><ul>
+<li>出版取次大手の日販が米国のAI企業に書籍を大量販売したとされ、業界団体が説明を求める事態となった。</li>
+<li>学習データの枯渇を背景に、出版流通のプレイヤーがデータ供給者として振る舞い始めた構図であり、権利処理の所在が問われている。</li>
+<li>著者・出版社・取次の三者で権利の合意形成ができていないまま取引が先行すれば、同様の紛争は今後も繰り返される。</li>
+<li>制作現場では、小学館「サライ.jp」が委託先による著作権侵害を謝罪した。肖像画をChatGPTに読み込ませて出力し、加工して納品していたという。</li>
+<li>生成AIのリスクは自社の利用ポリシーだけでは防げず、外注先まで含めたサプライチェーン全体の統制が必要であることを示す事例である。</li>
+<li>発注時の生成AI利用ルールの明示と、納品物の由来確認が実務上の必須プロセスになりつつある。</li>
+</ul></article>
+<article class="card"><h2>産業・地政学：中国のフィジカルAI</h2><ul>
+<li>中国のフィジカルAI（実世界で動作するAI）について、主要15社と5大集積地を「点と線と面」の構造で整理する分析が示された。</li>
+<li>個社の技術力という「点」だけでなく、サプライチェーンの「線」、地域クラスターの「面」として産業が形成されている点が特徴である。</li>
+<li>ソフトウェア単体の比較では見誤りやすく、部材調達から量産までを含めた面の競争力として評価する必要がある。</li>
+<li>ロボティクスや製造装置の領域では、日本企業にとって協業対象にも競合にもなり得る存在として冷静な把握が求められる。</li>
+</ul></article>
+<article class="card"><h2>今後の注目点</h2><ul>
+<li>AI開発の自動化比率、モデルの圧縮効率、マルチモーダルのオープン化という三つの流れが、AI活用の単価を引き下げ続ける。</li>
+<li>一方で企業側の制約は技術ではなく組織にあり、業務分解とデータ整備に踏み込めるかが成果を分ける。</li>
+<li>学習データの権利処理は当面最大の法務リスクであり、社内利用ポリシーと委託先管理の両面からの整備を急ぐべきである。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2609/18/2000001634/">itmedia.co.jp</a><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2142119.html">pc.watch.impress.co.jp</a><a class="badge" href="https://zenn.dev/mizchi/articles/jev-is-gpu-for-llms">zenn.dev</a><a class="badge" href="https://gigazine.net/news/20260918-qwen-3-8-omni-flash/">gigazine.net</a><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2142052.html">pc.watch.impress.co.jp</a><a class="badge" href="https://kn.itmedia.co.jp/kn/article/2609/19/2000001624/">kn.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/enterprise/articles/2609/18/news020.html">itmedia.co.jp</a><a class="badge" href="https://www.asahi.com/articles/ASV9L4338V9LUCVL00JM.html">asahi.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/18/2000001645/">itmedia.co.jp</a><a class="badge" href="https://monoist.itmedia.co.jp/mn/articles/2609/18/news012.html">monoist.itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
