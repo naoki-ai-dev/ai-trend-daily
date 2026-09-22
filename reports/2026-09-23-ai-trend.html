@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-09-23</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-09-23</span>
+      <span>⏱ 約11分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>この2日間で、OpenAI・Anthropic・SpaceXAIの3社がそろって新しいフロンティアモデルを発表しました。性能だけでなく、価格や利用コストも競争の焦点になっています。</li>
+<li>OpenAIは、数学の未解決問題への取り組みと、国際標準づくりへの提言を同時に打ち出しました。技術力と政策面の主導権を並行して握ろうとする姿勢が見えます。</li>
+<li>AIエージェントがECサイトで代理購入する動きをめぐり、プラットフォーム間の対応が分かれ始めました。</li>
+<li>国連事務総長がAIのリスクを核兵器になぞらえる発言をしました。国内では、AI学習目的とみられる古書の大量買い付けが報じられています。</li>
+</ul></article>
+<article class="card"><h2>フロンティアモデルの相次ぐ発表</h2><h3>OpenAI「GPT-6 Sol」「Luna」</h3>
+<ul>
+<li>OpenAIが「GPT-6 Sol」と「GPT-6 Luna」を発表しました。GPT-6世代で名前の異なる2モデルを出しており、用途や性能帯で分けた構成とみられます。</li>
+<li>同じ日に、他社がGPT-6系モデルで調査の時間とコストを半減させた導入事例や、GPT-6向けのプロンプトキャッシュ改善も公開されています。モデル単体ではなく、周辺の開発基盤も含めて普及を進めようとしていることがうかがえます。</li>
+</ul>
+<h3>Anthropic「Claude Opus 5.5」</h3>
+<ul>
+<li>Anthropicが「Claude Opus 5.5」を公開しました。報道によれば、上位モデル「Fable 5.1」並みの性能を持ちながら、利用コストは約4割下がっています。</li>
+<li>最上位クラスの性能をより安く提供するこの動きは、企業がAIを本番環境に導入する際のコスト面の障壁を下げる可能性があります。</li>
+</ul>
+<h3>SpaceXAI「Grok 4.7」</h3>
+<ul>
+<li>SpaceXAIが「Grok 4.7」を発表しました。コーディングと知識労働向けでは同社最高性能をうたいつつ、価格は据え置いています。</li>
+<li>3社とも「性能向上と価格維持・値下げ」を同時に打ち出しており、フロンティアモデル市場の競争軸が、純粋な性能から性能あたりのコストへ移りつつあることを示しています。</li>
+</ul></article>
+<article class="card"><h2>AIの研究能力と国際ガバナンス</h2><h3>数学の未解決問題「100件超を解決」</h3>
+<ul>
+<li>OpenAIは、数学者による独立した諮問グループと連携すると発表しました。同社の内部モデルが「100件を超える未解決問題を解決した」とされています。</li>
+<li>外部の数学者が関わることで、AIによる成果を検証する枠組みを整える狙いがあると考えられます。AIが科学研究を担う段階に入りつつあることを象徴する発表です。</li>
+</ul>
+<h3>国際標準づくりを米国主導で</h3>
+<ul>
+<li>OpenAIは、フロンティアAIの国際標準づくりを米国主導で進めるよう提言しました。その中で「RSI（再帰的自己改善）はまだ起きていない」との認識も示しています。</li>
+<li>研究能力の急速な向上を示す一方で、自己改善による暴走的な進歩はまだ起きていないと明言した形です。規制論議が過熱しすぎないよう、議論の前提を整える意図も読み取れます。</li>
+</ul>
+<h3>国連事務総長「核兵器と同じ緊急性」</h3>
+<ul>
+<li>国連事務総長が、AIのリスクを核兵器と比較し「同じ緊急性」で取り組むべきだと訴えました。報道では、オーストラリアもAIの安全策を求める声に加わったと伝えられています。</li>
+<li>米国主導の標準化を求めるOpenAIの提言とは対照的に、多国間での管理を求める声も強まっています。ガバナンスの主導権をめぐる構図がより鮮明になっています。</li>
+</ul></article>
+<article class="card"><h2>AIエージェントと電子商取引</h2><ul>
+<li>Amazonが、MetaのAIエージェント「Muse」による代理購入をブロックしました。一方、Shopifyは全店舗で対応する方針を示しています。</li>
+<li>大手ECプラットフォームの間で、AIエージェントを締め出すか受け入れるかの対応が分かれました。自社の顧客接点や購買データを守りたいAmazonと、出店者の販路拡大を優先するShopifyとで、戦略の違いがはっきり出た形です。</li>
+<li>AIエージェントによる「代理購入」が普及するかどうかは、プラットフォーム側の受け入れ方針に大きく左右されそうです。今後の業界標準やルールづくりが注目されます。</li>
+</ul></article>
+<article class="card"><h2>コスト構造と市場の変化</h2><h3>AIの価格は史上最速で下落</h3>
+<ul>
+<li>Epoch AIの分析によれば、AIはこれまでのどの変革的技術よりも速いペースで安くなっています。</li>
+<li>前述の新モデル各社の価格戦略とも合致する傾向です。推論コストの低下が、エージェントなど大量のトークンを消費する用途の普及を後押ししています。</li>
+</ul>
+<h3>オープンウェイトがトークン量で首位、収益はプロプライエタリ</h3>
+<ul>
+<li>処理されるトークン量では、オープンウェイトモデルがトップに立ったと報じられています。ただし、収益面では依然としてプロプライエタリ（非公開）モデルが優位です。</li>
+<li>利用量ではオープンモデルが広がる一方、お金を生んでいるのは有償の商用モデルという「二層構造」が見えてきました。価格下落が続く中で、商用モデル各社が収益を維持できるかが焦点になります。</li>
+</ul></article>
+<article class="card"><h2>学習データをめぐる動き</h2><ul>
+<li>国内の古書店で「謎の大量注文」が相次いでおり、AIの学習目的ではないかと報じられています。米国向けに「日本の本 50トン」が輸出された記録もあるとされています。</li>
+<li>ネット上のデータを集め尽くしつつある中で、紙の書籍という新たなデータ源に目が向けられている可能性があります。著作権や文化資源の扱いをめぐる議論につながることも考えられます。</li>
+</ul></article>
+<article class="card"><h2>総括</h2><ul>
+<li>フロンティアモデルの競争は、性能向上に加えて価格性能比を競う段階に入りました。今回のOpenAI・Anthropic・SpaceXAIの同時発表はその象徴です。</li>
+<li>AIの研究能力が数学の未解決問題に届き始める一方で、国際ガバナンスの主導権争いと安全性への懸念も同時に高まっています。</li>
+<li>AIエージェントの商取引への参入、学習データの確保といった実社会との接点で、利害の衝突が表に出始めています。今後は技術そのものに加え、ルールや制度の整備が重要なテーマになりそうです。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://openai.com/index/introducing-gpt-6-sol-and-luna">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/23/2000001673/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/22/2000001668/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/22/2000001671/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/22/2000001670/">itmedia.co.jp</a><a class="badge" href="https://www.smh.com.au/politics/federal/australia-joins-call-for-ai-safeguards-amid-warnings-of-out-of-control-risks-20260922-p60zbe.html">smh.com.au</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/22/2000001669/">itmedia.co.jp</a><a class="badge" href="https://epoch.ai/publications/the-plunging-price-of-thought">epoch.ai</a><a class="badge" href="https://techstrong.ai/generative-ai/open-weight-ai-models-seize-token-lead-but-proprietary-systems-still-make-the-money/">techstrong.ai</a><a class="badge" href="https://news.ntv.co.jp/category/society/e48899c1ab1445f683929740ef2b3aa6">news.ntv.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
