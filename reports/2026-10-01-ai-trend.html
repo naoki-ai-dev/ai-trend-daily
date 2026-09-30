@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-10-01</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-10-01</span>
+      <span>⏱ 約12分で読めます</span>
+      <span>🗂 9トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>今回はフロンティアモデルの発表、AI企業のセキュリティ事案、政策・規制、サイバー防御の話題が重なった。技術の進歩と安全管理の強化が同時に進んでいる。</li>
+<li>GoogleがGemini 4世代の新モデルを、一般公開ではなく用途を絞った形で発表した。高性能モデルは提供先を限定して段階的に公開する、という流れがはっきりしてきた。</li>
+<li>OpenAIは、自社が関わった不正アクセス事案への謝罪と、モデル蒸留キャンペーンの阻止を相次いで公表した。AI企業が加害側・被害側の両方としてセキュリティに向き合う局面に入っている。</li>
+<li>米国では大統領令と議会公聴会が同じ時期に動いた。AIエージェントによる攻撃への警戒も政策課題になっている。</li>
+<li>日本では、声のパブリシティ権をめぐる初めての司法判断が出た。生成AI時代の権利保護を考える上で重要な判断になる。</li>
+</ul></article>
+<article class="card"><h2>フロンティアモデル：Google「Gemini 4 Argon」</h2><ul>
+<li>Googleは公式ブログで「Gemini 4 Argon」を発表し、「フロンティア知能の次の時代」と位置付けた。同社のモデル戦略で大きな節目になる発表である。</li>
+<li>ITmediaによると、名称は「Gemini 4 Pro」ではなく新しい命名になった。従来のPro/Flashといった階層型の名称から離れる可能性があり、今後のラインアップ構成が注目される。</li>
+<li>最初の提供先はサイバー防御組織に限られる。高い能力を持つモデルを、まず防御目的の利用者に渡してリスクを見極める段階的な公開方式を採った。</li>
+<li>出力上限は100万トークンと報じられている。入力側のコンテキスト長だけでなく、出力側も大きく伸びたことになる。大規模なコード生成、長文レポート、エージェントによる長時間の作業などで実用性が大きく変わる可能性がある。</li>
+<li>防御組織への先行提供は、高性能モデルが攻撃にも転用できるという認識を反映している。フロンティアモデルの公開方針が、安全性評価と一体で設計されるようになってきた。</li>
+</ul></article>
+<article class="card"><h2>OpenAIをめぐる安全・セキュリティ問題</h2><ul>
+<li>OpenAIは、オーストラリア政府のサイトへの不正アクセスについて謝罪した。AI企業の活動が他国の政府システムに影響した事案であり、国際的な信頼に関わる問題である。</li>
+<li>OpenAIは同時に、最先端AIの学習に関する安全指針も公開した。事案への対応と並行して、学習プロセスの安全管理を外部に示し、説明責任を果たそうとする姿勢がうかがえる。</li>
+<li>別の発表では、組織的な「モデル蒸留キャンペーン」を阻止したと明らかにした。蒸留とは、大規模モデルの出力を使って別のモデルを学習させる手法で、無断で行えば知的財産の流出にあたる。</li>
+<li>蒸留対策が公式発表の題材になったことは、フロンティアモデルの出力そのものが守るべき資産として扱われるようになったことを示す。API利用の監視や利用規約の執行が今後さらに厳しくなる可能性がある。</li>
+<li>この2件から、AI企業には、自社システムが外部に与える影響の管理と、外部からの不正利用への防御の両方が求められていることがわかる。</li>
+</ul></article>
+<article class="card"><h2>米国の政策動向</h2><ul>
+<li>トランプ米大統領はAI企業のトップらと昼食会を開き、政府内で「AI」を「SI」と呼び替える大統領令に署名した。用語の変更という異例の措置で、政権のAI政策の打ち出し方に独自色が出ている。</li>
+<li>呼び方の変更が実際の政策にどう影響するかはまだ見えない。ただ、政府文書、調達、規制の用語に波及すれば、企業や研究機関の対応にも影響が出る可能性がある。</li>
+<li>米上院の小委員会では、「Rogue AI」をテーマにした公聴会が開かれた。AIエージェントによる攻撃から国土を守る方法が議題となった。</li>
+<li>この公聴会は、AIエージェントが自律的に行動して攻撃に使われるリスクが、立法の場で具体的に議論され始めたことを示す。今後の規制や安全基準づくりの出発点になりうる。</li>
+<li>行政府は産業界と連携を演出し、議会はリスク管理を議論している。米国のAI政策は、推進と警戒の二本立てで進んでいる。</li>
+</ul></article>
+<article class="card"><h2>AIとサイバーセキュリティ</h2><ul>
+<li>報道によると、脆弱性の開示件数は月1万件へと倍増した。AIが脆弱性の発見と悪用の両方を加速させていることが背景にある。</li>
+<li>開示が増えれば、修正パッチの適用や優先順位付けの負担も増える。防御側もAIで対応を自動化しなければ追いつかない状況になりつつある。</li>
+<li>Gemini 4 Argonがまずサイバー防御組織に提供されることや、米議会がAIエージェントによる攻撃を議論していることは、この状況とつながっている。</li>
+<li>攻撃側のAI活用が進むほど、高性能モデルを防御側に優先して提供する仕組みの重要性が増す。モデル提供の順序そのものが、安全保障上の判断になり始めている。</li>
+</ul></article>
+<article class="card"><h2>科学分野：AI設計タンパク質の電子透かし</h2><ul>
+<li>Natureに、AIが生成したタンパク質に機能を保ったまま電子透かしを埋め込む研究が掲載された。報道によると、Googleがこの手法を開発した。</li>
+<li>AIによるタンパク質設計は創薬や材料開発を加速させる一方、悪用されればバイオセキュリティ上のリスクになる。透かしによって生成元を追跡できれば、責任の所在を明らかにする手段になる。</li>
+<li>「機能を保ったまま」という点が重要である。透かしを入れてもタンパク質としての性能が落ちないなら、実用の場面にも導入しやすい。</li>
+<li>テキストや画像で進んできたAI生成物の来歴管理が、生命科学の領域にも広がった。安全対策が扱う範囲が物理世界にまで伸びていることがわかる。</li>
+</ul></article>
+<article class="card"><h2>権利・法制度：声のパブリシティ権</h2><ul>
+<li>声優の津田健次郎さんがTikTokを訴えた裁判で、声もパブリシティ権の対象になるとする初めての判断が示された。</li>
+<li>生成AIによる音声クローンが広がるなか、声の無断利用に法的な歯止めをかける根拠になりうる。声優や俳優など、声を仕事にする人の権利保護にとって大きな前進である。</li>
+<li>これまで肖像や氏名を中心に考えられてきたパブリシティ権が、声にまで広がった意義は大きい。音声合成サービスや、それを配信するプラットフォームも対応を迫られる可能性がある。</li>
+<li>今後は、AIで生成した「似た声」がどこまで権利侵害にあたるのか、という線引きが焦点になる。</li>
+</ul></article>
+<article class="card"><h2>開発現場の変化</h2><ul>
+<li>Ruby on Railsの作者DHHは「Pencils Down」と宣言し、もう手でコードを書かないと表明した。一方で、ソフトウェア開発の未来は明るいと述べている。</li>
+<li>著名な開発者がAIによるコード生成への全面移行を明言したことは、開発者の役割が「書く人」から「設計し検証する人」へ移っていることを象徴している。</li>
+<li>この変化は、AIエージェントの自律性が高まるほど、生成物の検証やガバナンスの重要性が増すというセキュリティ面の議論ともつながる。</li>
+</ul></article>
+<article class="card"><h2>今後の注目点</h2><ul>
+<li>Gemini 4 Argonがいつ、どの範囲まで一般に提供されるか、また他社のフロンティアモデルが同じような限定公開方式を採るかが焦点になる。</li>
+<li>OpenAIの不正アクセス事案について、オーストラリア政府側の対応や、公開された安全指針の具体的な運用が注目される。</li>
+<li>米国では、大統領令による用語変更の影響と、議会でのAIエージェント規制の議論がどう進むかを見る必要がある。</li>
+<li>国内では、声のパブリシティ権の判断が、音声生成AIの事業者や利用者の実務にどう反映されるかが課題になる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/">blog.google</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/01/2000001912/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/30/2000001869/">itmedia.co.jp</a><a class="badge" href="https://openai.com/index/disrupting-a-coordinated-model-distillation-campaign">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2609/30/2000001871/">itmedia.co.jp</a><a class="badge" href="https://www.hsgac.senate.gov/subcommittees/dmdcc/hearings/rogue-ai-securing-the-homeland-against-ai-agent-attacks/">hsgac.senate.gov</a><a class="badge" href="https://therecord.media/google-vulnerabilities-cyberattacks-ai">therecord.media</a><a class="badge" href="https://www.nature.com/articles/s41586-026-10965-y">nature.com</a><a class="badge" href="https://www.bengo4.com/c_18/n_20987/">bengo4.com</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2610/01/news010.html">atmarkit.itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
