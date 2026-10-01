@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-10-02</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-10-02</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 9トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概況</h2><ul>
+<li>本日の動向は「フロンティアモデルの性能競争」「モデル・計算資源をめぐる地政学」「AI利用への規制と統治」「インフラと産業実装の大型化」の4軸で整理できる。</li>
+<li>特に米中間でモデルの知見流出と計算基盤の自立化をめぐる攻防が目立ち、企業にとってAIの調達先をどう分散するかが経営課題として浮上している。</li>
+<li>一方で、国内では巨額のデータセンター投資やフィジカルAIの協業、AIが実務を担う新会社など、実装段階の動きが具体化している。</li>
+</ul></article>
+<article class="card"><h2>フロンティアモデル競争：Googleが「Gemini 4 Argon」を投入</h2><ul>
+<li>Googleの新モデル「Gemini 4 Argon」は、コーディングや法務の領域でOpenAIの「GPT-6 Astra」を上回ると報じられた。</li>
+<li>汎用ベンチマークだけでなく、法務のような専門領域での性能が比較の焦点になっており、業務特化の評価軸が競争の主戦場に移りつつある。</li>
+<li>コーディング性能はAIエージェントの実用性に直結するため、開発支援ツールの採用先選定にも影響が及ぶ可能性がある。</li>
+<li>トップモデルの首位が短期間で入れ替わる状況が続いており、利用企業は特定ベンダーへの固定を避ける設計が一層求められる。</li>
+</ul></article>
+<article class="card"><h2>米中の攻防：蒸留阻止と計算基盤の自立化</h2><ul>
+<li>OpenAIは、自社モデルの推論過程を狙った組織的な「蒸留」行為を阻止したと発表し、中国の「Kimi」開発元の関係者が関与したと主張している。</li>
+<li>推論モデルの思考過程は性能の源泉であり、API出力を学習データとして流用する行為への警戒が、米国のモデル提供企業で強まっていることを示す事例である。</li>
+<li>今後は推論過程の出力制限や利用規約の厳格化、不審な利用パターンの検知強化など、モデル提供側の防御策が広がるとみられる。</li>
+<li>一方、DeepSeekはHuaweiと提携し、Ascend向けの「TileLang」を含む6つのAI開発ツールをオープンソースで公開した。</li>
+<li>狙いはNVIDIAのCUDAへの依存低減であり、中国勢がモデルだけでなく開発ツールチェーンまで含めた自前のエコシステム構築を加速していることがうかがえる。</li>
+<li>米国側は知見の流出防止、中国側はハードウェアとソフトウェアの自立化と、双方が「切り離し」を前提とした動きを強めている。</li>
+</ul></article>
+<article class="card"><h2>AI主権：選択肢を持つことが経営課題に</h2><ul>
+<li>モデルの“禁輸”問題を契機に、AI主権が「切実な経営課題」になったとする論考が示された。</li>
+<li>特定国・特定企業のモデルに依存していると、規制や提供停止によって業務が止まるリスクがあるという認識が広がっている。</li>
+<li>上記の蒸留問題やDeepSeekの脱CUDAの動きと合わせると、モデル・計算資源の供給が地政学に左右される時代に入ったことは明らかである。</li>
+<li>企業には、複数モデルの併用やオープンモデル・国産モデルの活用など、「選択肢を持つこと」を前提としたAI戦略が求められる。</li>
+</ul></article>
+<article class="card"><h2>規制・統治：AIによる意思決定とデータ利用への歯止め</h2><ul>
+<li>カリフォルニア州のニューサム知事が、従業員の解雇・懲戒処分をAIだけで決定することを禁止する、いわゆる「ロボ上司禁止法」に署名した。</li>
+<li>人事上の重大な判断に人間の関与を義務付ける内容であり、AIによる自動意思決定に対する規制の具体例として注目される。</li>
+<li>同州は多くのテック企業の拠点であるため、米国内の他州や企業の人事運用にも波及する可能性がある。</li>
+<li>Redditは、AIボット対策としてRSSフィードを廃止し、公開APIへのアクセスを終了すると発表した。</li>
+<li>学習用データの無断収集への対抗策であり、良質な人間由来データを持つプラットフォームが、データの囲い込みと価値化を強めている流れの一環といえる。</li>
+<li>RSSや公開APIに依存してきた外部ツールや研究用途にも影響が出る見込みで、オープンなWebの縮小という副作用も懸念される。</li>
+</ul></article>
+<article class="card"><h2>安全保障：米国が「自律戦闘軍」を創設</h2><ul>
+<li>米国のヘグセス氏が「自律戦闘軍」の創設を表明し、無人機の推進と将官の削減を打ち出した。</li>
+<li>自律型兵器・無人システムを軍組織の中核に据える方針であり、AIの軍事利用が実戦力の再編段階に入ったことを示している。</li>
+<li>自律システムの判断に対する人間の関与やその統制のあり方は、国際的な議論の的になるとみられる。</li>
+</ul></article>
+<article class="card"><h2>インフラ：千葉市に総額2.3兆円のAIデータセンター</h2><ul>
+<li>千葉市に総額2.3兆円規模の巨大AIデータセンターを建設する計画が報じられ、発電大手JERAも参画している。</li>
+<li>電力供給の確保がAIデータセンターの最大の制約となる中、発電事業者が加わる座組みは電力と計算資源を一体で確保する狙いがあるとみられる。</li>
+<li>国内に大規模な計算基盤を持つことは、前述のAI主権の観点からも意味を持つ。</li>
+<li>一方で、海外ハイパースケーラーとの競争の中でどう需要を獲得するかが今後の課題となる。</li>
+</ul></article>
+<article class="card"><h2>産業実装：フィジカルAIとAI主体の組織</h2><ul>
+<li>日立とファナックがフィジカルAIで協業し、日立のエッジAIとファナックのロボットを組み合わせた有効性の検証も進める。</li>
+<li>製造現場のロボットにエッジでのAI判断を組み込む取り組みであり、日本が強みを持つ産業用ロボット分野でAI活用を広げる動きとして注目される。</li>
+<li>セキュリティサービスのHENNGEは、人間は取締役2人だけで実務をAIが担う新会社を設立した。</li>
+<li>AIエージェントに業務を委ねる組織形態の実験的事例であり、実際の業務品質や責任の所在をどう担保するかが今後の注目点となる。</li>
+<li>カリフォルニア州の規制が示すように、AIに任せる業務の範囲と人間が責任を持つ範囲の線引きは、実装が進むほど重要性を増す。</li>
+</ul></article>
+<article class="card"><h2>今後の注目点</h2><ul>
+<li>フロンティアモデルの性能競争は続く一方で、モデルの知見流出防止とデータ囲い込みが強まり、AIをめぐる「開放」から「防御」への転換が進んでいる。</li>
+<li>米中のエコシステム分断が進む中、日本企業にとっては複数の調達先と国内の計算基盤を確保するAI主権の取り組みが現実的な課題となる。</li>
+<li>規制面では、人事や軍事など人間への影響が大きい領域で、AIの自律判断にどこまで人間の関与を求めるかが焦点となる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2144721.html">pc.watch.impress.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/01/2000001929/">itmedia.co.jp</a><a class="badge" href="https://gigazine.net/news/20261001-deepseek-huawei-ascend/">gigazine.net</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2610/01/2000001909/">itmedia.co.jp</a><a class="badge" href="https://gigazine.net/news/20261001-california-no-robo-bosses-act/">gigazine.net</a><a class="badge" href="https://gigazine.net/news/20261001-reddit-killing-rss-feeds-end-public-api/">gigazine.net</a><a class="badge" href="https://www.nikkei.com/article/DGXZQOCB013S30R01C26A0000000/">nikkei.com</a><a class="badge" href="https://www.itmedia.co.jp/business/articles/2610/01/news082.html">itmedia.co.jp</a><a class="badge" href="https://monoist.itmedia.co.jp/mn/articles/2610/01/news031.html">monoist.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2610/01/2000001936/">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
