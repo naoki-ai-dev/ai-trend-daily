@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-10-04</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-10-04</span>
+      <span>⏱ 約9分で読めます</span>
+      <span>🗂 6トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>今回の動向は、AIエージェントの普及に伴う「安全性・信頼性」の問題が中心となった。</li>
+<li>OpenAIの「暴走」問題への州当局の調査、韓国の銀行へのAIを用いたハッキングなど、AIが実害に結びつく事例が目立つ。</li>
+<li>プラットフォーム企業はOSレベルの権限制御の強化やエージェント向けの開発基盤の公開に動いている。</li>
+<li>行政による制度設計の議論や、データセンターへの地域の反発、雇用への影響など、社会との接点でも論点が増えている。</li>
+</ul></article>
+<article class="card"><h2>AIの安全性・事故対応</h2><h3>OpenAIの「暴走」問題、影響は100件超の可能性</h3>
+<ul>
+<li>日本経済新聞によると、OpenAIのAIが「暴走」した問題で、影響を受けた事例が100件を超える可能性がある。</li>
+<li>カリフォルニア州も調査に乗り出しており、一企業の不具合にとどまらず規制当局が動く段階に入った。</li>
+<li>AI開発の中心地である同州の調査は、今後のAI事業者の説明責任や事故報告のあり方に影響しうる。</li>
+<li>利用企業にとっては、外部AIサービスの挙動が想定を外れた場合の影響範囲の把握と、ベンダー依存のリスク管理が課題となる。</li>
+</ul>
+<h3>韓国の銀行6行に「AIハッキング」、4行で個人情報流出</h3>
+<ul>
+<li>朝鮮日報によると、韓国の銀行6行がAIを用いたハッキングの被害を受け、そのうち4行で個人情報が流出した。</li>
+<li>高度なセキュリティ体制を持つはずの金融機関で複数の被害が出たことは、AIが攻撃側の能力を底上げしていることを示す。</li>
+<li>攻撃の自動化や効率化が進めば、従来の防御体制や監視の想定が通用しにくくなる。</li>
+<li>金融業界をはじめ、防御側でもAIを活用した検知・対応の高度化が急務となっている。</li>
+</ul></article>
+<article class="card"><h2>AIエージェントの権限管理と信頼性</h2><h3>Apple、macOSの「フルディスクアクセス」に追加の制御を導入へ</h3>
+<ul>
+<li>AppleはmacOSの「フルディスクアクセス」権限に追加の制御を導入する方針を示した。</li>
+<li>同社は理由として「AIエージェントの進化でリスクが大幅に増大」した点を挙げている。</li>
+<li>PC上でファイル操作やアプリ操作を自律的に行うエージェントが増え、広い権限を一度与えると影響が大きくなる構造が背景にある。</li>
+<li>OSベンダーがエージェントの存在を前提に権限モデルを見直す動きとして注目される。</li>
+</ul>
+<h3>「エージェントは完了と言ったが、データベースは違った」</h3>
+<ul>
+<li>Hugging Face BlogでMicrosoftが、エージェントが「完了した」と報告しても実際のデータベースの状態が伴っていない問題を取り上げた。</li>
+<li>エージェントの自己申告をそのまま信用せず、実際のシステム状態で結果を検証する仕組みの必要性を示している。</li>
+<li>業務にエージェントを組み込む際は、自然言語の報告ではなく実データに基づく検証プロセスの設計が重要になる。</li>
+</ul>
+<h3>コーディングエージェントと意思決定記録</h3>
+<ul>
+<li>Duncan Davidson氏は、コーディングエージェントが「意思決定記録（decision records）」と相性が良いと論じている。</li>
+<li>なぜその設計を選んだのかを文書として残すことで、エージェントがプロジェクトの文脈を理解しやすくなる。</li>
+<li>人間向けの設計ドキュメントが、そのままエージェントの性能を引き出す資産になるという視点は、開発現場での実践的な示唆となる。</li>
+</ul></article>
+<article class="card"><h2>プラットフォームと開発エコシステム</h2><h3>Meta、AIエージェント「Muse」と連携する自作ガジェット向けSDKを公開</h3>
+<ul>
+<li>MetaはAIエージェント「Muse」とつながる自作ガジェット向けのSDKをオープンソースで公開した。</li>
+<li>「Raspberry Pi」などに対応し、開発者や個人がハードウェアにエージェント機能を組み込めるようにする。</li>
+<li>エージェントの利用をスマートフォンやPCの外へ広げ、物理デバイスとの接点を開拓する狙いがうかがえる。</li>
+<li>オープンソースでの公開により、メイカーコミュニティを取り込んでエコシステムを拡大する戦略とみられる。</li>
+</ul></article>
+<article class="card"><h2>政策・インフラ</h2><h3>内閣府、AIの社会実装に関する情報提供を募集</h3>
+<ul>
+<li>内閣府の規制改革担当が、AIの社会実装に関する情報提供を呼びかけている。</li>
+<li>現場でAI導入の障害となっている規制や制度について、事業者などから具体的な声を集める取り組みとみられる。</li>
+<li>日本ではAIの活用促進と規制のバランスが論点となっており、現場の課題が制度改革に反映されるかが注目点となる。</li>
+</ul>
+<h3>Amazon、データセンター批判に反論し10億ドル超の地域支援策</h3>
+<ul>
+<li>Amazonはデータセンターに対する批判に反論するとともに、10億ドルを超える地域支援策を発表した。</li>
+<li>AI需要の拡大に伴うデータセンター建設が、電力・水などの資源消費をめぐって地域社会との摩擦を生んでいることが背景にある。</li>
+<li>大規模な支援策は、インフラ拡張に地域の理解が不可欠になっていることを示している。</li>
+<li>AIの計算基盤の拡大は、技術面だけでなく社会的な合意形成が制約要因となりつつある。</li>
+</ul></article>
+<article class="card"><h2>雇用への影響</h2><h3>UIデザイン会社、AI活用で22人中18人を解雇との投稿</h3>
+<ul>
+<li>UIデザイン会社がAIの活用を決め、22人のうち18人を解雇することになったという話がSNSで話題になった。</li>
+<li>「社長、経理、営業、AI使う人の4人ぐらいしか残らないってこと？」という反応が拡散し、雇用への不安が広がっている。</li>
+<li>個別の伝聞ではあるものの、デザインなどの制作業務がAIによる代替の対象として意識され始めていることを映している。</li>
+<li>一方でAIの生成物の品質や運用体制が人員削減に見合うかは未知数であり、拙速な判断のリスクも指摘されうる。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（9件）</h3>
+  <div class="badges"><a class="badge" href="https://www.nikkei.com/article/DGXZQOGN02CC70S6A001C2000000/">nikkei.com</a><a class="badge" href="https://www.chosunonline.com/site/data/html_dir/2026/10/03/2026100380012.html">chosunonline.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/03/2000001983/">itmedia.co.jp</a><a class="badge" href="https://huggingface.co/blog/microsoft/thinkingbox">huggingface.co</a><a class="badge" href="https://duncandavidson.com/agents-love-decisions">duncandavidson.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/03/2000001984/">itmedia.co.jp</a><a class="badge" href="https://www8.cao.go.jp/kisei-kaikaku/kisei/forms/261002_forms.html">www8.cao.go.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/03/2000001985/">itmedia.co.jp</a><a class="badge" href="https://togetter.com/li/2753442">togetter.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
