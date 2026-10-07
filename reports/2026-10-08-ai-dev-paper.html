@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発の論文 2026-10-08</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-purple">
+  <header class="page">
+    <span class="eyebrow">AI開発の論文</span>
+    <h1>AI開発の論文</h1>
+    <div class="meta">
+      <span>📅 2026-10-08</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 2トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><span class="mark">注目の著者</span><h2>失敗から学ぶ──LLM脆弱性分析のための失敗駆動型プロンプト改善（米国）</h2><ul>
+<li><strong>何を調べたか</strong>：LLMによる脆弱性分析の性能はプロンプト設計に大きく左右されます。しかし既存研究は手法を集計指標で比べるだけで、「なぜ失敗するか」「どう直すか」を体系的に扱っていませんでした。本論文はこの問題に取り組み、失敗駆動型プロンプト改善（FDPR）という手法を提案しています。</li>
+<li><strong>手法の流れ</strong>：まず脆弱性学習用アプリDVJA（Damn Vulnerable Java Application）でモデルの失敗を収集し、繰り返し現れる失敗パターンを特定します。次に、それぞれのパターンに対応するプロンプト修正を設計します。</li>
+<li><strong>特定された失敗モード</strong>：偽陽性、偽陰性、根拠のない推論、CWE分類の誤りの4種類が繰り返し現れました。</li>
+<li><strong>評価方法</strong>：改善後のプロンプトを、開発に使ったDVJAとは別のJuliet Test Suiteで評価しています。さらに複数モデルで交差検証し、特定モデルへの過適合でないかを確認しています。</li>
+<li><strong>注目すべき結果</strong>：失敗駆動の改善により、LLMによる脆弱性分析の信頼性が向上したと報告されています。あわせて、他の場面にも再利用できるプロンプト設計原則が得られたとしています。</li>
+<li><strong>方法論としての主張</strong>：プロンプト調整を勘や試行錯誤ではなく、「失敗の分類 → 対策の対応付け」という根拠ある工程として進められることを示した点が要点です。</li>
+<li><strong>AI開発の実務への効き方</strong>：LLMをコードレビューやSASTの補助に使うチームでは、誤検知・見逃し・根拠の弱い指摘を記録して分類する運用がそのまま応用できます。分類ごとにプロンプトへ制約や指示を追加していけば、改善の過程を説明できる形で残せます。</li>
+<li><strong>実務での注意点</strong>：あるモデルで調整したプロンプトは、別のテストセットや別モデルでも検証するべきです。本論文のこの手順は、モデル切り替えが頻繁な現場でも参考になります。</li>
+<li><strong>地域の推定根拠と確信度</strong>：フィードには所属情報がないため、これは推定です。共著者のDavid Mohaisen氏は米国の大学でセキュリティ研究を行う研究者として知られており、第一著者も同じ研究室の所属である可能性が高いと考えて「米国」としました。第一著者名の言語的特徴は所属地域の手がかりにならないため判断材料に使っていません。確信度は中程度です。</li>
+</ul></article>
+<article class="card"><span class="mark">注目の著者</span><h2>テストは通っても規約違反──コーディングエージェントにリポジトリ規範を習得・検証させるRepoNorm（地域不明）</h2><ul>
+<li><strong>何を調べたか</strong>：コーディングエージェントの変更は機能テストを通過しても、リポジトリ固有のコントリビューション要件（規約・慣習）を満たさないことがあります。この論文は、規範を自動で獲得・検証してエージェントに渡す手法「RepoNorm」を提案しています。</li>
+<li><strong>課題の所在</strong>：規範はリポジトリ内の複数のソースに散らばっており、適用条件や例外も解釈する必要があります。検索拡張やドキュメント生成で一般的な文脈を与えても、どの規範が今の変更に当てはまるかはエージェント自身が判断しなければなりません。</li>
+<li><strong>手法の特徴</strong>：RepoNormは個々のコーディングタスクとは独立に、明文化された規範と暗黙の規範の両方を抽出します。規範の内容と適用範囲をリポジトリ内の証拠で確認し、必要に応じてGit履歴も参照したうえで、「規範パッケージ」として既存のエージェントに渡します。</li>
+<li><strong>評価設定</strong>：3種類のコーディングモデルと、RepoNormBenchの121タスクで評価しています。比較対象は、追加ガイダンスなし（Raw）と、CodeWikiによる生成ドキュメントです。</li>
+<li><strong>注目すべき結果①（規範遵守率）</strong>：Rawと比べた相対改善は、全体の規範遵守率（NCR）が7.42〜10.77%、コントリビューション関連NCRが31.64〜45.44%、プロンプトで明示されなかった規範のNCRが11.34〜17.69%でした。3モデルすべてで、CodeWikiより高い値を示しています。</li>
+<li><strong>注目すべき結果②（機能成功率と精度）</strong>：機能成功率はRawより5.79〜9.09ポイント高く観測されましたが、対応のある比較では有意水準に達していません。抽出した規範のサンプリング精度は、デフォルト設定で86%です。</li>
+<li><strong>実務への効き方</strong>：コントリビューション規約の遵守率が大きく伸びたことから、エージェント生成PRのレビュー差し戻しを減らす効果が期待できます。CLAUDE.mdやAGENTS.mdのような規約ファイルを手書きするだけでなく、履歴や既存コードから暗黙の慣習を抽出・検証して渡す設計が有効だと示唆されます。</li>
+<li><strong>導入時の注意点</strong>：精度86%ということは、誤った規範が混入する余地が残ります。生成された規範パッケージは人間がレビューしてから運用に組み込むのが現実的です。</li>
+<li><strong>地域推定の根拠と確信度</strong>：フィードに所属情報はなく、ここでの地域は著者名からの推定にすぎません。第一著者を含む多くの著者名は中国語圏由来とみられますが、中国語圏の研究者は世界各地に所属しているため、名前だけでは地域を絞り込めません。判断材料が弱いため、確信度は低いと判断し「地域不明」としました。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（2件）</h3>
+  <div class="badges"><a class="badge" href="https://arxiv.org/abs/2610.08405">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2610.07757">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
