@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-10-09</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-10-09</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 10トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>主要トピック概観</h2><ul>
+<li>本日の動向は「主要モデルの世代交代と低価格化」「AI悪用による攻撃・情報操作への警戒」「AI生成物の真正性確認」の3点に集約される。</li>
+<li>性能向上とコスト低下が同時に進み、AIの利用層は無料ユーザーやローカル環境にまで広がりつつある。</li>
+<li>一方で攻撃側のAI活用も明確になっており、普及とリスク対策を一体で考える必要性が高まっている。</li>
+</ul></article>
+<article class="card"><h2>OpenAI：ChatGPTの全ユーザーに「GPT-6」を提供</h2><ul>
+<li>OpenAIは、無料版を含むChatGPTの全ユーザーに「GPT-6」を提供した。最新世代モデルを有料プランに限定せず一斉に開放した点が大きな特徴である。</li>
+<li>新機能「Intelligent UI」を搭載し、回答の中にユーザーが直接操作できる画面を生成できるようになった。</li>
+<li>テキストで答える形から、その場で生成されたUIを通じて作業を完結させる形への移行を示す動きといえる。</li>
+<li>無料層への最新モデル開放により、競合各社にも価格設定や機能提供範囲の見直しを迫る可能性がある。</li>
+</ul></article>
+<article class="card"><h2>Anthropic：「Claude Haiku 5.5」公開と大幅な価格改定</h2><ul>
+<li>Anthropicは小型モデル「Claude Haiku 5.5」を公開した。「Haiku 4.5」から性能が大幅に向上する一方、利用コストは約75％減ると説明している。</li>
+<li>API料金はHaiku 4.5の10分の1に設定され、同社の小型モデルとして大幅な値下げとなった。</li>
+<li>あわせて上位モデル「Sonnet 5.5」のキャッシュ読み込み料金も半額に引き下げられた。</li>
+<li>大量のリクエストを処理するエージェント用途や業務システムへの組み込みで、コスト面の障壁が大きく下がる。</li>
+<li>小型モデルを安価な下位版ではなく、高性能かつ低コストな主力選択肢として位置付ける戦略がうかがえる。</li>
+</ul></article>
+<article class="card"><h2>Microsoft：ローカル実行のコーディングAIと「ハイブリッドインテリジェンス」</h2><ul>
+<li>Microsoftは、PC上で動作するローカルAI「MAI-Code-1.1-Flash」をリリースした。</li>
+<li>あわせて、ローカルAIとクラウドAIを組み合わせる「ハイブリッドインテリジェンス」の考え方を提唱している。</li>
+<li>処理内容に応じて端末側とクラウド側を使い分け、応答速度・コスト・データ保護を両立させる狙いとみられる。</li>
+<li>クラウドモデルの値下げが進む中でも、ローカル実行の選択肢を広げる動きは並行して進んでいる。</li>
+</ul></article>
+<article class="card"><h2>AI悪用によるサイバー攻撃への警戒</h2><ul>
+<li>国内で情報漏えいが多発している状況を受け、セキュリティ専門家が合同で見解を示した。</li>
+<li>専門家は現状を「異常な事態」と表現し、攻撃へのAI悪用は「否定する方が難しい状況」との認識を示している。</li>
+<li>見解では、攻撃の特徴と防御側が取るべき対策もあわせて整理されている。</li>
+<li>AIで攻撃の速度と規模が拡大する前提に立ち、従来型の防御体制を見直す必要性が強調されている。</li>
+<li>防御側でも、検知・分析・対応の高速化にAIを活用することが不可欠になりつつある。</li>
+</ul></article>
+<article class="card"><h2>OpenAI：AIを使った「偽装フロント」工作の阻止</h2><ul>
+<li>OpenAIは、AIを悪用した「false front（偽装フロント）」工作を阻止した取り組みを公表した。</li>
+<li>実在の組織や人物を装った偽の窓口を作り、AIでその運営を効率化する手口への対策とみられる。</li>
+<li>AI事業者が自社サービスの悪用を監視し、その内容を公表する取り組みは継続的に行われている。</li>
+<li>サイバー攻撃と同様に、情報工作の分野でもAIが攻撃側の効率化に使われている実態を示している。</li>
+</ul></article>
+<article class="card"><h2>Google：AI生成物の判定ツール「SynthID Detector」を一般公開</h2><ul>
+<li>Googleは、AI生成コンテンツを判定するツールを一般向けに公開した。</li>
+<li>判定対象はGoogle製AIに限らず、OpenAIやNVIDIAのサービスで生成されたコンテンツも含まれる。</li>
+<li>複数社の生成物を横断的に確認できる仕組みが一般ユーザーにも開放された意義は大きい。</li>
+<li>偽情報やなりすましへの懸念が強まる中、生成物の出所を確認する手段の整備が進んでいる。</li>
+<li>対応する事業者が増えるほど、電子透かしを業界横断の真正性確認の基盤として使える可能性が高まる。</li>
+</ul></article>
+<article class="card"><h2>AI向け生物学データセットへの大型投資</h2><ul>
+<li>米国政府は、AIトレーニング用のオープンな生物学データセットを構築するため、5億ドルを投資する。</li>
+<li>Meta、Google DeepMind、Isomorphic Labsもそれぞれ3億ドルを投資する。</li>
+<li>創薬や生命科学分野のAIでは、モデルの性能だけでなく学習データの質と量が課題とされてきた。</li>
+<li>官民が共同でオープンデータという共通基盤に資金を投じる点が特徴であり、研究全体の底上げにつながると期待される。</li>
+</ul></article>
+<article class="card"><h2>数学研究へのAIの浸透</h2><ul>
+<li>理論計算機科学の重要な未解決予想である「Unique Games」の証明にAIが迫り、研究者がAIより先に証明しようと競い合った経緯が報じられた。</li>
+<li>AIが研究の補助にとどまらず、人間の研究者と先着を争う存在になりつつあることを象徴する事例である。</li>
+<li>数学のように厳密さが求められる分野でのAIの進展は、研究者の役割や成果の評価方法にも影響を与え得る。</li>
+</ul></article>
+<article class="card"><h2>企業でのAI定着：富士通のCopilot活用</h2><ul>
+<li>富士通では、Microsoft Copilotの10万ライセンスについて利用率が9割を超えている。</li>
+<li>生成AIの導入企業で多い「導入したが使われない」という課題に対し、定着を図った取り組みが紹介されている。</li>
+<li>大規模組織で高い利用率を実現した事例は、ライセンス配布後の活用促進策の重要性を示している。</li>
+<li>AI活用の焦点が、導入するかどうかから、どう定着させて成果につなげるかへ移っている。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/08/2000002119/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/08/2000002112/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2610/08/2000002114/">itmedia.co.jp</a><a class="badge" href="https://gigazine.net/news/20261008-hybrid-intelligence-mai-code-flash/">gigazine.net</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2610/08/2000002123/">itmedia.co.jp</a><a class="badge" href="https://openai.com/index/disrupting-ai-enabled-false-front-operations">openai.com</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/08/2000002128/">itmedia.co.jp</a><a class="badge" href="https://gigazine.net/news/20261008-virtual-biology-initiative/">gigazine.net</a><a class="badge" href="https://www.quantamagazine.org/as-ai-closed-in-on-unique-games-proof-researchers-raced-to-beat-the-machines-20261007/">quantamagazine.org</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2610/08/news022.html">atmarkit.itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
