@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発の論文 2026-10-09</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-purple">
+  <header class="page">
+    <span class="eyebrow">AI開発の論文</span>
+    <h1>AI開発の論文</h1>
+    <div class="meta">
+      <span>📅 2026-10-09</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 2トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><span class="mark">注目の著者</span><h2>コーディングエージェント時代にソフトウェア工学が不可欠である理由──LLMの構造的空白を埋める4つの知識レバー（イタリア）</h2><ul>
+<li><strong>何を調べたか</strong>：AIがソフトウェア工学（SE）という学問と、ソフトウェアエンジニアという職業を不要にするのかを論じた論考です。結論は逆で、高性能なコーディングエージェントが普及するほどSEとエンジニアは不可欠になると主張しています。</li>
+<li><strong>論文の性質</strong>：要旨を見る限り、実験やベンチマークで定量評価する研究ではありません。LLMの性質から議論を組み立てるポジションペーパーです。</li>
+<li><strong>注目点①：LLMの3つの構造的性質</strong>：「確率的生成」「不可知性（agnosticism）」「意味的ステートレス性」の3つを挙げています。これらが生む「構造的空白」は、学習をどれだけ重ねても解消できないと論じています。</li>
+<li><strong>注目点②：空白を放置した場合のリスク</strong>：SEという土台がないままAI支援開発を進めると、もっともらしく見えても検証できず、最終的に信頼できないソフトウェアが生まれると指摘しています。</li>
+<li><strong>注目点③：4つの知識レバー</strong>：空白を埋める手段として「方法論の知識」「ドメイン知識」「設計上の選択」「プロセス上の選択」を提示しています。4つとも永続的な成果物として具体化（reify）すべきだとしています。</li>
+<li><strong>注目点④：エンジニアの3つの役割</strong>：知識レバーの運用には、エンジニアが「方法論の設計者」「人とAIの仲介者」「知識の管理者」として関わる必要があると位置づけています。</li>
+<li><strong>実務への効き方①：知識の外部化</strong>：エージェントは会話をまたいで意味を保持しないため、設計判断・ドメイン知識・開発プロセスを文書や規約ファイルとしてリポジトリに残すことが重要になります。これはエージェント向け指示ファイルや設計記録（ADR）を整備する方針の理論的な裏付けになります。</li>
+<li><strong>実務への効き方②：検証の設計</strong>：生成コードが「もっともらしい」こと自体がリスクだと考えると、テスト・レビュー・受け入れ基準を人間側で設計しておくことの価値が高まります。</li>
+<li><strong>実務への効き方③：人材育成の論拠</strong>：エンジニアの役割をコードを書く人から、方法論と知識を管理する人へと捉え直す議論は、チーム体制や育成方針を見直す際の論拠として使えます。</li>
+<li><strong>地域推定の根拠と確信度</strong>：フィードに所属情報はないため、地域は推定です。著者名「Alfonso Fuggetta」がイタリア語圏の姓名であることを主な根拠に、イタリアと推定しました。同名のSE研究者がイタリアの研究機関で活動していることも知られており、確信度は中程度です。ただし同一人物かどうかや現在の所属は確認していません。</li>
+</ul></article>
+<article class="card"><span class="mark">注目の著者</span><h2>AdaT²：適応的テスト変換による会話エージェントのブラックボックス境界テスト（地域不明）</h2><ul>
+<li>LLMベースの会話エージェントが業務ポリシーを守れているかを、内部を見ないブラックボックス方式で検証する手法「AdaT²」を提案した論文です。ポリシーの各条件はユーザー要求を2つに分ける「境界」であり、エージェントはその両側で異なる振る舞いをすべきだと捉えています。</li>
+<li>AdaT²は、まずLLMをユーザー役にした探索的な会話を行い、エージェントの返答から「条件」と「その条件が成り立つときに期待される振る舞い」を記述した文（ステートメント）を抽出します。そのステートメントを手がかりに境界テストを生成します。</li>
+<li>単一のステートメントから作る通常のテストに加えて、「必須入力を1つ省く」のような変換指示とステートメントを組み合わせた変換テストも生成します。変換によって、テストを境界の反対側や別の境界へ移すことができます。</li>
+<li>ステートメントと変換指示の組み合わせは膨大で、適用できないものも多くあります。そこで、ステートメントは新規性で選び、変換指示はバンディットアルゴリズムのBayes-UCBで選びます。Bayes-UCBは、過去の組み合わせでテストが生成できたか、LLMジャッジの判定でエージェントが合格したかから学習します。</li>
+<li>評価用ベンチマークは、境界の両側を別々に数えます。また、プロンプト・ツールコード・知識ベースで明示的に定義された境界と、LLMがドメイン知識から推測した境界を区別しています。</li>
+<li>注目すべき結果として、τ³-benchの4ドメインでは、AdaT²のテストの62.7〜83.3%が「期待される振る舞いが明示的に定義された有効な境界テスト」でした。比較手法AgentEvalの47.7〜68.1%を全ドメインで上回っています。</li>
+<li>変換テストは、通常テストでは見逃される明示的な境界を13〜46個追加で捉えました。回帰テストとしては、航空ドメインで埋め込んだポリシー違反8件をすべて検出し、小売ドメインでは8件中4件を検出しました。AgentEvalはテスト数が3分の1未満で、検出数はそれぞれ5件と2件でした。</li>
+<li>実務への示唆として、カスタマーサポートなどのエージェントを社内ポリシーに沿わせる場面で、ソースコードや評価データがなくてもポリシー境界を狙ったテストスイートを自動生成する道筋を示しています。プロンプトやツールを改修した際の回帰テストに特に有効です。</li>
+<li>「必須入力の欠落」のような変換パターンでエッジケースを体系的に作るという考え方は、手作業でエージェントのテストケースを設計する際にも応用できます。</li>
+<li>地域は、論文に所属情報が含まれていないため推定です。共著者のLionel Briand氏はカナダとアイルランドの両方で研究活動が知られており、他の共著者の顔ぶれからアイルランドの研究拠点の可能性も考えられます。ただし、第一著者Liting Lin氏の所属を直接示す材料はなく、氏名からも地域は判断できないため、確信度は低いと判断して「地域不明」としました。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（2件）</h3>
+  <div class="badges"><a class="badge" href="https://arxiv.org/abs/2610.10226">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2610.10141">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
