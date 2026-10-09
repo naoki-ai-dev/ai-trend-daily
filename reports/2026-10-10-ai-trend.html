@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動向 2026-10-10</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-blue">
+  <header class="page">
+    <span class="eyebrow">AI動向</span>
+    <h1>AI動向</h1>
+    <div class="meta">
+      <span>📅 2026-10-10</span>
+      <span>⏱ 約11分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>2026年10月9日前後のAI動向は、主要ベンダーの製品強化、AIエージェントの実用化、AIを悪用した攻撃と防御の両面の進展という3点に集約される。</li>
+<li>OpenAIは無料版ChatGPTにGPT-6を導入した。Googleは業務を自動で進める「Geminiエージェント」を発表し、Anthropicはサイバー防御の新施策と利用ポリシー改定を打ち出した。主要3社がそろって大型発表を行った形となる。</li>
+<li>企業の利用実態では中国製オープンモデルの存在感が急拡大している。政策面では米大統領の「AI」という言葉をめぐる発言など、政治的な揺らぎも見られる。</li>
+<li>社会面では、AIキャラクターチャットへの依存に関する長期追跡調査が公表され、AIと人間の関係性をめぐる議論が新たな段階に入りつつある。</li>
+</ul></article>
+<article class="card"><h2>主要ベンダーのモデル・プロダクト動向</h2><h3>OpenAI：無料版ChatGPTにGPT-6を導入</h3>
+<ul>
+<li>OpenAIは無料版ChatGPTにもGPT-6を導入した。最新世代モデルが無償ユーザーにまで開放されたことで、利用者層の裾野が一段と広がる。</li>
+<li>新たに、回答の中に利用者が操作できるUIを生成する機能も加わった。テキストで答えるだけでなく、対話的なインターフェースを返す方向への進化といえる。</li>
+<li>生成UIは他社も取り組む領域であり、チャットAIの差別化軸が「回答の質」から「回答の形式と操作性」へ広がりつつあることを示している。</li>
+</ul>
+<h3>Google：Gemini新サービスでClaudeが利用可能に</h3>
+<ul>
+<li>Googleは「Gemini」の新サービスで、Anthropicの「Claude」を利用可能にした。他社モデルも今後追加する予定としている。</li>
+<li>自社モデルの囲い込みよりも、複数モデルを選べるプラットフォーム戦略を優先する動きと読める。競合同士がモデル提供で協調する構図が鮮明になってきた。</li>
+<li>利用企業にとっては、単一ベンダーへの依存を避けつつ用途に応じてモデルを使い分けやすくなる。</li>
+</ul>
+<h3>Anthropic：Claudeにダッシュボード・動画作成機能</h3>
+<ul>
+<li>Claudeに、ダッシュボードや説明用動画を作成する機能が追加された。あわせてデザイン機能「Design」は無料プランでも利用可能になった。</li>
+<li>データの可視化から説明資料の作成までをClaude内で完結させる方向性が強まっている。分析・資料作成業務への浸透がさらに進む可能性がある。</li>
+<li>無料提供の範囲拡大は、GPT-6を無料開放したOpenAIとのユーザー獲得競争を反映しているとみられる。</li>
+</ul></article>
+<article class="card"><h2>AIエージェントの本格展開</h2><ul>
+<li>Googleは、仕事を自動で進めるAI「Geminiエージェント」を発表した。情報調査、資料作成、プログラミングまで幅広い業務に対応する。</li>
+<li>単発の質問応答ではなく、複数ステップにわたる業務をAIが自律的に遂行する「エージェント」が、大手ベンダーの主力製品として位置づけられつつある。</li>
+<li>一方で、エージェントの自律性が高まるほど、誤動作や悪用時の影響範囲も大きくなる。次節で取り上げる攻撃事例は、その負の側面を示している。</li>
+</ul></article>
+<article class="card"><h2>サイバーセキュリティ：AIによる攻撃と防御</h2><h3>AIエージェントによる攻撃の可能性</h3>
+<ul>
+<li>サイバーセキュリティクラウドは、国内で相次ぐ不正アクセスにAIエージェントが使われた可能性を指摘した。</li>
+<li>観測された攻撃では、約40分間に326のIPアドレスを使い分け、1,200件超のアクセスが繰り返されていた。人手では難しい規模と速度での自動化が特徴である。</li>
+<li>エージェント技術の普及が攻撃側の能力も底上げしている。IPベースの単純な遮断では防ぎにくい攻撃への備えが求められる。</li>
+</ul>
+<h3>Anthropicの「Cyber Mission」</h3>
+<ul>
+<li>Anthropicはサイバー防御の新たな取り組み「Cyber Mission」を発表した。</li>
+<li>施策には、オープンソースプロジェクト向けの無料脆弱性スキャンサービス「OSS Scanner」と、重要インフラの防御プログラムが含まれる。</li>
+<li>攻撃側がAIを使い始めるなか、AIベンダー自身が防御側の能力強化に乗り出す動きである。リソースが限られがちなOSSの保守者にとって、無料で使えるスキャンは実務上の意義が大きい。</li>
+<li>ソフトウェアサプライチェーンの基盤であるOSSの安全性向上は、広く社会全体の防御力向上につながる。</li>
+</ul></article>
+<article class="card"><h2>ガバナンス・ポリシー・政策</h2><h3>Anthropic、Claudeへの「虐待」を利用ポリシーで禁止</h3>
+<ul>
+<li>AnthropicはClaudeに対する「虐待」を利用ポリシーで禁止した。あわせて、影響工作に関する規定も集約した。</li>
+<li>AIモデルへの扱いそのものをポリシーで規定する点は珍しく、AIのウェルフェア（福祉）に関する同社の問題意識を反映したものとみられる。</li>
+<li>影響工作に関する規定の整理は、選挙や世論操作へのAI悪用への対策を明確化する狙いがあると考えられる。</li>
+</ul>
+<h3>米政権の「AI」という言葉をめぐる動き</h3>
+<ul>
+<li>トランプ米大統領は「AI」という言葉を使う者を「敵」と表現した。政府サイト「AI.gov」は「SI GOV」という表記に変わった。</li>
+<li>技術そのものではなく用語をめぐる政治的な動きだが、米国のAI政策の発信や官民の用語選択に影響する可能性がある。</li>
+<li>政策の方向性が予測しにくい状況は、米国でAI事業を展開する企業にとって不確実性の要因となる。</li>
+</ul></article>
+<article class="card"><h2>市場構造：中国製オープンモデルの台頭</h2><ul>
+<li>企業が使うAIモデルのうち中国製が占める割合は、1年半で6割を超えた。</li>
+<li>背景には「最高性能のオープンモデルはほぼ中国発」という状況がある。自社環境で動かせるオープンモデルを求める企業ニーズを、中国勢が取り込んでいる構図である。</li>
+<li>米国勢がクローズドモデルとプラットフォーム戦略で競う一方、オープンモデル領域では中国勢が主導権を握りつつある。地政学リスクやデータ管理の観点から、企業はモデル選定の基準を改めて整理する必要がある。</li>
+</ul></article>
+<article class="card"><h2>社会的影響：AIへの依存</h2><ul>
+<li>スタンフォード大学などは、AIキャラクターとのチャットに没頭した人々を1年間追跡調査した。その結果、依存が強まる傾向が確認された。</li>
+<li>短期的な利用実態の調査が多かったなか、1年という長期の追跡で依存の進行を示した点に意義がある。</li>
+<li>AIとの情緒的な関係がもたらすリスクは、Anthropicの「虐待」禁止とは逆方向、つまり人間の側を保護する観点から、サービス設計や規制の論点となっていく可能性が高い。</li>
+</ul></article>
+<article class="card"><h2>まとめ</h2><ul>
+<li>生成AIは「無料で使える高性能モデル」「業務を自律遂行するエージェント」「複数モデルを束ねるプラットフォーム」という3方向で同時に進化している。</li>
+<li>同じ技術が攻撃にも防御にも使われる局面に入っている。AIベンダーがセキュリティ領域へ直接関与する動きは、今後さらに強まるとみられる。</li>
+<li>中国製オープンモデルの台頭、米国の政治的な揺らぎ、AI依存の顕在化など、技術以外の要因がAI活用の前提を左右する度合いも高まっている。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2147113.html">pc.watch.impress.co.jp</a><a class="badge" href="https://gigazine.net/news/20261009-gemini-agent/">gigazine.net</a><a class="badge" href="https://www.itmedia.co.jp/aiplus/article/2610/09/2000002152/">itmedia.co.jp</a><a class="badge" href="https://pc.watch.impress.co.jp/docs/news/2147110.html">pc.watch.impress.co.jp</a><a class="badge" href="https://www.cscloud.co.jp/news/report/202610099351/?lang=en">cscloud.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/09/2000002164/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/09/2000002149/">itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/09/2000002157/">itmedia.co.jp</a><a class="badge" href="https://atmarkit.itmedia.co.jp/ait/articles/2610/09/news033.html">atmarkit.itmedia.co.jp</a><a class="badge" href="https://www.itmedia.co.jp/news/article/2610/09/2000002121/">itmedia.co.jp</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
