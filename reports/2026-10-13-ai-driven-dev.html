@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-10-13</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-10-13</span>
+      <span>⏱ 約11分で読めます</span>
+      <span>🗂 8トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概観：AI駆動開発は「試す段階」から「運用する段階」へ</h2><ul>
+<li>AIコーディングエージェントは、個人の生産性ツールから組織とプロダクションの基盤へと位置づけが変わりつつある。</li>
+<li>今回の記事群で目立つのは、新機能の紹介よりも、権限・コスト・状態管理・安全性といった「本番運用の設計原則」をめぐる議論である。</li>
+<li>経営レベルのAIネイティブ化から、pre-commitフックや権限設定といった現場の細かな実装知見まで、論点は幅広い。</li>
+<li>共通する問いは「AIにどこまで任せ、どこで人間や仕組みが止めるか」という境界設計だ。</li>
+</ul></article>
+<article class="card"><h2>組織レベルのAIネイティブ化</h2><ul>
+<li>Airbnbの事例では、CEOの決算発言とCTOの証言から、AIを前提に組織を組み替える「AIファースト」な姿勢が読み解かれている。</li>
+<li>経営トップが決算という公式の場でAI活用を語ることは、AI駆動開発が経営戦略の中核として扱われ始めたことを示している。</li>
+<li>開発組織にとっては、AIツールの導入そのものよりも、AIを前提にした業務プロセスや役割分担の再設計が問われる段階に入っている。</li>
+<li>この流れは、後述する権限設計やガードレールなど、現場の運用ルール整備の必要性を押し上げる要因にもなっている。</li>
+</ul></article>
+<article class="card"><h2>エージェント設計：ツールとプロトコルの最適化</h2><ul>
+<li>Postmanは、AIエージェントに公開するツールを170個から15個に絞り込んだ本番設計を採用している。</li>
+<li>ツールを多く渡せばエージェントが賢くなるわけではなく、選択肢の多さは誤選択やコンテキスト消費の増加につながるという教訓が読み取れる。</li>
+<li>「何を見せないか」を設計することが、エージェントの精度と安定性を高める重要な手段になりつつある。</li>
+<li>MCP（Model Context Protocol）では、ステートレス化に伴うSDK移行が進んでおり、4言語のSDKにおける移行実測8本を「壊れる層」ごとに整理した記事が登場した。</li>
+<li>プロトコルの仕様変更は、サーバー実装・クライアント実装・セッション管理など複数の層に波及するため、どの層で何が壊れるかを把握することが移行の鍵となる。</li>
+<li>エージェント基盤のエコシステムが成熟するにつれ、ツール設計とプロトコル追従の両面で、継続的な保守コストを見込む必要が出てきている。</li>
+</ul></article>
+<article class="card"><h2>運用自動化：夜間バッチと非対話実行</h2><ul>
+<li>Claude Codeを夜間バッチに組み込んだ事例では、権限・コスト・障害検知の3点が設計原則として挙げられている。</li>
+<li>人間が見ていない時間帯に動くエージェントは、対話セッションとは異なり、異常をその場で止める人がいない。</li>
+<li>そのため、実行できる操作を事前に絞る権限設計、暴走時の費用を抑えるコスト上限、失敗を確実に拾う検知の仕組みが不可欠となる。</li>
+<li>AIエージェントに支出の承認ゲートを設けた海外の事例では、最初の43件の判断のうち35件が拒否されたと報告されている。</li>
+<li>この数字は、エージェントが自律的に要求する支出の多くが、人間の基準では妥当でないことを示唆しており、ゲートの必要性を裏付けている。</li>
+<li>非対話・自律実行の拡大に伴い、「止める仕組み」を最初から組み込むことが標準的な設計になりつつある。</li>
+</ul></article>
+<article class="card"><h2>安全性：ガードレールは多層で構築する</h2><ul>
+<li>AIエージェントにコミットさせるリポジトリでは、pre-commitに5つの安全ゲートを入れる運用が紹介されている。</li>
+<li>エージェントが生成した変更を、Gitの段階で機械的に検査することで、秘密情報の混入や意図しない変更を水際で防ぐ考え方である。</li>
+<li>一方、Claude Codeのdeny設定だけではgit pushを止めきれないという指摘もある。</li>
+<li>単一の権限設定に頼ると、コマンドの書き方や経路の違いによってすり抜けが起こりうるため、フック・Git側の設定・リモートの保護などを組み合わせる必要がある。</li>
+<li>両記事から読み取れるのは、エージェントの安全性は「1か所の設定」ではなく「複数の層の防御」で担保すべきだという原則である。</li>
+<li>特にpushのように外部へ影響する操作は、取り消しが難しいため、最も厳重な制御対象として扱うべきだろう。</li>
+</ul></article>
+<article class="card"><h2>並行開発とコンテキスト管理</h2><ul>
+<li><code>claude --worktree</code> を使って同じリポジトリで複数のエージェントを並行稼働させる際の注意点が、5つのポイントとして整理されている。</li>
+<li>Git worktreeによる作業ディレクトリの分離は並行開発を可能にする一方で、ブランチ管理や依存関係の共有など、並行ならではの落とし穴を伴う。</li>
+<li>長時間のエージェント作業では、コンテキストのコンパクション（要約・圧縮）後に、完了済みのタスクを再実行してしまう問題がある。</li>
+<li>subagent-driven-developmentでは、作業の進捗を記録するledger（台帳）を外部に持つことで、コンパクション後も完了状態を引き継ぐ設計が採られている。</li>
+<li>並行化と長時間化が進むほど、エージェントの「記憶」を会話の外に永続化する仕組みが重要になる。</li>
+<li>状態をファイルやGitなどの外部ストレージに逃がす設計は、複数エージェントの協調にもそのまま応用できる。</li>
+</ul></article>
+<article class="card"><h2>レビュー工程へのAI適用</h2><ul>
+<li>Claude Codeの <code>/code-review</code> では、努力レベルを5段階で選べるようになっている。</li>
+<li>最上位の <code>ultra</code> はクラウド上の複数エージェントでレビューを行い、1回あたり5〜25ドル程度の費用がかかるとされる。</li>
+<li>レビューの深さとコストを利用者が選択できる設計は、変更の重要度に応じてAIレビューの投資を調整するという運用を後押しする。</li>
+<li>小さな修正には軽量なレビュー、リリース前の大きな変更には多エージェントの深いレビューといった使い分けが現実的になってきた。</li>
+</ul></article>
+<article class="card"><h2>今後の展望</h2><ul>
+<li>AI駆動開発の焦点は、「AIに何ができるか」から「AIをどう安全かつ経済的に運用するか」へ移っている。</li>
+<li>ツール数の絞り込み、支出ゲート、pre-commitによる検査など、エージェントの行動範囲を意図的に狭める設計が成果を上げている。</li>
+<li>夜間バッチや並行開発など、人間の目が届かない実行形態が増えるほど、権限・コスト・状態管理の仕組み化が欠かせない。</li>
+<li>組織レベルでは、Airbnbのように経営がAIネイティブ化を掲げる動きが広がり、現場の運用知見がそのまま競争力に直結する時代になりつつある。</li>
+<li>MCPの仕様変化に見られるように基盤技術はまだ流動的であり、変化に追従し続ける体制づくりも重要な課題である。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/leading_ai/articles/airbnb-ai-native-organization">zenn.dev</a><a class="badge" href="https://zenn.dev/takuh/articles/6c02d8705609ea">zenn.dev</a><a class="badge" href="https://zenn.dev/kai_kou/articles/1217-mcp-stateless-sdk-migration-roundup">zenn.dev</a><a class="badge" href="https://zenn.dev/sidejob/articles/a426c4d38f375a8c9">zenn.dev</a><a class="badge" href="https://dev.to/mms_a485ae4c6b01aa70eb31/we-put-a-spend-gate-in-front-of-our-ai-agents-it-denied-35-of-its-first-43-decisions-41lj">dev.to</a><a class="badge" href="https://zenn.dev/vakoya/articles/vakoya-precommit-gates-for-ai-agent">zenn.dev</a><a class="badge" href="https://zenn.dev/k_iijima/articles/ae926619c45882">zenn.dev</a><a class="badge" href="https://zenn.dev/tanashun/articles/claude-code-worktree-parallel">zenn.dev</a><a class="badge" href="https://zenn.dev/skillselion/articles/0f8d3f202f6de0">zenn.dev</a><a class="badge" href="https://qiita.com/caymezon/items/b188c98a2eeaccc33824">qiita.com</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
