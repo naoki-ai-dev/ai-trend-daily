@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発の論文 2026-10-22</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-purple">
+  <header class="page">
+    <span class="eyebrow">AI開発の論文</span>
+    <h1>AI開発の論文</h1>
+    <div class="meta">
+      <span>📅 2026-10-22</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 2トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><span class="mark">注目の著者</span><h2>TraceLite：画像化と冗長除去でSWEエージェントの履歴を軽くする（香港）</h2><ul>
+<li><strong>何を調べたか</strong>：リポジトリ単位の課題を解くSWEエージェントでは、ツール実行の履歴（トレース）が増え続け、トークン消費と推論コストが膨らみます。本論文は、この履歴を学習なし・補助LLMなしで圧縮する手法「TraceLite」を提案しています。</li>
+<li><strong>前提となる予備調査</strong>：中程度の圧縮率であれば、テキストを画像として描画する「光学的圧縮」でも文字情報と意味情報の多くが保たれることを確認しています。またエージェントの軌跡には、ステップ間の重複と、作業フェーズ単位の冗長性の両方があると報告しています。</li>
+<li><strong>手法の中身</strong>：直近の観測結果は高精度なテキストのまま残し、古い観測結果はコンパクトな画像に変換します。あわせて重複部分を削除し、コード編集後に不要になったフェーズの観測内容を破棄します。</li>
+<li><strong>注目すべき結果</strong>：SWE-bench VerifiedとDeepSWEで、GPT-5.6-LunaとGemini-3.8Flashをバックボーンに評価しています。SWE-bench Verifiedでは解決率78.25%で、比較した圧縮手法をすべて上回りました。</li>
+<li><strong>コスト面の結果</strong>：平均入力トークンを33.05%、APIコストを21.30%削減しています。圧縮処理による遅延は観測1件あたり0.438秒にとどまります。</li>
+<li><strong>実務への効き方</strong>：長時間動くコーディングエージェントの運用コストを、追加学習や要約用LLM呼び出しなしで下げられる可能性があります。「最新はテキスト、過去は画像」という方針は、マルチモーダル対応モデルを使うエージェント基盤のコンテキスト管理にそのまま応用しやすい設計です。</li>
+<li><strong>導入時の注意点</strong>：画像化した履歴を正しく読み取れるかは、バックボーンモデルの視覚性能に依存すると考えられます。自社で使うモデルで解決率が落ちないか、事前に検証したほうが安全です。</li>
+<li><strong>地域の推定根拠と確信度</strong>：フィードには所属情報がないため、地域は推定です。最終著者のMichael R. Lyu氏は香港中文大学の研究者として広く知られており、著者名がいずれも中国語のピンイン表記であることから、第一著者も同じ研究室の所属と推定しました。ただし第一著者本人の所属は確認できていないため、確信度は中程度です。</li>
+</ul></article>
+<article class="card"><span class="mark">注目の著者</span><h2>InterWebCoder──実行可能テストを報酬にした強化学習で「操作できるWebページ」を生成する（香港）</h2><ul>
+<li><strong>何を調べたか</strong>：見た目だけでなく、クリックや入力などの複数ステップの操作とそれに伴う状態遷移まで再現する「インタラクティブなWebページ」のコード生成を、マルチモーダルLLM（MLLM）に学習させる手法を提案している。</li>
+<li><strong>課題設定</strong>：実世界のWebページのコードは無関係なスクリプトや外部依存が絡み合っていて学習データにしにくい。また、GUIエージェントに操作させて動作を検証する従来方式は、遅く結果も不安定になりうる。</li>
+<li><strong>データ合成パイプライン</strong>：実際の操作軌跡を記録し、それをもとに外部依存のない自己完結したWebページコードと実行可能なテストスクリプトをセットで合成する。テスト仕様で生成を導き、実行して検証する設計になっている。</li>
+<li><strong>失敗原因の切り分けと修復</strong>：テストが落ちたときは実行時の証拠を使い、誤りがWebページ側とテスト側のどちらにあるかを特定してから反復修正する。この仕組みにより、2,058タスクから1,736件の検証済みサンプルを得た（合成成功率84.35%）。</li>
+<li><strong>学習手法</strong>：テストIDで重み付けした教師ありファインチューニングの後、GRPO（グループ相対方策最適化）を行う。報酬にはテスト合格率と状態ごとの視覚的類似度を使い、機能的正しさと見た目の忠実さを直接最適化する。</li>
+<li><strong>注目すべき結果</strong>：9Bのバックボーンで、IWR-Benchで48.54、Vision2Webで48.42の最終スコアを記録した。30B級モデルやGemini-3.7-Flashを上回り、Claude-Sonnet-5とも競り合う水準にある。</li>
+<li><strong>効率面の成果</strong>：GUIエージェント検証を実行可能テストに置き換えたことで、報酬計算の遅延を97%以上削減し、外部MLLMによる検証コストもなくした。エンドツーエンドの学習は最大1.4倍速くなった。</li>
+<li><strong>実務への効き方</strong>：フロントエンド生成をAIに任せるとき、スクリーンショットの見た目比較だけでなく「操作シナリオを実行するテスト」で検証する方が速く、再現性も高いことを示している。社内の生成パイプラインや評価基盤の設計に直接応用できる考え方である。</li>
+<li><strong>実務への効き方（続き）</strong>：テストが落ちたときに「コードが悪いのかテストが悪いのか」を実行ログから切り分ける修復ループは、AIにコードとテストを両方書かせる開発フローでもそのまま参考になる。</li>
+<li><strong>地域の推定根拠と確信度</strong>：フィードには所属情報がないため、地域は推定である。第一著者を含め中国語圏の名前が並ぶことに加え、最終著者のMichael R. Lyuは香港中文大学のソフトウェア工学研究グループを率いる研究者として知られており、第一著者も同グループの所属と考えて香港と推定した。共著者に別機関の研究者が含まれる可能性もあるため、確信度は中程度である。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（2件）</h3>
+  <div class="badges"><a class="badge" href="https://arxiv.org/abs/2610.28612">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2610.28610">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
