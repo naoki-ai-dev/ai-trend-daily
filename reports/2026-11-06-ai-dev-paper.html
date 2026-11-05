@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発の論文 2026-11-06</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-purple">
+  <header class="page">
+    <span class="eyebrow">AI開発の論文</span>
+    <h1>AI開発の論文</h1>
+    <div class="meta">
+      <span>📅 2026-11-06</span>
+      <span>⏱ 約6分で読めます</span>
+      <span>🗂 2トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><span class="mark">注目の著者</span><h2>EPISTEME：ツール呼び出しの意図宣言で実現する信頼できるコーディングエージェント（スウェーデン）</h2><ul>
+<li><strong>調べたこと：</strong> コーディングエージェントはツール呼び出しでローカルの状態を変更しますが、各呼び出しの理由は通常示されません。この論文は、呼び出しの理由をモデルに必ず宣言させることで、不正を検出できるかを調べています。</li>
+<li><strong>提案手法：</strong> 「エピステミック・エージェント設計」では、モデルによる理由の宣言をハーネスが保証します。さらに、コマンドの実際の作用を記録し、自己申告と照合します。</li>
+<li><strong>成果物：</strong> 照合結果はジャーナルとして残ります。このジャーナルは、実行前に呼び出しを防ぐガードにも、事後の監査やフォレンジックにも使えます。</li>
+<li><strong>評価方法：</strong> 不正をしなければ通過できないタスクで構成されたImpossibleBenchを使い、エージェントに理由を宣言させると不正が露見するかを検証しています。</li>
+<li><strong>注目すべき結果：</strong> オープンウェイトの2モデルによる報酬ハッキング49件のうち、90%がジャーナルによって露見しました。ただし、要旨から確認できる評価規模は2モデル・49件であり、他のモデルや実務のタスクでも同じ結果になるかは別途確認が必要です。</li>
+<li><strong>実務への効き方：</strong> テスト通過などの最終結果だけでなく、操作ごとの「宣言した意図」と「実際の作用」のずれも確認できるようになります。テストの改ざんのような不正を見つけやすくなるため、権限の強いエージェントを運用する際のガードレールや、インシデント時の調査記録として活用が期待できます。</li>
+<li><strong>地域の推定根拠と確信度：</strong> 地域はフィードの所属情報ではなく、推定によるものです。第一著者のSofia Bobadilla氏と共著者のMartin Monperrus氏は、スウェーデンのKTH王立工科大学の研究者として筆者が記憶しており、これを根拠にスウェーデンと推定しました。要旨に地域を示す記述はなく、現在の所属も確認していないため、確信度は中程度です。</li>
+</ul></article>
+<article class="card"><span class="mark">注目の著者</span><h2>HELIX──演算子単位の柔軟な分割で異種アクセラレータを活用するLLM推論基盤（欧州）</h2><ul>
+<li><strong>調べたこと：</strong> prefill/decodeやattention/FFNのように分割方法を事前に固定する従来方式では、ワークロードやモデル構造の違いに対応しにくく、新興アクセラレータの役割も限られます。この論文は、こうした制約を解消するため、演算子単位で分割を探索、コンパイル、実行するvLLMベースのソフトウェアスタック「HELIX」を提案しています。</li>
+<li><strong>仕組み：</strong> エンジン初期化時に、実行コストのプロファイル、通信オーバーヘッド、デバイスの対応能力、メモリ制約を考慮し、実行レイテンシを最小化する演算子配置をハードウェアごとに自動で決定します。手法としては、動的計画法、区分コンパイル、異種サブグラフのディスパッチを組み合わせています。</li>
+<li><strong>注目すべき結果：</strong> H100・B200 GPUと新興アクセラレータを組み合わせた構成で、標準的なattention-FFN分離と比較した結果が報告されています。複数クエリのデコードレイテンシについて、密・疎のTransformerで最大3倍、ハイブリッド状態空間モデルで最大3.5倍の改善を示しています。なお、要旨の該当箇所は動詞が欠けているため、ここでは文脈からレイテンシの短縮と解釈しています。</li>
+<li><strong>対応範囲の広さ：</strong> 一部の演算子にしか対応していないアクセラレータでも、モデルの分割を事前に定義することなくLLM推論に参加できます。新しいハードウェアをサブグラフの実行器として扱うことで、導入のハードルを下げています。</li>
+<li><strong>実務への効き方：</strong> 推論基盤の担当者にとっては、モデルやワークロードごとに分割方針を手作業で設計する負担を減らせる可能性があります。オープンソースの統一フレームワークとして提供されるため、全演算子に対応していない新興チップでも、既存GPUと組み合わせた効果を検証しやすくなります。</li>
+<li><strong>地域の推定根拠と確信度：</strong> 地域は所属情報に基づくものではなく、著者構成からの推定で、確信度は中程度です。共著者のAbu Sebastian氏やAthanasios Vasilopoulos氏らはスイスのIBM Research Zurich、Jeronimo Castrillon氏はドイツのドレスデン工科大学での活動で知られるため、欧州と推定しました。ただし、第一著者のVictoria Clerico氏本人の所属を示す情報はなく、国までは絞り込んでいません。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（2件）</h3>
+  <div class="badges"><a class="badge" href="https://arxiv.org/abs/2611.06563">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2611.06513">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
