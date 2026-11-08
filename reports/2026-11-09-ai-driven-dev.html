@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI駆動開発の動向 2026-11-09</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-green">
+  <header class="page">
+    <span class="eyebrow">AI駆動開発の動向</span>
+    <h1>AI駆動開発の動向</h1>
+    <div class="meta">
+      <span>📅 2026-11-09</span>
+      <span>⏱ 約10分で読めます</span>
+      <span>🗂 7トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><h2>概要</h2><ul>
+<li>AI駆動開発の関心は「AIにコードを書かせる」段階を越え、エージェントをいつ動かし、どう止め、どう検証するかという運用設計へ移っています。</li>
+<li>人間の介在を減らす自律化が進む一方で、許可制御のすり抜けや取り消せない操作への対策など、安全面の議論も具体的になっています。</li>
+<li>テスト設計や差し戻し分析といった品質保証の工夫、人間の判断力を保つための要求定義の重要性も主要なテーマです。</li>
+<li>基盤モデル側では、SWEエージェントに向けた学習段階の工夫が紹介されており、ツール運用とモデル開発の両面から進展が見られます。</li>
+</ul></article>
+<article class="card"><h2>エージェント運用の自律化：外ループと並列化</h2><ul>
+<li>エラー監視のSentryからWebhookを経てCodexを起動する事例では、エージェントの「外ループ」を「いつ動かし、いつ止め、何を引き継ぐか」の3点で設計する考え方が示されています。</li>
+<li>この視点では、エージェントの性能よりも起動条件・停止条件・コンテキストの受け渡しといった周辺設計が、自律運用の成否を左右します。</li>
+<li>障害検知から修正着手までを人手を介さず進める流れは、開発プロセスの一部がイベント駆動のエージェント処理へ置き換わりつつあることを示しています。</li>
+<li>Claude Code Projectsを扱う記事では、統括役のClaudeが並列の作業を割り振る使い方が解説されています。</li>
+<li>単一エージェントとの対話から、統括エージェントが複数の作業を指揮する階層構造へと、利用形態が移っています。</li>
+<li>並列化と外ループ化はどちらも、人間がエージェントの一挙手一投足を見る前提を外す方向にあります。そのぶん、後述する安全策と検証の仕組みの重要度が増しています。</li>
+</ul></article>
+<article class="card"><h2>安全性とガードレール：自律化の裏側</h2><ul>
+<li>「Your Allowlist Lost to a Heredoc」は、コマンドの許可リストがヒアドキュメントによってすり抜けられる問題を取り上げています。</li>
+<li>文字列パターンで許可・拒否を判定する方式には、シェル構文の柔軟さによって意図しないコマンドが通る構造的な弱点があります。許可リストだけに頼る危うさを示す事例です。</li>
+<li>常駐型AIエージェントの設計を扱う記事では、すべての操作に確認を求めるのではなく、「取り消せない操作」の前にだけ確認を挟む方針が紹介されています。</li>
+<li>確認を一律に求めると、人間が内容を見ずに承認する確認疲れが起きます。可逆性を基準に介入点を絞る設計は、自律性と安全性を両立させる現実的な落とし所です。</li>
+<li>本番リリース後のセキュリティについては、年1回の評価をAIエージェントによる継続的な検査に置き換える取り組みが報告されています。</li>
+<li>エージェントは攻撃される対象であると同時に、防御側の検査を自動化・高頻度化する手段にもなっています。</li>
+</ul></article>
+<article class="card"><h2>品質保証と検証：AIの出力をどう信頼するか</h2><ul>
+<li>1つのエージェントがコードとテストを両方書く「1エージェントTDD」と、実装を見ずにテストを書く「2エージェント・ブラインドTDD」を、実機で比較した検証があります。</li>
+<li>自分の書いたコードに合わせてテストを書くと、バグを前提にしたテストになりやすいという問題意識があります。worktreeでエージェントを分離し、情報を遮断する手法が試されています。</li>
+<li>AIに任せた作業の差し戻しを数えた記事では、差し戻しの約半分が同じ形をしていたと報告されています。</li>
+<li>差し戻しには繰り返し現れるパターンがあり、それを分類すれば指示や前提条件を改善できます。品質改善を感覚ではなくデータで進める姿勢が見られます。</li>
+<li>2つの記事に共通するのは、AIの出力を一度のレビューで信じるのではなく、構造的に誤りを見つける仕組みを組み込む考え方です。</li>
+</ul></article>
+<article class="card"><h2>人間の役割と指示設計</h2><ul>
+<li>「認知的降伏」を扱う記事では、AIの判断に人間が無批判に従ってしまう状態を、要求定義から防ぐ方法が論じられています。</li>
+<li>何を作るべきか、何が正しいかを人間が先に言語化しておかないと、AIの出力を評価する基準がなくなります。要求定義は人間の主体性を保つための足場になります。</li>
+<li>AIが賢くなった今でもAGENTS.mdが必要かを問う記事では、指示はAIを賢くも愚かにもするという視点が示されています。</li>
+<li>モデルの能力が上がっても、プロジェクト固有の文脈や制約は自動では伝わりません。一方で、不適切な指示や過剰な指示は性能を下げることもあり、指示ファイルの質が改めて問われています。</li>
+<li>自律化が進むほど、人間の仕事はコードを書くことから、要求を定義し、エージェントに渡す前提を設計し、結果を判断することへ移っていきます。</li>
+</ul></article>
+<article class="card"><h2>基盤モデル側の動き：SWEエージェントの下地づくり</h2><ul>
+<li>オープン・ミッドトレーニングに関する記事では、事前学習とファインチューニングの間に約500Bトークンの中間学習を挟み、SWEエージェントの下地を作る仕組みが解説されています。</li>
+<li>「型を教える前に現場を読ませる」という表現のとおり、特定の作業手順を教え込む前に、実際の開発の文脈に大量に触れさせる方針です。</li>
+<li>学習手法がオープンに共有されることで、エージェント向けモデルの開発が一部の大手企業に限られない状況が広がる可能性があります。</li>
+</ul></article>
+<article class="card"><h2>今後の展望</h2><ul>
+<li>外ループ化と並列化によって、エージェントは人間の監視下で動くツールから、イベントに反応して自律的に動くプロセスへ変わりつつあります。</li>
+<li>そのぶん、許可リストのすり抜けへの対策や、取り消せない操作の識別といったガードレールの設計が、開発基盤の中心的な課題になります。</li>
+<li>品質保証では、エージェント同士の情報分離や差し戻しの定量分析など、AIの誤りを構造的に見つける手法が広がると考えられます。</li>
+<li>人間の役割は、要求定義と指示設計を通じて判断の主体であり続けることにあります。AIの能力向上とともに、その重要性はむしろ増していきます。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（10件）</h3>
+  <div class="badges"><a class="badge" href="https://zenn.dev/tmiyachi/articles/outer-loop-sentry-webhook-codex">zenn.dev</a><a class="badge" href="https://zenn.dev/orivanai/articles/claude-code-projects-guide">zenn.dev</a><a class="badge" href="https://dev.to/puneet_nanda_dc25d8b489ad/your-allowlist-lost-to-a-heredoc-l4h">dev.to</a><a class="badge" href="https://zenn.dev/hach/articles/chat-agent-irreversible-action-confirmation-design">zenn.dev</a><a class="badge" href="https://zenn.dev/anfangd/articles/continuous-security-assessment-ai-agent">zenn.dev</a><a class="badge" href="https://zenn.dev/tappers/articles/ai-labo-e06-blind-tdd-worktrees">zenn.dev</a><a class="badge" href="https://zenn.dev/claire_ai/articles/tsui-iriguchi">zenn.dev</a><a class="badge" href="https://zenn.dev/yasuakiomokawa/articles/97ffb5a31f1c6d">zenn.dev</a><a class="badge" href="https://zenn.dev/ogiri/articles/agents-md-and-skills-still-matter">zenn.dev</a><a class="badge" href="https://zenn.dev/lixian/articles/priming-base-models-midtraining">zenn.dev</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
