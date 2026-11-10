@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発の論文 2026-11-11</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-purple">
+  <header class="page">
+    <span class="eyebrow">AI開発の論文</span>
+    <h1>AI開発の論文</h1>
+    <div class="meta">
+      <span>📅 2026-11-11</span>
+      <span>⏱ 約7分で読めます</span>
+      <span>🗂 2トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><span class="mark">注目の著者</span><h2>Androidアプリをエージェントで丸ごとHarmonyOSへ移植する──コード翻訳を超えた移行フレームワーク（地域不明）</h2><ul>
+<li>この論文は、AndroidアプリをHarmonyOSへ移行する作業を、メソッド単位やファイル単位の翻訳ではなくプロジェクト全体の移行として扱う方法を調べたものです。提案手法はエージェント型フレームワーク「A2HTrans」です。</li>
+<li>背景として、既存のLLMによる移行手法は、プロジェクト全体の依存関係や作業の順序をほとんど考慮していません。また、HarmonyOSの主要言語ArkTSは学習資源が少なく、移行先のテストも不足しがちなため、エンドツーエンドの移行では誤りが起きやすいと指摘しています。</li>
+<li>A2HTransはまず、アプリを機能ごとの移行タスクに分解し、依存関係の解析で処理順を決めます。そのうえで、翻訳・検証・反復修復を1つの実行ワークフローの中で連携させます。</li>
+<li>検証には2段構えの方法を使います。コンパイラで構文をチェックし、LLMで意味的な妥当性を確認し、問題があれば自動で修復します。言語資源が少ない環境で信頼性を補うための工夫です。</li>
+<li>評価は、規模や分野の異なる14個のAndroidアプリを対象に行われました。基盤モデルにはClaude-Sonnet-4.6を使い、Claude Codeと比較しています。</li>
+<li>注目すべき結果として、Claude Codeと比べて機能の網羅性が8.3%、振る舞いの正しさが8.0%向上し、移行時間は28.8%短縮されました。</li>
+<li>実務への示唆として、同じLLMを使っても、汎用のコーディングエージェントに任せるより、タスク分解・依存順序・検証ループを明示的に組んだワークフローの方が品質と速度の両方で有利になりうることが示されています。大規模なクロスプラットフォーム移行やレガシー移行を設計する際の参考になります。</li>
+<li>特に、学習データが少ない言語やテストが乏しいプロジェクトをAIで扱う場合、コンパイラなどの決定的なツールとLLMの意味チェックを組み合わせる構成は、ほかの言語やフレームワークにも応用しやすい実践的なパターンです。</li>
+<li>地域は推定で、フィードには所属情報が含まれていないため「地域不明」としました。第一著者名は中国語圏の名前ですが、それだけでは中国本土か海外の研究機関かを判別できません。</li>
+<li>地域推定の補足として、共著者にポルトガル語圏系の名前があること、英語のニックネーム「Jack」の併記が見られること、題材がHuawei系のHarmonyOSであることなど、手がかりは複数の方向を指しています。そのため確信度は低いと判断しました。</li>
+</ul></article>
+<article class="card"><span class="mark">注目の著者</span><h2>NINJA：ナビゲーターとインスペクターの分業による省コンテキストな不具合箇所特定（地域不明）</h2><ul>
+<li><strong>何を調べたか</strong>：ソフトウェアの不具合修正の前段となる「issue localization（不具合箇所の特定）」で、エージェントの探索をどう構成すれば効率と精度を両立できるかを調べた研究です。従来手法の多くは単一エージェントが探索履歴をコンテキストに積み続けるため、推論に使える余地が狭まります。また探索構造が平坦なため、ファイル単位の「広さ」と関数単位の「深さ」の両立が難しいという課題があります。</li>
+<li><strong>提案手法の構成</strong>：NINJAは探索を2つの役割に分けます。ナビゲーターは全体の探索状態を保持し、ファイル単位の検索を行って調査対象の入口ファイルを割り当てます。インスペクターは割り当てられたファイル周辺を、それぞれ独立したコンテキストで関数単位まで掘り下げます。</li>
+<li><strong>多ラウンドの連携</strong>：インスペクターが疑わしい箇所をフィードバックとして返し、ナビゲーターが全体状態を更新します。そのうえで探索を続けるか、特定を確定するかを判断します。局所探索の痕跡が1つのコンテキストに蓄積しない点が設計の核心です。</li>
+<li><strong>追加学習</strong>：全体の調整役と局所探索役の両方を強化するため、2段階のエージェント型ファインチューニングも導入しています。</li>
+<li><strong>注目すべき結果</strong>：複数のベンチマークと複数のLLMバックボーンで、競合ベースラインを一貫して上回ったと報告されています。特に、ファインチューニング後のQwen3-Coder-30B-A3B-Instruct（アクティブ3B規模のMoE）が、クローズドモデルのClaude-Haiku-4.5を上回った点が目を引きます。</li>
+<li><strong>実務への効き方①（エージェント設計）</strong>：コーディングエージェントを自作・運用する場合に、「司令役が全体状態だけを持ち、詳細調査はサブエージェントの使い捨てコンテキストに任せる」構成の有効性を裏付ける知見です。大規模リポジトリでコンテキストが膨張して精度が落ちる問題への具体的な処方箋になります。</li>
+<li><strong>実務への効き方②（コストと運用）</strong>：小型のオープンモデルでも、役割分担と追加学習を組み合わせれば商用の軽量モデル並み以上の箇所特定が期待できます。社内環境での運用やAPIコストの削減を検討するチームにとって参考になります。</li>
+<li><strong>地域推定の根拠と確信度</strong>：第一著者を含む複数の著者名は中国語圏の氏名に見え、バックボーンにQwenを採用している点も中国との関わりを示唆します。ただし、氏名だけでは所属機関の国は決まりません。共著者にはポーランド系の氏名も含まれ、国際共同研究の可能性も高いため、第一著者の所属地域を特定する材料としては弱いと判断しました。そのため確信度は低く、あくまで推定の結果として「地域不明」としています。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（2件）</h3>
+  <div class="badges"><a class="badge" href="https://arxiv.org/abs/2611.11192">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2611.10027">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
