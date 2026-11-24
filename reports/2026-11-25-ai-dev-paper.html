@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発の論文 2026-11-25</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --ink:#1a2028; --sub:#5b6672;
+    --line:#e4e9f0; --shadow:0 1px 3px rgba(20,30,50,.06),0 6px 18px rgba(20,30,50,.06);
+    --blue:#2f6df0; --blue-weak:#e8f0ff; --blue-ink:#1b4bcf;
+    --green:#16a36a; --green-weak:#e3f6ec; --green-ink:#0e8656;
+    --purple:#7a5af0; --purple-weak:#eee9ff; --purple-ink:#5535cc;
+    --gray:#8a94a3; --gray-weak:#eef1f4; --gray-ink:#5b6672;
+    --faint:#9aa4b1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+  /* index/archive：サイトヘッダー・セクションラベル */
+  header.site{padding:30px 0 8px}
+  header.site h1{font-size:24px;font-weight:800}
+  header.site p{color:var(--sub);font-size:13px;margin-top:6px}
+  .section-label{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;
+    margin:26px 0 12px;text-transform:uppercase}
+
+  /* index：本日分（強調） */
+  /* 🔴 （2026-09-18更新）カード枚数に追従する格子。2列固定だと3枚目が1枚だけ次行に
+     落ちて余白が出る（docs/mockups/index-3categories.html 検討メモ②）。 */
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+  @media (max-width:560px){.today{grid-template-columns:1fr}}
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px;text-decoration:none;color:inherit;
+    display:block;border-top:5px solid var(--c)}
+  .hero.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .hero.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .hero.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .hero.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .hero h3{font-size:17px;font-weight:700;line-height:1.5}
+  .hero .sub{color:var(--sub);font-size:12px;margin-top:10px}
+
+  /* index/archive：フラットな行カード */
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-decoration:none;color:inherit;display:flex;
+    align-items:center;gap:12px;border-left:4px solid var(--c)}
+  .row.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .row.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .row.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .row.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .row .date{font-variant-numeric:tabular-nums;font-size:13px;color:var(--sub);min-width:96px}
+  .row .rtag{font-size:11px;font-weight:700;color:var(--ci);background:var(--cw);
+    padding:3px 9px;border-radius:999px}
+  .row .rt{font-size:14px;font-weight:600;flex:1}
+  .row .none{color:var(--sub);font-weight:400;font-style:italic}
+
+  .more{display:block;text-align:center;margin-top:18px;padding:12px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:14px}
+  .empty{color:var(--sub);font-size:14px;padding:12px 0}
+
+  /* 個別レポート：ページヘッダー（アクセント色はaccent-*クラスで切り替え） */
+  .accent-blue{--accent:var(--blue);--accent-weak:var(--blue-weak);--accent-ink:var(--blue-ink)}
+  .accent-green{--accent:var(--green);--accent-weak:var(--green-weak);--accent-ink:var(--green-ink)}
+  .accent-purple{--accent:var(--purple);--accent-weak:var(--purple-weak);--accent-ink:var(--purple-ink)}
+  .accent-gray{--accent:var(--gray);--accent-weak:var(--gray-weak);--accent-ink:var(--gray-ink)}
+
+  header.page{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;
+    color:var(--accent-ink);background:var(--accent-weak);
+    padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  header.page h1{font-size:26px;font-weight:800;letter-spacing:.01em}
+  .meta{margin-top:8px;color:var(--sub);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .meta span{display:inline-flex;align-items:center;gap:5px}
+
+  /* 個別レポート：トピックカード */
+  main{padding-top:22px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:20px 20px 18px;
+    border-left:4px solid var(--accent)}
+  .card h2{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.5}
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .card li{position:relative;padding-left:18px;color:#2b333d;font-size:15px}
+  .card li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+
+  /* 個別レポート：出典（カード化せずドメインバッジ） */
+  .sources{margin-top:26px;padding-top:18px;border-top:1px dashed var(--line)}
+  .sources h3{font-size:13px;color:var(--sub);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:var(--accent-ink);background:var(--accent-weak);
+    text-decoration:none;padding:5px 11px;border-radius:8px;border:1px solid transparent;
+    transition:border-color .15s}
+  .badge:hover{border-color:var(--accent)}
+
+  .foot{margin-top:30px;text-align:center;font-size:12px;color:var(--sub)}
+  .foot a{color:var(--accent-ink);text-decoration:none}
+
+  /* 🔴 （第12ループ）注目の著者の印。カードでは見出しの上の小さなバッジ（docs/mockups/report-paper.html） */
+  .card .mark{display:inline-block;font-size:11px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:1px 8px;border-radius:999px;margin-bottom:8px}
+
+  /* 🔴 （第12ループ）一覧の日付カード（docs/mockups/index-daycards.html）。1日＝1枚、中にカテゴリの行 */
+  .days{display:flex;flex-direction:column;gap:10px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 8px}
+  .day.day-today{border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 12px;
+    border-top:5px solid transparent;
+    border-image:linear-gradient(90deg,var(--blue) 0 33.3%,var(--green) 33.3% 66.6%,var(--purple) 66.6% 100%) 1 0 0 0}
+  .day-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    text-decoration:none;color:inherit;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+  .day-head .d{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .day.day-today .day-head .d{font-size:18px}
+  .day-head .sm{font-size:12px;color:var(--sub);white-space:nowrap}
+  .line{display:flex;align-items:center;gap:8px;min-width:0;padding:7px 0 7px 8px;
+    text-decoration:none;color:inherit;border-left:3px solid var(--c);margin:4px 0}
+  .line.blue{--c:var(--blue);--cw:var(--blue-weak);--ci:var(--blue-ink)}
+  .line.green{--c:var(--green);--cw:var(--green-weak);--ci:var(--green-ink)}
+  .line.purple{--c:var(--purple);--cw:var(--purple-weak);--ci:var(--purple-ink)}
+  .line.gray{--c:var(--gray);--cw:var(--gray-weak);--ci:var(--gray-ink)}
+  .ltag{flex:0 0 4.6em;text-align:center;font-size:11px;font-weight:700;color:var(--ci);
+    background:var(--cw);padding:2px 0;border-radius:999px;white-space:nowrap}
+  .lt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:600}
+  .day.day-today .lt{font-size:15px}
+  .lt .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lt .n{flex:0 0 auto;font-size:12px;font-weight:400;color:var(--sub);white-space:nowrap}
+  .line.cont{margin-top:-2px}
+  .line.cont .ltag{visibility:hidden}
+  .line .mark{flex:0 0 auto;font-size:10px;font-weight:700;color:#8a5a00;background:#fff3d6;
+    border:1px solid #f1d28a;padding:0 6px;border-radius:999px;white-space:nowrap;line-height:1.6}
+  .lt .none{color:var(--sub);font-weight:400;font-style:italic}
+  .line.missing{border-left:3px dashed var(--line)}
+  .line.missing .ltag{color:var(--faint);background:transparent;border:1px dashed var(--line)}
+  .lt .miss{color:var(--faint);font-weight:400}
+  .boundary{display:flex;align-items:center;gap:10px;margin:18px 0 12px;font-size:12px;color:var(--sub)}
+  .boundary::before,.boundary::after{content:"";flex:1;border-top:1px dashed var(--line)}
+  /* 日付カードの塊と行カードの塊が境目の線なしで隣り合うとき（1日ページの生成に失敗した日）の間隔 */
+  .days + .list,.list + .days{margin-top:10px}
+
+  @media (prefers-color-scheme:dark){
+    :root{--bg:#0f141a;--card:#171d25;--ink:#e6ebf1;--sub:#93a0ae;--line:#252d38;
+      --blue-weak:#16233d;--blue-ink:#7aa5ff;--green-weak:#12301f;--green-ink:#57d39a;
+      --purple-weak:#221c3d;--purple-ink:#a793ff;
+      --gray-weak:#1c2229;--gray-ink:#93a0ae;--faint:#5f6b78;
+      --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35)}
+    .card .mark,.line .mark{color:#f3c96b;background:#3a2c10;border-color:#5c4718}
+  }
+</style>
+</head>
+<body>
+<div class="wrap accent-purple">
+  <header class="page">
+    <span class="eyebrow">AI開発の論文</span>
+    <h1>AI開発の論文</h1>
+    <div class="meta">
+      <span>📅 2026-11-25</span>
+      <span>⏱ 約8分で読めます</span>
+      <span>🗂 2トピック</span>
+    </div>
+  </header>
+  <main>
+    <article class="card"><span class="mark">注目の著者</span><h2>修復エージェントに「失敗の因果連鎖」を渡すと解決率が大幅に向上──SWE-bench Lite全300件での検証（ドイツ）</h2><ul>
+<li><strong>何を調べたか</strong>：バグ修復エージェントは、バグ報告を読む開発者と同じ情報から出発し、修正の前に「プログラムがどう失敗するのか」を突き止める必要がある。この論文は、失敗の診断をあらかじめエージェントに与える手法FORECASTを提案し、その効果を調べた。</li>
+<li><strong>手法の仕組み</strong>：成功するテストと失敗するテストの実行から、失敗時の実行がどう分岐していくかを説明する「因果連鎖（cause chain）」を推定する。因果連鎖は、条件やデータフローなどの実行上の特徴を並べた短い系列である。</li>
+<li><strong>導入のしやすさ</strong>：因果連鎖はエージェントが受け取るissueの末尾に追記される。issueからプロンプトを組み立てるエージェントであれば、本体を改造せずに使える。</li>
+<li><strong>評価の規模</strong>：SWE-bench Liteの全300件を対象に、5種類の修復エージェントと2つのモデル（商用のClaude Haiku 4.5とオープンウェイトのQwen3.5）で評価した。</li>
+<li><strong>注目すべき結果（解決率）</strong>：診断を加えると、すべてのエージェントで解決件数が有意に増えた。全エージェントを通した解決率は、Haiku 4.5で48.5%から70.9%（22.4ポイント増）、Qwen3.5で31.2%から56.1%（24.9ポイント増）に上がった。</li>
+<li><strong>注目すべき結果（モデル差の逆転）</strong>：診断ありのQwen3.5（56.1%）が、診断なしのHaiku 4.5（48.5%）を上回った。ただし、診断ありのHaiku 4.5（70.9%）には届いていない。</li>
+<li><strong>注目すべき結果（頑健性）</strong>：効果は繰り返し実行しても維持された。診断の元になるテストをすでに自分で実行しているエージェントでも改善しており、テストを実行できるだけでは得られない価値が診断にあることを示唆する。</li>
+<li><strong>実務への効き方（入力の改善）</strong>：モデルの変更やエージェントの改造より先に、issueに添える診断情報を充実させることが有力な改善策になりうる。自社のエージェントでも、失敗の条件やデータの流れを短くまとめてissueに追記する形で小さく試せる。</li>
+<li><strong>実務への効き方（モデル選定）</strong>：商用モデルを使いにくい環境では、オープンウェイトモデルと診断の組み合わせが選択肢になりうる。モデル単体の性能だけでなく、与える情報も含めて比較するのがよい。</li>
+<li><strong>実務での留意点</strong>：診断には成功するテストと失敗するテストの実行が必要なため、失敗を再現するテストがないバグには、そのまま適用しにくいと考えられる。診断の生成コストや、用いたテストの入手方法は要旨からは分からず、本文での確認が必要である。</li>
+<li><strong>地域の推定根拠と確信度</strong>：フィードに所属情報は含まれておらず、「ドイツ」は推定である。共著者のAndreas Zeller氏とLars Grunske氏はドイツの研究機関に所属する研究者として知られ、第一著者のMarius Smytzek氏も同じ研究グループの一員と考えられることを主な根拠とした。確信度は高めだが、論文の所属欄は確認していない。</li>
+</ul></article>
+<article class="card"><span class="mark">注目の著者</span><h2>コーディングエージェントはスタッフエンジニアのように振る舞えるか──60課題のベンチマーク「sudo L7」（米国）</h2><ul>
+<li><strong>地域の扱い</strong>：見出しの「米国」は第一著者の所属地域の推定であり、配信情報に所属の記載はない。</li>
+<li><strong>何を調べたか</strong>：AIコーディングエージェントが、テストに通るパッチを書くだけでなく、経験豊富なエンジニアのような判断もできるかを調べた。依頼にないリスクへの気づき、誤った前提への疑問、既存資産の再利用、確認した範囲の率直な報告などが対象である。</li>
+<li><strong>課題の作り方</strong>：スタッフ級エンジニアが作成した60課題からなり、多くは非公開の本番コードベースを使う。各課題は、フロンティアモデルが失敗した箇所を軸に設計されている。</li>
+<li><strong>採点方法</strong>：現実的で指定の足りない依頼に、専門家が書いた非公開の評価基準（計1,287項目）を組み合わせ、各項目に8つの行動次元のタグを付けた。エージェント型の採点器が作業記録を読み、コードを調べて実行し、重大度上位2段階の基準をすべて満たした試行だけを合格とする。</li>
+<li><strong>注目すべき結果（成績）</strong>：2026年11月時点の公開リーダーボード（19モデル、各課題3試行）では、合格率はClaude Fable 5.2が52.2%、Claude Sonnet 5.5が50.6%、Claude Opus 5.5が46.1%だった。GPT-6.1 Sol、Claude Fable 5.1、GPT-6 Astraは31〜34%、残る13モデルは最高でも18.9%だった。</li>
+<li><strong>成績を読むうえでの注意</strong>：各モデルは開発元のハーネスまたはOpenCodeで実行されており、実行環境は統一されていない。</li>
+<li><strong>注目すべき結果（合否基準）</strong>：合否を左右する基準の過半数は、機能の正しさ以外を問うものだった。根拠のない主張が1つあるだけで、他は優れた試行が不合格になる事例も示されている。</li>
+<li><strong>注目すべき結果（採点の信頼性）</strong>：採点器候補の3モデルは、基準ごとの判定でソフトウェアエンジニア1名とそれぞれ85〜86%一致した。これは、エンジニア2名どうしの一致率とほぼ同じ水準である。</li>
+<li><strong>実務への効き方（レビュー）</strong>：この結果を踏まえると、テスト通過だけで受け入れを決めず、隠れた危険の指摘、不要な作業の回避、検証範囲の報告も確認するのがよい。特に「確認済み」という報告は、実行ログなどの証拠と照合したい。</li>
+<li><strong>実務への効き方（導入判断）</strong>：首位のモデルでも試行の半分弱が不合格となるため、曖昧な依頼を任せる際は人の確認を残すのが妥当である。自社で評価する場合は、過去の失敗箇所から課題を作り、重大度付きの基準で採点する方法が参考になる。</li>
+<li><strong>地域推定の根拠と確信度</strong>：確信度は中程度。著者名の組み合わせ（特にEdwin Chen、Suhaas Garre、Sushant Mehta）が、米国に拠点を置くSurge AIの関係者と一致するとみられることが主な根拠である。要旨に所属や地域の記述はなく、同姓同名や、第一著者だけ所在地が異なる可能性は残る。</li>
+</ul></article>
+<div class="sources">
+  <h3>情報ソース（2件）</h3>
+  <div class="badges"><a class="badge" href="https://arxiv.org/abs/2611.30574">arxiv.org</a><a class="badge" href="https://arxiv.org/abs/2611.30517">arxiv.org</a></div>
+</div>
+
+    <div class="foot"><a href="../index.html">← レポート一覧へ戻る</a></div>
+  </main>
+</div>
+</body>
+</html>
